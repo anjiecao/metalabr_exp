@@ -1,0 +1,90 @@
+---
+title: "metalabr_exp"
+author: "anjie"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(here)
+library(metalabr)
+library(tidyboot)
+library(ggthemes)
+
+# metadata <- get_metalab_metadata()
+# metalab_data <- get_metalab_data(metadata)
+# write_csv(metalab_data, here("data/metalab_data.csv"))
+
+metalab_data <- read_csv(here("data/metalab_data.csv"))
+```
+
+# goal: 
+
+- plot sample size for every datasets
+- plot age to effect size curve for every datasets 
+
+## sample sizes?
+
+
+```{r}
+metalab_n <- metalab_data %>% 
+  mutate(n_2 = ifelse(is.na(n_2), 0, n_2)) %>% 
+  mutate(total_infants = n_1 + n_2) %>% 
+  group_by(dataset) %>% 
+  summarise(n = sum(total_infants)) %>% 
+  arrange(n) 
+
+metalab_n %>% 
+  ggplot(aes(reorder(dataset,-n), n)) + 
+  geom_point() + 
+  theme_classic() + 
+  theme() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+metalab_data %>% 
+  filter(is.na(n_2), participant_design == "within") 
+```
+
+## age curve
+
+
+https://github.com/langcog/metalab2/blob/master/pages/reports/scratch/bayesian_ma.Rmd
+
+
+there are ages
+
+```{r}
+filter(metalab_data, 
+       mean_age_months < 36) %>%
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc),
+             alpha = .3) + 
+  geom_smooth(method="lm", formula = y ~ x, 
+              aes(col = "Linear"), 
+              se = FALSE) + 
+  geom_smooth(method="lm", formula = y ~ log(x), 
+              aes(col = "Log"),
+              se = FALSE) + 
+  geom_smooth(method="lm", formula = y ~ I(x^2),
+              aes(col = "Quadratic"),
+              se = FALSE) +
+  facet_wrap(~ short_name) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  scale_colour_solarized(name="Models", breaks = c("Linear", "Log",
+                                                "Quadratic", "Linear and Log"),
+                                     labels=c("Linear" = "Linear",
+                                              "Log" = "Log",
+                                              "Quadratic" = "Quadratic",
+                                              "Linear and Log" = "Linear and Log")) +
+  ggthemes::theme_few()
+```
+
+
+
+
+
