@@ -19,6 +19,155 @@ library(ggthemes)
 metalab_data <- read_csv(here("data/metalab_data.csv"))
 ```
 
+# weird stuff in dataset 
+
+## older ppl?
+
+```{r}
+metalab_data %>% 
+  filter(mean_age_1 > 5000) %>% 
+  select(dataset, long_cite, mean_age_1)
+```
+
+
+## crazy sample size? 
+
+Imitation, vocabulary, pretend play, and socially insightful behavior were investigated in 5,206 same- and opposite-sex 2-year-old twin pairs in the United Kingdom. Individual differences in imitative ability were due to modest heritability (30%), while environmental factors shared between twins (42%) and unique to each twin (28%) also made significant contributions to the variance. Imitation correlated significantly, although modestly, with vocabulary, pretend play, and socially insightful behavior, and the strongest relationship was with vocabulary. A model that represented the covariance between the variables as being due to correlated latent genetic and environmental factors fitted the data well, with shared environmental factors influencing most of the covariance. Parents who encourage imitation may also tend to foster the development of language, pretence, and socially insightful behavior.
+
+
+```{r}
+metalab_data %>% 
+  filter(n > 1000) %>% 
+  select(dataset, long_cite, n)
+```
+
+## weird level? 
+
+```{r}
+metalab_data %>% 
+  distinct(infant_type)
+```
+
+```{r}
+metalab_data %>% 
+  distinct(object_stimulus)
+
+metalab_data %>% 
+  distinct(stimuli_type)
+
+
+```
+
+
+# bird eye overview of the dataset 
+
+
+## tbd 
+code stub for figuring out how many are filled 
+
+```{r}
+metalab_data %>% 
+  group_by(dataset) %>% 
+  summarise_all(funs(sum(!is.na(.)))) %>% 
+  left_join(
+    metalab_data %>% 
+  group_by(dataset) %>% summarise(n_row = n()), 
+  by = "dataset"
+  ) %>% 
+  #mutate_at(vars(-dataset, -unique_row), funs(. / unique_row)) # this line calculate ratio of filled columns 
+  
+  
+```
+
+
+## response mode distribution 
+
+```{r}
+metalab_data %>% 
+  group_by(dataset, response_mode) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(
+    metalab_data %>% 
+  group_by(dataset) %>% summarise(n_row = n()), 
+  by = "dataset"
+  ) %>% 
+  mutate(proportion_response_mode = n/ n_row) %>% 
+  
+  ggplot(aes(x = response_mode, y = proportion_response_mode)) + 
+  geom_point() + 
+  facet_wrap(~dataset) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        strip.text.x = element_text(size = 7)) + 
+  labs(title = "Response mode")
+```
+
+## method distribution
+
+```{r}
+metalab_data %>% 
+  group_by(dataset, method) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(
+    metalab_data %>% 
+  group_by(dataset) %>% summarise(n_row = n()), 
+  by = "dataset"
+  ) %>% 
+  mutate(proportion_method = n/ n_row) %>% 
+  ggplot(aes(x = method, y = proportion_method)) + 
+  geom_point() + 
+  facet_wrap(~dataset) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        strip.text.x = element_text(size = 7)) + 
+  labs(title = "Method")
+```
+
+## dependent_measure  
+
+```{r}
+metalab_data %>% 
+  group_by(dataset, dependent_measure) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(
+    metalab_data %>% 
+  group_by(dataset) %>% summarise(n_row = n()), 
+  by = "dataset"
+  ) %>% 
+  mutate(proportion_dm = n/ n_row) %>% 
+  ggplot(aes(x = dependent_measure, y = proportion_dm)) + 
+  geom_point() + 
+  facet_wrap(~dataset) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        strip.text.x = element_text(size = 7)) + 
+  labs(title = "dependent_measure")
+```
+
+## participant_type
+
+```{r}
+metalab_data %>% 
+  group_by(dataset, participant_design) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(
+    metalab_data %>% 
+  group_by(dataset) %>% summarise(n_row = n()), 
+  by = "dataset"
+  ) %>% 
+  mutate(proportion_pd = n/ n_row) %>% 
+  ggplot(aes(x = participant_design, y = proportion_pd)) + 
+  geom_point() + 
+  facet_wrap(~dataset) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        strip.text.x = element_text(size = 7)) + 
+  labs(title = "participant_design")
+```
+
+
+
+
 # goal: 
 
 - plot sample size for every datasets
