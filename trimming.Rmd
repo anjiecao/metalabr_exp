@@ -1,0 +1,367 @@
+---
+title: "trimming.Rmd"
+author: "anjie"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(here)
+library(metalabr)
+library(tidyboot)
+library(ggthemes)
+
+# metadata <- get_metalab_metadata()
+# metalab_data <- get_metalab_data(metadata)
+# write_csv(metalab_data, here("data/metalab_data.csv"))
+
+metalab_data <- read_csv(here("data/metalab_data.csv"))
+ids_data <- read_csv(here("data/ids_clean.csv")) %>% 
+  mutate(ds_clean = "Infant directed speech preference")
+```
+
+
+# metalab_data
+
+```{r}
+trimmed_data <- metalab_data %>% 
+  filter(!dataset %in% c(# dataset to be replaced 
+                         "Infant directed speech preference", 
+                         
+                         # dataset to be excluded 
+                         "Phonotactic learning", 
+                         "Pointing and vocabulary (concurrent)", 
+                         "Pointing and vocabulary (longitudinal)",
+                         "Video deficit", 
+                         "Word segmentation (neuro)", 
+                         
+                         # dataset to be modified 
+                         "Statistical sound category learning", 
+                         "Gaze following (live)",
+                         "Gaze following (video)",
+                         "Function word segmentation", 
+                         "Word segmentation (behavioral)"
+                         
+                         )) %>% 
+  mutate(ds_clean = dataset) %>% 
+  bind_rows(
+    ids_data %>% mutate(expt_num = as.numeric(expt_num)), #IDS replacement 
+
+    # modifying statistical sound category learning 
+    metalab_data %>% 
+    filter(dataset == "Statistical sound category learning", exposure_phase == "habituation") %>% 
+    mutate(ds_clean = "Statistical sound category learning (habituation)"), 
+    
+    #combining gaze following 
+    metalab_data %>% 
+      filter(dataset %in% c("Gaze following (live)","Gaze following (video)")) %>% 
+      mutate(ds_clean = "Gaze following (combined)"),
+    
+    #combining function word segmentation 
+    metalab_data %>% 
+      filter(dataset %in% c("Function word segmentation", "Word segmentation (behavioral)")) %>% 
+      mutate(ds_clean = "Word Segmentation (combined)")
+    
+  )
+  
+```
+
+# basic stats 
+
+## n of effect size 
+
+```{r}
+trimmed_data %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  ggplot(aes(x = reorder(ds_clean, -n), y = n)) + 
+  geom_point()+ 
+  theme_classic() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+
+## n sample sizes 
+
+```{r}
+trimmed_n <- trimmed_data %>% 
+  mutate(n_2 = ifelse(is.na(n_2), 0, n_2)) %>% 
+  distinct(ds_clean, same_infant, n_1, n_2) %>% 
+  mutate(total_infants = n_1 + n_2) %>% 
+  group_by(ds_clean) %>% 
+  summarise(n = sum(total_infants)) %>% 
+  arrange(n) 
+
+trimmed_n %>% 
+  ggplot(aes(reorder(ds_clean,-n), n)) + 
+  geom_point() + 
+  theme_classic() + 
+  theme() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
+do we worry about the potential outliers here? ds that has small effect size n but contributes a lot of sample n? 
+
+```{r}
+trimmed_data %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  rename(effect_size_n = n) %>% 
+  left_join(trimmed_n %>% rename(sample_size = n), by = "ds_clean") %>% 
+  ggplot(aes(x = effect_size_n, 
+             y = sample_size)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+
+```
+
+
+## method distribution 
+
+
+### response mode 
+
+```{r}
+trimmed_data %>% 
+  group_by(ds_clean, response_mode) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(
+    trimmed_data %>% 
+  group_by(ds_clean) %>% summarise(n_row = n()), 
+  by = "ds_clean"
+  ) %>% 
+  mutate(proportion_response_mode = n/ n_row) %>% 
+  
+  ggplot(aes(x = reorder(response_mode, -proportion_response_mode), y = proportion_response_mode)) + 
+  geom_point() + 
+  facet_wrap(~ds_clean) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        strip.text.x = element_text(size = 7)) + 
+  labs(title = "Response mode")
+```
+
+### method
+
+```{r}
+trimmed_data %>% 
+  group_by(ds_clean, method) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(
+    trimmed_data %>% 
+  group_by(ds_clean) %>% summarise(n_row = n()), 
+  by = "ds_clean"
+  ) %>% 
+  mutate(proportion_method = n/ n_row) %>% 
+  
+  ggplot(aes(x = reorder(method, -proportion_method), y = proportion_method)) + 
+  geom_point() + 
+  facet_wrap(~ds_clean) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        strip.text.x = element_text(size = 7)) + 
+  labs(title = "method")
+```
+
+
+### dependent_measure 
+
+```{r}
+trimmed_data %>% 
+  group_by(ds_clean, dependent_measure) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(
+    trimmed_data %>% 
+  group_by(ds_clean) %>% summarise(n_row = n()), 
+  by = "ds_clean"
+  ) %>% 
+  mutate(proportion_dm = n/ n_row) %>% 
+  ggplot(aes(x = dependent_measure, y = proportion_dm)) + 
+  geom_point() + 
+  facet_wrap(~ds_clean) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        strip.text.x = element_text(size = 7)) + 
+  labs(title = "dependent_measure")
+```
+
+
+ok everything above looks very messy, let's create some birdeye view on all methods & do some recoding 
+
+```{r}
+trimmed_data %>% 
+  mutate(mega_method = paste(response_mode, method, dependent_measure, sep = "_")) %>% 
+  distinct(ds_clean, mega_method) %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  ggplot(aes(reorder(ds_clean,-n), n)) + 
+  geom_point() + 
+  theme_classic() + 
+  theme() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
+  labs(title = "unique mega_method")
+```
+
+```{r}
+trimmed_data %>% 
+  mutate(mega_method = paste(response_mode, method, dependent_measure, sep = "_")) %>% 
+  distinct(ds_clean, mega_method)
+```
+
+response mode doesn't feel like a very meaningful categories? 
+
+```{r}
+trimmed_data %>% 
+  distinct(ds_clean, response_mode) 
+```
+
+
+importing some recoding of the method (categorize based on look vs no-look)
+
+```{r}
+m_recode <- read_csv(here("data/ds_clean_rework.csv"))
+
+
+trimmed_data <- m_recode %>% 
+  select(-note) %>% 
+  left_join(trimmed_data, by = c("ds_clean", "response_mode", "method", "dependent_measure"))
+```
+
+actually didn't see much "looking" for young children trend 
+
+```{r}
+filter(trimmed_data, 
+       mean_age_months < 36) %>%
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc,  
+             color = looking),
+             alpha = .3) + 
+  facet_wrap(~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few()
+```
+
+let's see familiarization vs habituation vs test only in paradigms measuring looking 
+
+```{r}
+filter(trimmed_data, 
+       mean_age_months < 36)  %>% 
+  filter(exposure_phase %in% c("familiarization", "habituation", "test_only"), 
+         looking == "yes") %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc,  
+             color = exposure_phase),
+             alpha = .3) + 
+  facet_wrap( ~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few()
+```
+
+
+
+
+## infant type distribution 
+
+```{r}
+it_recode <- read_csv(here("data/infant_type_rework.csv"))
+
+
+trimmed_data <- it_recode %>% 
+  select(-long_cite) %>% 
+  left_join(trimmed_data, by = c("ds_clean", "native_lang", "infant_type")) %>% 
+  rename(infant_type_clincal =  `infant_type_clinical (typical vs nt (preterm / delayed / developmental disorder)`)
+```
+
+
+very little to be meaningful, should probably prune? 
+
+```{r}
+filter(trimmed_data, 
+       mean_age_months < 36)  %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc,  
+             color = infant_type_clincal),
+             alpha = .3) + 
+  facet_wrap( ~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few() 
+```
+
+this has a spread, may consider recode something? 
+
+```{r}
+filter(trimmed_data, 
+       mean_age_months < 36)  %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc,  
+             color = infant_type_language),
+             alpha = .3) + 
+  facet_wrap( ~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few() 
+```
+
+# publicaion year? 
+
+citation density?
+
+
+```{r}
+trimmed_data  %>% 
+  ggplot(aes(x = year, y = d_calc, color = publication_type)) +
+  geom_point() + 
+  facet_wrap( ~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("publishing year") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few() 
+```
+
+
+
+
+
+
+```{r}
+filter(trimmed_data, 
+       mean_age_months < 36) %>%
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc),
+             alpha = .3) + 
+  geom_smooth(method="lm", formula = y ~ x, 
+              aes(col = "Linear"), 
+              se = FALSE) + 
+  geom_smooth(method="lm", formula = y ~ log(x), 
+              aes(col = "Log"),
+              se = FALSE) + 
+  geom_smooth(method="lm", formula = y ~ I(x^2),
+              aes(col = "Quadratic"),
+              se = FALSE) +
+  facet_wrap(~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  scale_colour_solarized(name="Models", breaks = c("Linear", "Log",
+                                                "Quadratic", "Linear and Log"),
+                                     labels=c("Linear" = "Linear",
+                                              "Log" = "Log",
+                                              "Quadratic" = "Quadratic",
+                                              "Linear and Log" = "Linear and Log")) +
+  ggthemes::theme_few()
+```
+

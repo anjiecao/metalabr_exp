@@ -21,6 +21,78 @@ metalab_data <- read_csv(here("data/metalab_data.csv"))
 
 # weird stuff in dataset 
 
+## function word segmentation vs wod segmentation (behavioral)
+
+
+nonoverlapping, contains more info than the original published databse
+
+```{r}
+ws <- metalab_data %>% 
+  filter(dataset == "Word segmentation (behavioral)") %>% 
+  distinct(long_cite) %>% 
+  pull()
+
+fws <- metalab_data %>% 
+  filter(dataset == "Function word segmentation") %>% 
+  distinct(long_cite) %>% 
+  pull()
+
+ws
+```
+
+
+```{r}
+
+m_wsb <- colnames(metalab_data %>% 
+  filter(dataset == "Word segmentation (behavioral)") %>% 
+  summarise_all(funs(sum(!is.na(.)))) %>% 
+  select_if(~ any(. > 0)))
+  
+
+m_fws <- colnames(metalab_data %>% 
+  filter(dataset == "Function word segmentation") %>% 
+  summarise_all(funs(sum(!is.na(.)))) %>% 
+  select_if(~ any(. > 0)))
+
+# elements of vector m_wsb not contained in m_fws  
+m_wsb_special <- setdiff(m_wsb, m_fws)
+setdiff(m_fws, m_wsb)
+
+```
+
+```{r}
+metalab_data %>% 
+  filter(dataset == "Word segmentation (behavioral)") %>% 
+  select(m_wsb_special)
+```
+
+## gaze following 
+
+```{r}
+gfv = metalab_data %>% 
+  filter(dataset == "Gaze following (video)")
+
+gfl = metalab_data %>% 
+  filter(dataset == "Gaze following (live)")
+
+
+m_gfv <- colnames(gfv %>% 
+  summarise_all(funs(sum(!is.na(.)))) %>% 
+  select_if(~ any(. > 0)))
+  
+
+m_gfl <- colnames(gfl %>% 
+  summarise_all(funs(sum(!is.na(.)))) %>% 
+  select_if(~ any(. > 0)))
+
+# elements of vector m_wsb not contained in m_fws  
+setdiff(m_gfv, m_gfl)
+setdiff(m_gfl, m_gfv)
+
+```
+
+
+
 ## older ppl?
 
 ```{r}
@@ -45,7 +117,7 @@ metalab_data %>%
 
 ```{r}
 metalab_data %>% 
-  distinct(infant_type)
+  distinct()
 ```
 
 ```{r}
@@ -163,6 +235,13 @@ metalab_data %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
         strip.text.x = element_text(size = 7)) + 
   labs(title = "participant_design")
+```
+```{r}
+metalab_data %>% 
+  filter(dataset == "Function word segmentation")
+
+metalab_data %>% 
+  filter(dataset == "Word segmentation")
 ```
 
 
