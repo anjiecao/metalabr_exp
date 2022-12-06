@@ -1,0 +1,290 @@
+---
+title: "author_exploration"
+author: "anjie"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(broom)
+library(metafor)
+
+source(here("helper/author_help.r"))
+
+d <- read_csv(here("data/clean_data.csv"))
+author_d <- read_csv(here("data/clean_author.csv"))
+```
+
+# run all the lm
+
+```{r}
+# unique ls of dataset name 
+
+all_nested_d <-lapply(distinct(d, ds_clean) %>% pull(), 
+       function(x){
+         get_major_author_effect(d, x, author_d)
+       }) %>% 
+  bind_rows() %>% 
+  group_by(ds_clean, major_author) %>% 
+  nest()
+
+
+
+```
+
+
+```{r}
+
+missing_info_ds <- d %>%   
+  filter(is.na(unique_row) | is.na(same_infant) | is.na(short_cite)) %>%  
+  distinct(ds_clean) %>% 
+  pull(ds_clean)
+```
+
+
+## regular models 
+
+```{r}
+all_models_res <- all_nested_d %>% 
+  filter(!major_author %in% c("…SweigWilson", "deVilliers", "Fernald","GrafEstes"
+                              )) %>% 
+  filter(!is.na(major_author) & ds_clean != "Prosocial Agents") %>% 
+  mutate(mod = map(data, function (df) lm(d_calc ~ mean_age_months * by_major_author,
+                                  data = df)), 
+  tidy = map(mod, broom::tidy)) %>% 
+  select(-mod, -data) %>% 
+  unnest(tidy)
+```
+
+```{r}
+all_models_res %>% 
+  filter(p.value < 0.05) %>% 
+  filter(grepl("author", term))
+```
+
+
+## fancy rma model
+
+```{r}
+all_rma_models <- all_nested_d %>% 
+  filter(!ds_clean %in% missing_info_ds) %>% 
+  filter(!major_author %in% c("…SweigWilson", "deVilliers", "Fernald","GrafEstes"
+                              )) %>% 
+  filter(!is.na(major_author) & ds_clean != "Prosocial Agents") %>% 
+  # fail to converge 
+  filter(ds_clean != "Familiar word recognition") %>% 
+  filter(ds_clean != "Symbolic play") %>% 
+  mutate(mod = map(data, function (df) rma.mv(
+    d_calc ~ mean_age_months * by_major_author, 
+    V = d_var_calc, 
+    random = ~ 1 | short_cite/same_infant/unique_row, 
+    method = "REML", 
+    data = df)), 
+    tidy = map(mod, broom::tidy)) %>% 
+  select(-mod, -data) %>% 
+  unnest(tidy)
+
+
+pruned_models_df <- all_nested_d %>% 
+  filter(ds_clean == "Familiar word recognition" | 
+         ds_clean == "Symbolic play") %>% 
+  mutate(mod = map(data, function (df) rma.mv(
+    d_calc ~ mean_age_months * by_major_author, 
+    V = d_var_calc, 
+    random = ~ 1 | short_cite/same_infant, 
+    method = "REML", 
+    data = df)), 
+    tidy = map(mod, broom::tidy)) %>% 
+  select(-mod, -data) %>% 
+  unnest(tidy)
+
+
+rmamv_df <- bind_rows(all_rma_models, pruned_models_df)
+
+```
+
+```{r}
+significant_author_df <- rmamv_df %>% 
+  filter(p.value < 0.05) %>% 
+  filter(grepl("author", term)) %>% 
+  distinct(ds_clean, major_author)
+```
+
+```{r}
+all_nested_d %>% 
+  filter(ds_clean %in% significant_author_df$ds_clean, 
+         major_author %in% significant_author_df$major_author) %>% 
+  unnest(data) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author))+
+    geom_point() + 
+    geom_smooth(method = "lm") + 
+    facet_wrap(ds_clean~major_author)
+```
+
+# look at specific datasets 
+
+## Abstract rule learning + Ferguson
+
+```{r}
+arl_d<-all_nested_d %>% 
+  filter(ds_clean == "Abstract rule learning", major_author == "Ferguson") %>% 
+  unnest(data) 
+
+
+arl_d %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author))+
+    geom_point() + 
+    geom_smooth(method = "lm")
+```
+```{r}
+
+
+m <- c("long_cite", "by_major_author", "response_mode", 
+         "exposure_phase", "method", "dependent_measure", "participant_design", 
+         "native_lang", "test_lang", 
+         "Modality", "Semantics", "TrainingRule")
+
+visualize_method_diff(arl_d, m)
+```
+
+
+
+
+when controlling for the methodologies it still significant?
+
+```{r}
+  rma.mv(
+    d_calc ~ mean_age_months * by_major_author + exposure_phase + method + Modality, 
+    V = d_var_calc, 
+    random = ~ 1 | short_cite/same_infant/unique_row, 
+    method = "REML", 
+    data = arl_d) %>% 
+  tidy()
+```
+
+
+## Familiar word recognition 
+
+```{r}
+fwr_d<-all_nested_d %>% 
+  filter(ds_clean == "Familiar word recognition", major_author == "Hallé") %>% 
+  unnest(data) 
+
+
+fwr_d %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author))+
+    geom_point() + 
+    geom_smooth(method = "lm")
+```
+
+
+didn't see a big difference tbh?
+
+```{r}
+
+fwr_m <- c("long_cite", "by_major_author", "response_mode", 
+         "exposure_phase", "method", "dependent_measure", "participant_design", 
+         "native_lang", "infant_type", "test_lang", "tokens_per_trial", "word_types_per_cond",
+         "publication_type")
+
+
+visualize_method_diff(fwr_d, fwr_m)
+
+
+```
+just look at method, still significant 
+
+```{r}
+ rma.mv(
+    d_calc ~ mean_age_months * by_major_author + method , 
+    V = d_var_calc, 
+    random = ~ 1 | short_cite/same_infant/unique_row, 
+    method = "REML", 
+    data = fwr_d) %>% 
+  tidy()
+```
+
+## Gaze following 
+
+
+```{r}
+gf_d<-all_nested_d %>% 
+  filter(ds_clean == "Gaze following (combined)", major_author == "Delgado") %>% 
+  unnest(data) 
+
+
+gf_d %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author))+
+    geom_point() + 
+    geom_smooth(method = "lm")
+```
+```{r}
+gf_d %>% 
+  ungroup() %>% 
+  select(long_cite) %>% 
+  filter(grepl("Delgado", long_cite)) %>% 
+  distinct() 
+  
+
+gf_d %>% 
+  ungroup() %>% 
+  select(long_cite) %>% 
+  filter(grepl("Mundy", long_cite)) %>% 
+  distinct() 
+
+gf_d %>% 
+  ungroup() %>% 
+  select(long_cite) %>% 
+  filter(grepl("Mundy", long_cite) & grepl("Delgado", long_cite)) %>% 
+  distinct() 
+```
+
+
+```{r}
+gf_m <- c("long_cite", "by_major_author", "response_mode", "exposure_phase", "method", 
+          "dependent_measure", "participant_design", "native_lang", "infant_type", "num_trials", 
+          "cue_type")
+
+visualize_method_diff(gf_d, gf_m)
+```
+```{r}
+rma.mv(
+    d_calc ~ mean_age_months * by_major_author + cue_type , 
+    V = d_var_calc, 
+    random = ~ 1 | short_cite/same_infant/unique_row, 
+    method = "REML", 
+    data = gf_d) %>% 
+  tidy()
+```
+
+# Mispronunciation sensitivity 
+
+```{r}
+ms_d <- all_nested_d %>% 
+filter(ds_clean == "Mispronunciation sensitivity", major_author == "Swingley") %>% 
+  unnest(data) 
+
+
+ms_d %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author))+
+    geom_point() + 
+    geom_smooth(method = "lm")
+```
+
+```{r}
+ms_d
+```
+
+
+really doesn't see much that's off 
+
+```{r}
+ms_m <- c("long_cite", "by_major_author", "response_mode", "exposure_phase", "method", 
+          "CorrectPronunciation", "Mispronunciation", "is_correct", "n_feature", "type_feature", 
+          "mispron_location")
+
+visualize_method_diff(ms_d, ms_m)
+```
+
