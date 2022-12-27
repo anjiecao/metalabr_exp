@@ -19,6 +19,295 @@ d <- read_csv(here("data/clean_data.csv"))
 author_d <- read_csv(here("data/clean_author.csv"))
 ```
 
+
+# Visuralization
+
+
+## Abstract rule learning"  
+
+```{r}
+visualize_major_author_effect(d, "Abstract rule learning", author_d)
+
+```
+
+## Categorization bias
+
+
+```{r}
+visualize_major_author_effect(d, "Categorization bias", author_d)
+visualize_major_author_effect(d, "Categorization bias", author_d, age_limit = TRUE)
+
+
+```
+
+## Cross-situational word learning
+
+
+
+```{r}
+visualize_major_author_effect(d,"Cross-situational word learning", author_d)
+
+visualize_major_author_effect(d,"Cross-situational word learning", author_d, TRUE)
+
+```
+
+
+## Familiar word recognition    
+
+```{r}
+visualize_major_author_effect(d,"Familiar word recognition", author_d)
+visualize_major_author_effect(d,"Familiar word recognition", author_d, TRUE)
+
+```
+
+## Gaze following (combined)
+
+methodologically moderated?
+early author???
+
+```{r}
+visualize_major_author_effect(d,"Gaze following (combined)", author_d)
+visualize_major_author_effect(d,"Gaze following (combined)", author_d, TRUE)
+
+
+```
+
+## Infant directed speech preference 
+
+first proxy for mean age months, not accurate
+
+method? 
+non-native langauge?
+
+```{r}
+
+
+ids_author <- author_d %>% 
+  filter(percent_by_author > .15) %>% 
+  filter(ds_clean == "Infant directed speech preference")
+  
+  
+
+ids <- lapply(ids_author$author_clean, 
+       function(name){
+         
+         d %>% 
+          filter(ds_clean == "Infant directed speech preference") %>% 
+          mutate(
+          by_major_author = case_when(
+             grepl(name, long_cite) ~ "yes", 
+             !grepl(name, long_cite) ~ "no"
+            )
+          ) %>% 
+  #filter(ds_clean %in% c("Mispronunciation sensitivity", "Prosocial agents")) %>% 
+          #filter(mean_age_months < 36) %>% 
+          mutate(major_author = name)
+                 
+       }) %>% 
+  bind_rows()
+ 
+
+ids %>% 
+  filter(mean_age_months < 12) %>% 
+   ggplot(aes(x = mean_age_months, y = d, color = by_major_author))+
+          geom_point() + 
+          geom_smooth(method = "lm") + 
+  facet_wrap(~major_author) + 
+  labs(title ="Infant directed speech preference") 
+
+```
+
+
+## Label advantage in concept learning         
+
+```{r}
+visualize_major_author_effect(d,"Label advantage in concept learning", author_d)
+visualize_major_author_effect(d,"Label advantage in concept learning", author_d, TRUE)
+
+```
+
+## Language discrimination and preference
+
+
+
+```{r}
+visualize_major_author_effect(d,"Language discrimination and preference", author_d)
+visualize_major_author_effect(d,"Language discrimination and preference", author_d, TRUE)
+
+```
+
+## Mispronunciation sensitivity
+
+```{r}
+visualize_major_author_effect(d,"Mispronunciation sensitivity" , author_d)
+visualize_major_author_effect(d,"Mispronunciation sensitivity" , author_d, TRUE)
+```
+
+
+
+## Mutual exclusivity
+
+```{r}
+visualize_major_author_effect(d,"Mutual exclusivity"  , author_d)
+visualize_major_author_effect(d,"Mutual exclusivity"  , author_d, TRUE)
+
+```
+
+## Natural speech preference 
+ 
+```{r}
+visualize_major_author_effect(d,"Natural speech preference"  , author_d)
+visualize_major_author_effect(d,"Natural speech preference"  , author_d, TRUE)
+
+
+```
+ 
+## Online word recognition       
+
+```{r}
+visualize_major_author_effect(d,"Online word recognition"  , author_d)
+visualize_major_author_effect(d,"Online word recognition"  , author_d, TRUE)
+
+```
+
+## Prosocial Agents
+
+doesn't have long cite so can only rely on Hamlin
+
+```{r}
+d %>%
+  filter(ds_clean == "Prosocial agents") %>% 
+  mutate(hamlin_lab = ifelse(Hamlin_Lab == 1, "by_hamlin", "not_by_hamlin")) %>% 
+   ggplot(aes(x = mean_age_months, y = d_calc, color = hamlin_lab, group = hamlin_lab))+
+          geom_point() + 
+          geom_smooth(method = "lm") +
+  labs(title ="Prosocial agents")
+```
+
+
+## Simple arithmetic competences"     
+
+```{r}
+visualize_major_author_effect(d,"Simple arithmetic competences" , author_d)
+visualize_major_author_effect(d,"Simple arithmetic competences" , author_d, TRUE)
+
+
+```
+
+## sound symbolism
+
+```{r}
+visualize_major_author_effect(d,"Sound symbolism" , author_d)
+visualize_major_author_effect(d,"Sound symbolism" , author_d, TRUE)
+
+```
+
+## Statistical sound category learning (habituation)
+
+```{r}
+
+
+
+sscl_d <- author_d %>% 
+  filter(percent_by_author > .15) %>% 
+  filter(ds_clean == "Statistical sound category learning (habituation)") %>% 
+  mutate(author_clean = case_when(
+    author_clean == "vanZuijen" ~ "van Zuijen", 
+    author_clean == "MayeJ" ~ "Maye J", 
+    author_clean == "WeissDJ" ~ "Weiss DJ", 
+    TRUE ~ author_clean 
+  ))
+  
+  
+sscl_d <- lapply(sscl_d$author_clean, 
+       function(name){
+         d %>% 
+          filter(ds_clean == "Statistical sound category learning (habituation)") %>% 
+          mutate(
+          by_major_author = case_when(
+             grepl(name, long_cite) ~ "yes", 
+             !grepl(name, long_cite) ~ "no"
+            )
+          ) %>%
+          mutate(major_author = name)
+       }) %>% 
+  bind_rows()
+
+
+sscl_d %>% 
+   ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author))+
+          geom_point() + 
+          geom_smooth(method = "lm") + 
+  facet_wrap(~major_author) + 
+  labs(title ="Mispronunciation sensitivity")
+
+
+```
+
+
+## Statistical word segmentation    
+
+```{r}
+visualize_major_author_effect(d,"Statistical word segmentation" , author_d)
+visualize_major_author_effect(d,"Statistical word segmentation" , author_d, TRUE)
+
+```
+
+
+## Switch task
+
+```{r}
+visualize_major_author_effect(d,"Switch task" , author_d)
+visualize_major_author_effect(d,"Switch task" , author_d, TRUE)
+
+```
+
+## Symbolic play
+
+```{r}
+visualize_major_author_effect(d,"Symbolic play" , author_d)
+visualize_major_author_effect(d,"Symbolic play" , author_d, TRUE)
+
+```
+
+## Syntactic bootstrapping
+ 
+```{r}
+visualize_major_author_effect(d,"Syntactic bootstrapping" , author_d)
+visualize_major_author_effect(d,"Syntactic bootstrapping" , author_d, TRUE)
+
+```
+
+## Vowel discrimination (native)
+
+```{r}
+visualize_major_author_effect(d,"Vowel discrimination (native)" , author_d)
+visualize_major_author_effect(d,"Vowel discrimination (native)" , author_d, TRUE)
+
+```
+
+## Vowel discrimination (non-native)
+
+odd datapoints?
+
+```{r}
+visualize_major_author_effect(d,"Vowel discrimination (non-native)" , author_d)
+visualize_major_author_effect(d,"Vowel discrimination (non-native)" , author_d, TRUE)
+
+
+```
+
+## Word Segmentation (combined)
+
+```{r}
+visualize_major_author_effect(d,"Word Segmentation (combined)" , author_d)
+visualize_major_author_effect(d,"Word Segmentation (combined)" , author_d, TRUE)
+
+```
+
+
+
+
 # run all the lm
 
 ```{r}
@@ -45,29 +334,6 @@ missing_info_ds <- d %>%
   pull(ds_clean)
 ```
 
-
-## regular models 
-
-```{r}
-all_models_res <- all_nested_d %>% 
-  filter(!major_author %in% c("…SweigWilson", "deVilliers", "Fernald","GrafEstes"
-                              )) %>% 
-  filter(!is.na(major_author) & ds_clean != "Prosocial Agents") %>% 
-  mutate(mod = map(data, function (df) lm(d_calc ~ mean_age_months * by_major_author,
-                                  data = df)), 
-  tidy = map(mod, broom::tidy)) %>% 
-  select(-mod, -data) %>% 
-  unnest(tidy)
-```
-
-```{r}
-all_models_res %>% 
-  filter(p.value < 0.05) %>% 
-  filter(grepl("author", term))
-```
-
-
-## fancy rma model
 
 ```{r}
 all_rma_models <- all_nested_d %>% 
@@ -125,7 +391,10 @@ all_nested_d %>%
     facet_wrap(ds_clean~major_author)
 ```
 
-# look at specific datasets 
+
+# Method check 
+
+could method variation explain the major eauthor effect? 
 
 ## Abstract rule learning + Ferguson
 
@@ -261,7 +530,7 @@ rma.mv(
   tidy()
 ```
 
-# Mispronunciation sensitivity 
+## Mispronunciation sensitivity 
 
 ```{r}
 ms_d <- all_nested_d %>% 

@@ -104,226 +104,38 @@ trimmed_data <- trimmed_data %>%
   filter(infant_type_clincal == "typical")
 ```
 
-
-
-
-
-
-# basic stats 
-
-## n of effect size 
+## 5. fix issue wrt the author exploration 
 
 ```{r}
-trimmed_data %>% 
-  group_by(ds_clean) %>% 
-  count() %>% 
-  ggplot(aes(x = reorder(ds_clean, -n), y = n)) + 
-  geom_point()+ 
-  theme_classic() + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+pre_trimmed_data <- trimmed_data %>% 
+  filter(!ds_clean %in% c("Infant directed speech preference",
+                          "Prosocial Agents"
+                          ))
+
+# fix one by one 
+ids_clean <- trimmed_data %>% 
+  filter(ds_clean == "Infant directed speech preference") %>% 
+  mutate(mean_age_months = mean_age_1 / 30.44, 
+         d_calc = d, 
+         d_var_calc = d_var)
+
+pa_clean <- trimmed_data %>% 
+  filter(ds_clean == "Prosocial Agents") %>% 
+  mutate(by_major_author = ifelse(Hamlin_Lab == 1, "yes", "no"), 
+         major_author = "hamlin") 
+
+final_trimmed_data <- pre_trimmed_data %>% bind_rows(ids_clean) %>% 
+  bind_rows(pa_clean)
+
+write_csv(final_trimmed_data, here("data/clean_data.csv"))
 ```
 
 
-## n sample sizes 
+## 6. supplementary dataset on author 
 
 ```{r}
-trimmed_n <- trimmed_data %>% 
-  mutate(n_2 = ifelse(is.na(n_2), 0, n_2)) %>% 
-  distinct(ds_clean, same_infant, n_1, n_2) %>% 
-  mutate(total_infants = n_1 + n_2) %>% 
-  group_by(ds_clean) %>% 
-  summarise(n = sum(total_infants)) %>% 
-  arrange(n) 
-
-trimmed_n %>% 
-  ggplot(aes(reorder(ds_clean,-n), n)) + 
-  geom_point() + 
-  theme_classic() + 
-  theme() + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-```
-
-do we worry about the potential outliers here? ds that has small effect size n but contributes a lot of sample n? 
-
-```{r}
-trimmed_data %>% 
-  group_by(ds_clean) %>% 
-  count() %>% 
-  rename(effect_size_n = n) %>% 
-  left_join(trimmed_n %>% rename(sample_size = n), by = "ds_clean") %>% 
-  ggplot(aes(x = effect_size_n, 
-             y = sample_size)) + 
-  geom_point() + 
-  geom_smooth(method = "lm")
-
-```
-
-
-## method distribution 
-
-
-### response mode 
-
-```{r}
-trimmed_data %>% 
-  group_by(ds_clean, response_mode) %>% 
-  count() %>% 
-  ungroup() %>% 
-  left_join(
-    trimmed_data %>% 
-  group_by(ds_clean) %>% summarise(n_row = n()), 
-  by = "ds_clean"
-  ) %>% 
-  mutate(proportion_response_mode = n/ n_row) %>% 
-  
-  ggplot(aes(x = reorder(response_mode, -proportion_response_mode), y = proportion_response_mode)) + 
-  geom_point() + 
-  facet_wrap(~ds_clean) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
-        strip.text.x = element_text(size = 7)) + 
-  labs(title = "Response mode")
-```
-
-### method
-
-```{r}
-trimmed_data %>% 
-  group_by(ds_clean, method) %>% 
-  count() %>% 
-  ungroup() %>% 
-  left_join(
-    trimmed_data %>% 
-  group_by(ds_clean) %>% summarise(n_row = n()), 
-  by = "ds_clean"
-  ) %>% 
-  mutate(proportion_method = n/ n_row) %>% 
-  
-  ggplot(aes(x = reorder(method, -proportion_method), y = proportion_method)) + 
-  geom_point() + 
-  facet_wrap(~ds_clean) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
-        strip.text.x = element_text(size = 7)) + 
-  labs(title = "method")
-```
-
-
-### dependent_measure 
-
-```{r}
-trimmed_data %>% 
-  group_by(ds_clean, dependent_measure) %>% 
-  count() %>% 
-  ungroup() %>% 
-  left_join(
-    trimmed_data %>% 
-  group_by(ds_clean) %>% summarise(n_row = n()), 
-  by = "ds_clean"
-  ) %>% 
-  mutate(proportion_dm = n/ n_row) %>% 
-  ggplot(aes(x = dependent_measure, y = proportion_dm)) + 
-  geom_point() + 
-  facet_wrap(~ds_clean) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
-        strip.text.x = element_text(size = 7)) + 
-  labs(title = "dependent_measure")
-```
-
-
-### coded: looking 
-
-```{r}
-filter(trimmed_data, 
-       mean_age_months < 36) %>%
-  ggplot(aes(x = mean_age_months, y = d_calc, 
-             weight = 1/d_var_calc)) +
-  geom_point(aes(size = 1/d_var_calc,  
-             color = looking),
-             alpha = .3) + 
-  facet_wrap(~ ds_clean) + 
-  geom_hline(yintercept = 0, lty = 2, col = "black") + 
-  xlab("Mean age (months)") +
-  ylab("Effect size (d)") +
-  ggthemes::theme_few()
-```
-
-### coded: behavioral_measure
-
-```{r}
-filter(trimmed_data, 
-       mean_age_months < 36) %>%
-  ggplot(aes(x = mean_age_months, y = d_calc, 
-             weight = 1/d_var_calc)) +
-  geom_point(aes(size = 1/d_var_calc,  
-             color = behavioral_measure),
-             alpha = .3) + 
-  facet_wrap(~ ds_clean) + 
-  geom_hline(yintercept = 0, lty = 2, col = "black") + 
-  xlab("Mean age (months)") +
-  ylab("Effect size (d)") +
-  ggthemes::theme_few()
-
-filter(trimmed_data, 
-       mean_age_months < 36) %>%
-  ggplot(aes(x = mean_age_months, y = d_calc, 
-             weight = 1/d_var_calc)) +
-  geom_point(aes(size = 1/d_var_calc,  
-             color = behavioral_measure),
-             alpha = .3 
-            ) + 
-  geom_hline(yintercept = 0, lty = 2, col = "black") + 
-  xlab("Mean age (months)") +
-  ylab("Effect size (d)") +
-  ggthemes::theme_few()
-```
-
-
-### fam vs hab vs test only 
-
-```{r}
-filter(trimmed_data, 
-       mean_age_months < 36)  %>% 
-  filter(exposure_phase %in% c("familiarization", "habituation", "test_only"), 
-         looking == "yes") %>% 
-  ggplot(aes(x = mean_age_months, y = d_calc, 
-             weight = 1/d_var_calc)) +
-  geom_point(aes(size = 1/d_var_calc,  
-             color = exposure_phase),
-             alpha = .3) + 
-  facet_wrap( ~ ds_clean) + 
-  geom_hline(yintercept = 0, lty = 2, col = "black") + 
-  xlab("Mean age (months)") +
-  ylab("Effect size (d)") +
-  ggthemes::theme_few()
-```
-
-
-
-
-
-## publicaion year? 
-
-citation density?
-
-
-```{r}
-trimmed_data  %>% 
-  ggplot(aes(x = year, y = d_calc, color = publication_type)) +
-  geom_point() + 
-  facet_wrap( ~ ds_clean) + 
-  geom_hline(yintercept = 0, lty = 2, col = "black") + 
-  xlab("publishing year") +
-  ylab("Effect size (d)") +
-  ggthemes::theme_few() 
-```
-
-# really curious about the first author thing
-
-parsing the first author string 
-
-```{r}
-# parsed the author name to be in a list
-author_list_draft <- (trimmed_data %>% 
+author_list_draft <- (final_trimmed_data %>% 
   distinct(ds_clean, long_cite) %>%
   rowwise() %>% 
   mutate(new_long_cite = sub("\\(.*", "", long_cite), 
@@ -340,19 +152,14 @@ author_list_clean <- lapply(author_list_wo_initial, function(list_of_name){
   
 })
 
-ds_for_author <- trimmed_data %>% distinct(ds_clean, long_cite)
+ds_for_author <- final_trimmed_data %>% distinct(ds_clean, long_cite)
 ds_for_author$author_clean <- author_list_clean
 
 
 ds_for_author <- ds_for_author %>% unnest(author_clean)
-```
 
 
-```{r}
-# count how many papers in total 
-	
-
-ds_author_percent <- trimmed_data %>% 
+ds_author_percent <- final_trimmed_data %>% 
   left_join(ds_for_author, by = c("ds_clean", "long_cite")) %>% 
   group_by(ds_clean, author_clean) %>% 
   count() %>% 
@@ -372,69 +179,8 @@ ds_author_percent <- trimmed_data %>%
     TRUE ~ author_clean
     
   )) %>% 
-  left_join(trimmed_data %>% group_by(ds_clean) %>% count() %>% rename(n_effect_size = n), by = "ds_clean") %>% 
+  left_join(final_trimmed_data %>% group_by(ds_clean) %>% count() %>% rename(n_effect_size = n), by = "ds_clean") %>% 
   mutate(percent_by_author = n / n_effect_size) 
-
-
-ds_author_percent%>% 
-  ggplot(aes(x = author_clean, y = percent_by_author)) + 
-  geom_point() + 
-  geom_hline(yintercept = 0.15) + 
-  facet_wrap(~ds_clean)
-```
-
-
-
-## deep dive into author that's associated with > .15 effect sizes 
-
-```{r}
-get_major_author_effect <- function(ds_name, ds_author_percent, age_limit = FALSE){
-  d <- ds_author_percent %>% 
-  filter(percent_by_author > .15) %>% 
-  filter(ds_clean == ds_name) 
-  
-  
-major_authors_ds <- lapply(d$author_clean, 
-       function(name){
-         trimmed_data %>% 
-          filter(ds_clean == ds_name) %>% 
-          mutate(
-          by_major_author = case_when(
-             grepl(name, long_cite) ~ "yes", 
-             !grepl(name, long_cite) ~ "no"
-            )
-          ) %>% 
-  #filter(ds_clean %in% c("Mispronunciation sensitivity", "Prosocial agents")) %>% 
-          #filter(mean_age_months < 36) %>% 
-          mutate(major_author = name)
-       }) %>% 
-  bind_rows()
-  
-  if (age_limit){
-    major_authors_ds <- major_authors_ds %>% filter(mean_age_months < 36)
-  }
-    
-
-
-major_authors_ds %>% 
-   ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author))+
-          geom_point() + 
-          geom_smooth(method = "lm") + 
-  facet_wrap(~major_author) + 
-  labs(title =ds_name)
-}
-```
-
-
-## cleaning dataset
-
-DONE"Infant directed speech preference"
-DONE"Language discrimination and preference"
-DONE"Mispronunciation sensitivity"
-DONE"Prosocial Agents" 
-"Statistical sound category learning (habituation)"
-
-```{r}
 
 
 clean_ds_author_percent <- ds_author_percent %>% 
@@ -448,505 +194,214 @@ clean_ds_author_percent <- ds_author_percent %>%
   )
   
 
-good_data <- trimmed_data %>% 
-  filter(!ds_clean %in% c("Infant directed speech preference",
-                          "Prosocial Agents"
-                          ))
-
-# fix one by one 
-ids_clean <- trimmed_data %>% 
-  filter(ds_clean == "Infant directed speech preference") %>% 
-  mutate(mean_age_months = mean_age_1 / 30.44, 
-         d_calc = d, 
-         d_var_calc = d_var)
-
-pa_clean <- trimmed_data %>% 
-  filter(ds_clean == "Prosocial Agents") %>% 
-  mutate(by_major_author = ifelse(Hamlin_Lab == 1, "yes", "no"), 
-         major_author = "hamlin") 
-
-good_data <- bind_rows(
-  good_data, 
-  ids_clean, 
-  pa_clean
-)
-
 write_csv(clean_ds_author_percent, here("data/clean_author.csv"))
-write_csv(good_data, here("data/clean_data.csv"))
-
 ```
 
 
-## nesting dataset
+# basic stats 
+
+## n of effect size 
 
 ```{r}
-get_major_author_ds <- function(ds_name, ds_author_percent, age_limit = FALSE){
-  d <- ds_author_percent %>% 
-  filter(percent_by_author > .15) %>% 
-  filter(ds_clean == ds_name) 
-  
-  
-major_authors_ds <- lapply(d$author_clean, 
-       function(name){
-         trimmed_data %>% 
-          filter(ds_clean == ds_name) %>% 
-          mutate(
-          by_major_author = case_when(
-             grepl(name, long_cite) ~ "yes", 
-             !grepl(name, long_cite) ~ "no"
-            )
-          ) %>% 
-  #filter(ds_clean %in% c("Mispronunciation sensitivity", "Prosocial agents")) %>% 
-          #filter(mean_age_months < 36) %>% 
-          mutate(major_author = name)
-       }) %>% 
-  bind_rows()
-
-  return(major_authors_ds)
-  
-
-}
-
-get_major_author_ds("Abstract rule learning", ds_author_percent) %>% 
-  group_by(major_author) %>% 
-  nest() %>% 
-  mutate(mod = map(data, function (df) lm(d_calc ~ mean_age_months * by_major_author,
-                                  data = df)), 
-  tidy = map(mod, broom::tidy)) %>% 
-  select(-mod, -data) %>% 
-  unnest(tidy)
+final_trimmed_data %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  ggplot(aes(x = reorder(ds_clean, -n), y = n)) + 
+  geom_point()+ 
+  theme_classic() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
 
-
-
-
-
-
-### "Abstract rule learning"  
+## n sample sizes 
 
 ```{r}
-get_major_author_effect("Abstract rule learning", ds_author_percent)
-
-```
-
-### "Categorization bias"     
-
-research methods
-
-```{r}
-get_major_author_effect("Categorization bias", ds_author_percent)
-get_major_author_effect("Categorization bias", ds_author_percent, age_limit = TRUE)
-
-
-```
-
-### "Cross-situational word learning"
-
-
-
-```{r}
-get_major_author_effect("Cross-situational word learning", ds_author_percent)
-
-get_major_author_effect("Cross-situational word learning", ds_author_percent, TRUE)
-
-```
-
-
-### "Familiar word recognition"            
-
-```{r}
-get_major_author_effect("Familiar word recognition", ds_author_percent)
-get_major_author_effect("Familiar word recognition", ds_author_percent, TRUE)
-
-```
-
-### "Gaze following (combined)"
-
-methodologically moderated?
-early author???
-
-```{r}
-get_major_author_effect("Gaze following (combined)", ds_author_percent)
-get_major_author_effect("Gaze following (combined)", ds_author_percent, TRUE)
-
-
-```
-
-### Infant directed speech preference 
-
-first proxy for mean age months, not accurate
-
-method? 
-non-native langauge?
-
-```{r}
-
-
-d <- ds_author_percent %>% 
-  filter(percent_by_author > .15) %>% 
-  filter(ds_clean == "Infant directed speech preference")
-  
-  
-
-ids <- lapply(d$author_clean, 
-       function(name){
-         
-         trimmed_data %>% 
-          filter(ds_clean == "Infant directed speech preference") %>% 
-          mutate(
-          by_major_author = case_when(
-             grepl(name, long_cite) ~ "yes", 
-             !grepl(name, long_cite) ~ "no"
-            )
-          ) %>% 
-  #filter(ds_clean %in% c("Mispronunciation sensitivity", "Prosocial agents")) %>% 
-          #filter(mean_age_months < 36) %>% 
-          mutate(major_author = name)
-                 
-       }) %>% 
-  bind_rows() %>% 
-  mutate(mean_age_months = mean_age_1 / 30.44)
- 
-
-ids %>% 
-  filter(mean_age_months < 12) %>% 
-   ggplot(aes(x = mean_age_months, y = d, color = by_major_author))+
-          geom_point() + 
-          geom_smooth(method = "lm") + 
-  facet_wrap(~major_author) + 
-  labs(title ="Infant directed speech preference") 
-
-```
-
-
-### "Label advantage in concept learning"            
-
-```{r}
-get_major_author_effect("Label advantage in concept learning", ds_author_percent)
-get_major_author_effect("Label advantage in concept learning", ds_author_percent, TRUE)
-
-```
-
-### "Language discrimination and preference"
-
-```{r}
- d <- ds_author_percent %>% 
-  filter(percent_by_author > .15) %>% 
-  filter(ds_clean == "Language discrimination and preference")
-  
-
-trimmed_data %>% 
-      filter(ds_clean == "Language discrimination and preference") %>% 
-      mutate(
-          by_major_author = case_when(
-             grepl("Sebastian-Galles", long_cite) ~ "yes", 
-             !grepl("Sebastian-Galles", long_cite) ~ "no"
-            )
-          ) %>% 
-  mutate(major_author = "Sebastian-Galles") %>% 
-   ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author))+
-          geom_point() + 
-          geom_smooth(method = "lm") + 
-  facet_wrap(~major_author) + 
-  labs(title ="Language discrimination and preference")
-```
-
-
-```{r}
-get_major_author_effect("Language discrimination and preference", ds_author_percent)
-get_major_author_effect("Language discrimination and preference", ds_author_percent, TRUE)
-
-```
-
-### "Mispronunciation sensitivity"
-
-some parsing failure of author names
-
-look at plunkett& mani; priming?
-
-```{r}
-
-
-
-ms_d %>% 
-   ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author))+
-          geom_point() + 
-          geom_smooth(method = "lm") + 
-  facet_wrap(~major_author) + 
-  labs(title ="Mispronunciation sensitivity")
-
-get_major_author_effect("Mispronunciation sensitivity" , ds_author_percent)
-get_major_author_effect("Mispronunciation sensitivity" , ds_author_percent, TRUE)
-
-
-```
-
-
-
-### "Mutual exclusivity"  
-
-```{r}
-get_major_author_effect("Mutual exclusivity"  , ds_author_percent)
-get_major_author_effect("Mutual exclusivity"  , ds_author_percent, TRUE)
-
-
-```
-
-### "Natural speech preference" 
- 
-```{r}
-get_major_author_effect("Natural speech preference"  , ds_author_percent)
-get_major_author_effect("Natural speech preference"  , ds_author_percent, TRUE)
-
-
-```
- 
-### "Online word recognition"         
-
-```{r}
-get_major_author_effect("Online word recognition"  , ds_author_percent)
-get_major_author_effect("Online word recognition"  , ds_author_percent, TRUE)
-
-```
-
-### "Prosocial Agents"
-
-doesn't have long cite so can only rely on Hamlin
-
-```{r}
-trimmed_data %>%
-  filter(ds_clean == "Prosocial agents") %>% 
-  mutate(hamlin_lab = ifelse(Hamlin_Lab == 1, "by_hamlin", "not_by_hamlin")) %>% 
-   ggplot(aes(x = mean_age_months, y = d_calc, color = hamlin_lab, group = hamlin_lab))+
-          geom_point() + 
-          geom_smooth(method = "lm") +
-  labs(title ="Prosocial agents")
-```
-
-
-                                
-### "Simple arithmetic competences"     
-
-```{r}
-get_major_author_effect("Simple arithmetic competences" , ds_author_percent)
-get_major_author_effect("Simple arithmetic competences" , ds_author_percent, TRUE)
-
-
-```
-
-### "Sound symbolism"
-
-```{r}
-get_major_author_effect("Sound symbolism" , ds_author_percent)
-get_major_author_effect("Sound symbolism" , ds_author_percent, TRUE)
-
-```
-
-
-
-### "Statistical sound category learning (habituation)"
-
-```{r}
-
-
-
-sscl_d <- ds_author_percent %>% 
-  filter(percent_by_author > .15) %>% 
-  filter(ds_clean == "Statistical sound category learning (habituation)") %>% 
-  mutate(author_clean = case_when(
-    author_clean == "vanZuijen" ~ "van Zuijen", 
-    author_clean == "MayeJ" ~ "Maye J", 
-    author_clean == "WeissDJ" ~ "Weiss DJ", 
-    TRUE ~ author_clean 
-  ))
-  
-  
-sscl_d <- lapply(sscl_d$author_clean, 
-       function(name){
-         trimmed_data %>% 
-          filter(ds_clean == "Statistical sound category learning (habituation)") %>% 
-          mutate(
-          by_major_author = case_when(
-             grepl(name, long_cite) ~ "yes", 
-             !grepl(name, long_cite) ~ "no"
-            )
-          ) %>%
-          mutate(major_author = name)
-       }) %>% 
-  bind_rows()
-
-
-sscl_d %>% 
-   ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author))+
-          geom_point() + 
-          geom_smooth(method = "lm") + 
-  facet_wrap(~major_author) + 
-  labs(title ="Mispronunciation sensitivity")
-
-
-```
-
-
-### "Statistical word segmentation"    
-
-```{r}
-get_major_author_effect("Statistical word segmentation" , ds_author_percent)
-get_major_author_effect("Statistical word segmentation" , ds_author_percent, TRUE)
-
-```
-### "Switch task"
-
-```{r}
-get_major_author_effect("Switch task" , ds_author_percent)
-get_major_author_effect("Switch task" , ds_author_percent, TRUE)
-
-```
-
-### "Symbolic play"
-
-```{r}
-get_major_author_effect("Symbolic play" , ds_author_percent)
-get_major_author_effect("Symbolic play" , ds_author_percent, TRUE)
-
-```
-
-### "Syntactic bootstrapping"      
- 
-```{r}
-get_major_author_effect("Syntactic bootstrapping" , ds_author_percent)
-get_major_author_effect("Syntactic bootstrapping" , ds_author_percent, TRUE)
-
-```
-
-### "Vowel discrimination (native)" 
-
-```{r}
-get_major_author_effect("Vowel discrimination (native)" , ds_author_percent)
-get_major_author_effect("Vowel discrimination (native)" , ds_author_percent, TRUE)
-
-```
-
-### "Vowel discrimination (non-native)" 
-
-odd datapoints?
-
-```{r}
-get_major_author_effect("Vowel discrimination (non-native)" , ds_author_percent)
-get_major_author_effect("Vowel discrimination (non-native)" , ds_author_percent, TRUE)
-
-
-```
-
-### "Word Segmentation (combined)"
-
-```{r}
-get_major_author_effect("Word Segmentation (combined)" , ds_author_percent)
-get_major_author_effect("Word Segmentation (combined)" , ds_author_percent, TRUE)
-
-```
-
-
-- add methods to major author models?
-
-
-- dataset:
-  - expertise effect? 
-  - citation network?
-  - moderated by methods? 
-  
-- api for pubmed scopus rscopus 
-- degree of centrality? 
-  
-
-
-
-
-```{r}
-
-trimmed_data %>% 
-  left_join(author_list_df, by = "ds_clean") %>% 
-  rowwise() %>% 
-  mutate(
-    by_major_author = case_when(
-      (ds_clean != "Prosocial agents") & grepl(author_clean, long_cite) ~ "yes", 
-      (ds_clean != "Prosocial agents") & !grepl(author_clean, long_cite) ~ "no",
-       (ds_clean == "Prosocial agents") & Hamlin_Lab == 1 ~ "yes", 
-      (ds_clean == "Prosocial agents") & Hamlin_Lab == 0 ~ "no"
-    )
-  ) %>% 
-  #filter(ds_clean %in% c("Mispronunciation sensitivity", "Prosocial agents")) %>% 
-  filter(mean_age_months < 36) %>% 
-  ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author)) +
+trimmed_n <- final_trimmed_data %>% 
+  mutate(n_2 = ifelse(is.na(n_2), 0, n_2)) %>% 
+  distinct(ds_clean, same_infant, n_1, n_2) %>% 
+  mutate(total_infants = n_1 + n_2) %>% 
+  group_by(ds_clean) %>% 
+  summarise(n = sum(total_infants)) %>% 
+  arrange(n) 
+
+trimmed_n %>% 
+  ggplot(aes(reorder(ds_clean,-n), n)) + 
   geom_point() + 
-  geom_smooth(method = "lm")+ 
-  facet_wrap( ~ ds_clean) + 
-  geom_hline(yintercept = 0, lty = 2, col = "black") + 
-  xlab("publishing year") +
-  ylab("Effect size (d)") +
-  ggthemes::theme_few() 
+  theme_classic() + 
+  theme() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
 ```
 
-
-
+do we worry about the potential outliers here? ds that has small effect size n but contributes a lot of sample n? 
 
 ```{r}
-author <- read_csv(here("data/first_author.csv"))
-
-
-trimmed_data %>% 
-  left_join(author, by = "ds_clean") %>% 
-  rowwise() %>% 
-  mutate(
-    by_major_author = case_when(
-      (ds_clean != "Prosocial agents") & grepl(major_author, long_cite) ~ "yes", 
-      (ds_clean != "Prosocial agents") & !grepl(major_author, long_cite) ~ "no",
-       (ds_clean == "Prosocial agents") & Hamlin_Lab == 1 ~ "yes", 
-      (ds_clean == "Prosocial agents") & Hamlin_Lab == 0 ~ "no"
-    )
-  ) %>% 
-  #filter(ds_clean %in% c("Mispronunciation sensitivity", "Prosocial agents")) %>% 
-  filter(mean_age_months < 36) %>% 
-  ggplot(aes(x = mean_age_months, y = d_calc, color = by_major_author)) +
+final_trimmed_data %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  rename(effect_size_n = n) %>% 
+  left_join(trimmed_n %>% rename(sample_size = n), by = "ds_clean") %>% 
+  ggplot(aes(x = effect_size_n, 
+             y = sample_size)) + 
   geom_point() + 
-  geom_smooth(method = "lm")+ 
-  facet_wrap( ~ ds_clean) + 
-  geom_hline(yintercept = 0, lty = 2, col = "black") + 
-  xlab("publishing year") +
-  ylab("Effect size (d)") +
-  ggthemes::theme_few() 
+  geom_smooth(method = "lm")
+
 ```
 
 
+## method distribution 
 
 
+### response mode 
 
 ```{r}
-filter(d, 
+final_trimmed_data %>% 
+  group_by(ds_clean, response_mode) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(
+    final_trimmed_data %>% 
+  group_by(ds_clean) %>% summarise(n_row = n()), 
+  by = "ds_clean"
+  ) %>% 
+  mutate(proportion_response_mode = n/ n_row) %>% 
+  
+  ggplot(aes(x = reorder(response_mode, -proportion_response_mode), y = proportion_response_mode)) + 
+  geom_point() + 
+  facet_wrap(~ds_clean) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        strip.text.x = element_text(size = 7)) + 
+  labs(title = "Response mode")
+```
+
+### method
+
+```{r}
+final_trimmed_data %>% 
+  group_by(ds_clean, method) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(
+    final_trimmed_data %>% 
+  group_by(ds_clean) %>% summarise(n_row = n()), 
+  by = "ds_clean"
+  ) %>% 
+  mutate(proportion_method = n/ n_row) %>% 
+  
+  ggplot(aes(x = reorder(method, -proportion_method), y = proportion_method)) + 
+  geom_point() + 
+  facet_wrap(~ds_clean) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        strip.text.x = element_text(size = 7)) + 
+  labs(title = "method")
+```
+
+
+### dependent_measure 
+
+```{r}
+final_trimmed_data %>% 
+  group_by(ds_clean, dependent_measure) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(
+    final_trimmed_data %>% 
+  group_by(ds_clean) %>% summarise(n_row = n()), 
+  by = "ds_clean"
+  ) %>% 
+  mutate(proportion_dm = n/ n_row) %>% 
+  ggplot(aes(x = dependent_measure, y = proportion_dm)) + 
+  geom_point() + 
+  facet_wrap(~ds_clean) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        strip.text.x = element_text(size = 7)) + 
+  labs(title = "dependent_measure")
+```
+
+
+### coded: looking 
+
+```{r}
+filter(final_trimmed_data, 
        mean_age_months < 36) %>%
   ggplot(aes(x = mean_age_months, y = d_calc, 
              weight = 1/d_var_calc)) +
-  geom_point(aes(size = 1/d_var_calc),
+  geom_point(aes(size = 1/d_var_calc,  
+             color = looking),
              alpha = .3) + 
-  geom_smooth(method="lm", formula = y ~ x, 
-              aes(col = "Linear"), 
-              se = FALSE) + 
-  geom_smooth(method="lm", formula = y ~ log(x), 
-              aes(col = "Log"),
-              se = FALSE) + 
-  geom_smooth(method="lm", formula = y ~ I(x^2),
-              aes(col = "Quadratic"),
-              se = FALSE) +
   facet_wrap(~ ds_clean) + 
   geom_hline(yintercept = 0, lty = 2, col = "black") + 
   xlab("Mean age (months)") +
   ylab("Effect size (d)") +
-  scale_colour_solarized(name="Models", breaks = c("Linear", "Log",
-                                                "Quadratic", "Linear and Log"),
-                                     labels=c("Linear" = "Linear",
-                                              "Log" = "Log",
-                                              "Quadratic" = "Quadratic",
-                                              "Linear and Log" = "Linear and Log")) +
   ggthemes::theme_few()
 ```
 
+### coded: behavioral_measure
+
+```{r}
+filter(final_trimmed_data, 
+       mean_age_months < 36) %>%
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc,  
+             color = behavioral_measure),
+             alpha = .3) + 
+  facet_wrap(~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few()
+
+filter(final_trimmed_data, 
+       mean_age_months < 36) %>%
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc,  
+             color = behavioral_measure),
+             alpha = .3 
+            ) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few()
+```
+
+
+### fam vs hab vs test only 
+
+```{r}
+filter(final_trimmed_data, 
+       mean_age_months < 36)  %>% 
+  filter(exposure_phase %in% c("familiarization", "habituation", "test_only"), 
+         looking == "yes") %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc,  
+             color = exposure_phase),
+             alpha = .3) + 
+  facet_wrap( ~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few()
+```
+
+
+
+
+
+## publicaion year
+
+citation density?
+
+
+```{r}
+final_trimmed_data  %>% 
+  ggplot(aes(x = year, y = d_calc, color = publication_type)) +
+  geom_point() + 
+  facet_wrap( ~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("publishing year") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few() 
+```

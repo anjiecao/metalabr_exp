@@ -58,46 +58,46 @@ Categorization bias,Sachs,1,80,0.0125
 Categorization bias,Scott,8,80,0.1
 Categorization bias,Waxman,36,80,0.45
 Categorization bias,Weis,1,80,0.0125
-Cross-situational word learning,…SweigWilson,9,50,0.18
-Cross-situational word learning,Aravind,9,50,0.18
-Cross-situational word learning,Arenas,4,50,0.08
-Cross-situational word learning,Bunce,3,50,0.06
-Cross-situational word learning,Christiansen,2,50,0.04
-Cross-situational word learning,DeBrock,2,50,0.04
-Cross-situational word learning,deVilliers,9,50,0.18
-Cross-situational word learning,Dye,3,50,0.06
-Cross-situational word learning,Escudero,2,50,0.04
-Cross-situational word learning,Farris-Trimble,4,50,0.08
-Cross-situational word learning,Filippi,4,50,0.08
-Cross-situational word learning,Fisher,3,50,0.06
-Cross-situational word learning,Fitch,4,50,0.08
-Cross-situational word learning,Fitneva,2,50,0.04
-Cross-situational word learning,Gleitman,2,50,0.04
-Cross-situational word learning,Golinkoff,9,50,0.18
-Cross-situational word learning,Hirsh-Pasek,9,50,0.18
-Cross-situational word learning,Hu,4,50,0.08
-Cross-situational word learning,Johnson,4,50,0.08
-Cross-situational word learning,Klein,3,50,0.06
-Cross-situational word learning,Laaha,4,50,0.08
-Cross-situational word learning,McGregor,4,50,0.08
-Cross-situational word learning,McMurray,2,50,0.04
-Cross-situational word learning,Mugwanya,3,50,0.06
-Cross-situational word learning,Mulak,2,50,0.04
-Cross-situational word learning,Namy,3,50,0.06
-Cross-situational word learning,Pace,9,50,0.18
-Cross-situational word learning,Ramscar,3,50,0.06
-Cross-situational word learning,Roembke,2,50,0.04
-Cross-situational word learning,Rost,4,50,0.08
-Cross-situational word learning,Scott,6,50,0.12
-Cross-situational word learning,Smith,3,50,0.06
-Cross-situational word learning,Stiles,4,50,0.08
-Cross-situational word learning,Suanda,3,50,0.06
-Cross-situational word learning,Trueswell,2,50,0.04
-Cross-situational word learning,Valentine,9,50,0.18
-Cross-situational word learning,Vlach,8,50,0.16
-Cross-situational word learning,Wiggs,2,50,0.04
-Cross-situational word learning,Woodard,2,50,0.04
-Cross-situational word learning,Yu,3,50,0.06
+Cross-situational word learning,…SweigWilson,9,48,0.1875
+Cross-situational word learning,Aravind,9,48,0.1875
+Cross-situational word learning,Arenas,2,48,0.041666666666666664
+Cross-situational word learning,Bunce,3,48,0.0625
+Cross-situational word learning,Christiansen,2,48,0.041666666666666664
+Cross-situational word learning,DeBrock,2,48,0.041666666666666664
+Cross-situational word learning,deVilliers,9,48,0.1875
+Cross-situational word learning,Dye,3,48,0.0625
+Cross-situational word learning,Escudero,2,48,0.041666666666666664
+Cross-situational word learning,Farris-Trimble,2,48,0.041666666666666664
+Cross-situational word learning,Filippi,4,48,0.08333333333333333
+Cross-situational word learning,Fisher,3,48,0.0625
+Cross-situational word learning,Fitch,4,48,0.08333333333333333
+Cross-situational word learning,Fitneva,2,48,0.041666666666666664
+Cross-situational word learning,Gleitman,2,48,0.041666666666666664
+Cross-situational word learning,Golinkoff,9,48,0.1875
+Cross-situational word learning,Hirsh-Pasek,9,48,0.1875
+Cross-situational word learning,Hu,4,48,0.08333333333333333
+Cross-situational word learning,Johnson,4,48,0.08333333333333333
+Cross-situational word learning,Klein,3,48,0.0625
+Cross-situational word learning,Laaha,4,48,0.08333333333333333
+Cross-situational word learning,McGregor,2,48,0.041666666666666664
+Cross-situational word learning,McMurray,2,48,0.041666666666666664
+Cross-situational word learning,Mugwanya,3,48,0.0625
+Cross-situational word learning,Mulak,2,48,0.041666666666666664
+Cross-situational word learning,Namy,3,48,0.0625
+Cross-situational word learning,Pace,9,48,0.1875
+Cross-situational word learning,Ramscar,3,48,0.0625
+Cross-situational word learning,Roembke,2,48,0.041666666666666664
+Cross-situational word learning,Rost,2,48,0.041666666666666664
+Cross-situational word learning,Scott,6,48,0.125
+Cross-situational word learning,Smith,3,48,0.0625
+Cross-situational word learning,Stiles,2,48,0.041666666666666664
+Cross-situational word learning,Suanda,3,48,0.0625
+Cross-situational word learning,Trueswell,2,48,0.041666666666666664
+Cross-situational word learning,Valentine,9,48,0.1875
+Cross-situational word learning,Vlach,8,48,0.16666666666666666
+Cross-situational word learning,Wiggs,2,48,0.041666666666666664
+Cross-situational word learning,Woodard,2,48,0.041666666666666664
+Cross-situational word learning,Yu,3,48,0.0625
 Familiar word recognition,Best,1,34,0.029411764705882353
 Familiar word recognition,Bouchon,3,34,0.08823529411764706
 Familiar word recognition,Bywater,2,34,0.058823529411764705
@@ -126,107 +126,105 @@ Familiar word recognition,Thierry,10,34,0.29411764705882354
 Familiar word recognition,Tyler,1,34,0.029411764705882353
 Familiar word recognition,vanHeugten,1,34,0.029411764705882353
 Familiar word recognition,Vihman,16,34,0.47058823529411764
-Gaze following (combined),Astor,9,85,0.10588235294117647
-Gaze following (combined),Bedford,2,85,0.023529411764705882
-Gaze following (combined),Block,4,85,0.047058823529411764
-Gaze following (combined),Broesch,2,85,0.023529411764705882
-Gaze following (combined),Brooks,9,85,0.10588235294117647
-Gaze following (combined),Butler,8,85,0.09411764705882353
-Gaze following (combined),Call,2,85,0.023529411764705882
-Gaze following (combined),Card,2,85,0.023529411764705882
-Gaze following (combined),Caron,8,85,0.09411764705882353
-Gaze following (combined),Charman,10,85,0.11764705882352941
-Gaze following (combined),Cillessen,4,85,0.047058823529411764
-Gaze following (combined),Cox,4,85,0.047058823529411764
-Gaze following (combined),Crowson,1,85,0.011764705882352941
-Gaze following (combined),Csibra,4,85,0.047058823529411764
-Gaze following (combined),deBordes,4,85,0.047058823529411764
-Gaze following (combined),DeGroote,3,85,0.03529411764705882
-Gaze following (combined),Delgado,15,85,0.17647058823529413
-Gaze following (combined),Elsabbagh,6,85,0.07058823529411765
-Gaze following (combined),Fawcett,8,85,0.09411764705882353
-Gaze following (combined),Forssman,2,85,0.023529411764705882
-Gaze following (combined),Fox,2,85,0.023529411764705882
-Gaze following (combined),Fransson,2,85,0.023529411764705882
-Gaze following (combined),Ganea,4,85,0.047058823529411764
-Gaze following (combined),Gliga,2,85,0.023529411764705882
-Gaze following (combined),Gomes,2,85,0.023529411764705882
-Gaze following (combined),Gredebäck,16,85,0.18823529411764706
-Gaze following (combined),Hasselman,4,85,0.047058823529411764
-Gaze following (combined),Hauf,4,85,0.047058823529411764
-Gaze following (combined),Hernik,2,85,0.023529411764705882
-Gaze following (combined),Hudry,8,85,0.09411764705882353
-Gaze following (combined),Ishiguro,3,85,0.03529411764705882
-Gaze following (combined),Ishikawa,3,85,0.03529411764705882
-Gaze following (combined),Itakura,14,85,0.16470588235294117
-Gaze following (combined),Johnson,10,85,0.11764705882352941
-Gaze following (combined),Kanakogi,11,85,0.12941176470588237
-Gaze following (combined),Kanda,3,85,0.03529411764705882
-Gaze following (combined),Kano,2,85,0.023529411764705882
-Gaze following (combined),Kenward,6,85,0.07058823529411765
-Gaze following (combined),Kobayashi,8,85,0.09411764705882353
-Gaze following (combined),Lindskog,2,85,0.023529411764705882
-Gaze following (combined),Markus,3,85,0.03529411764705882
-Gaze following (combined),Meltzoff,1,85,0.011764705882352941
-Gaze following (combined),Messinger,7,85,0.08235294117647059
-Gaze following (combined),Morales,10,85,0.11764705882352941
-Gaze following (combined),Mundy,19,85,0.2235294117647059
-Gaze following (combined),Neal,8,85,0.09411764705882353
-Gaze following (combined),Okumura,11,85,0.12941176470588237
-Gaze following (combined),Parlade,4,85,0.047058823529411764
-Gaze following (combined),Pasco,4,85,0.047058823529411764
-Gaze following (combined),Pickles,2,85,0.023529411764705882
-Gaze following (combined),Pomares,4,85,0.047058823529411764
-Gaze following (combined),Roeyers,3,85,0.03529411764705882
-Gaze following (combined),Rohlfing,5,85,0.058823529411764705
-Gaze following (combined),Schwartz,9,85,0.10588235294117647
-Gaze following (combined),Senju,14,85,0.16470588235294117
-Gaze following (combined),Skalkidou,2,85,0.023529411764705882
-Gaze following (combined),Striano,3,85,0.03529411764705882
-Gaze following (combined),Szufnarowska,5,85,0.058823529411764705
-Gaze following (combined),Theuring,4,85,0.047058823529411764
-Gaze following (combined),Tucker,8,85,0.09411764705882353
-Gaze following (combined),VanHecke,4,85,0.047058823529411764
-Gaze following (combined),Vernetti,4,85,0.047058823529411764
-Gaze following (combined),Yale,11,85,0.12941176470588237
-Infant directed speech preference,Cooper,13,88,0.14772727272727273
-Infant directed speech preference,Curtin,8,88,0.09090909090909091
-Infant directed speech preference,Droucker,8,88,0.09090909090909091
-Infant directed speech preference,Goldstein,4,88,0.045454545454545456
-Infant directed speech preference,Hayashi,3,88,0.03409090909090909
-Infant directed speech preference,Huckeby,4,88,0.045454545454545456
-Infant directed speech preference,Inoue,2,88,0.022727272727272728
-Infant directed speech preference,Kaplan,4,88,0.045454545454545456
-Infant directed speech preference,Koga,2,88,0.022727272727272728
-Infant directed speech preference,Kondou,2,88,0.022727272727272728
-Infant directed speech preference,Nakagawa,2,88,0.022727272727272728
-Infant directed speech preference,Newman,10,88,0.11363636363636363
-Infant directed speech preference,Owren,2,88,0.022727272727272728
-Infant directed speech preference,Pegg,4,88,0.045454545454545456
-Infant directed speech preference,Robertson,2,88,0.022727272727272728
-Infant directed speech preference,Schachner,2,88,0.022727272727272728
-Infant directed speech preference,Segal,4,88,0.045454545454545456
-Infant directed speech preference,Shinohara,2,88,0.022727272727272728
-Infant directed speech preference,Singh,14,88,0.1590909090909091
-Infant directed speech preference,trainor,1,88,0.011363636363636364
-Infant directed speech preference,Trainor,6,88,0.06818181818181818
-Infant directed speech preference,Werker,15,88,0.17045454545454544
-Infant directed speech preference,NA,4,88,0.045454545454545456
-Label advantage in concept learning,Althaus,3,102,0.029411764705882353
-Label advantage in concept learning,Balaban,7,102,0.06862745098039216
-Label advantage in concept learning,Booth,28,102,0.27450980392156865
-Label advantage in concept learning,Braun,3,102,0.029411764705882353
-Label advantage in concept learning,Deng,4,102,0.0392156862745098
-Label advantage in concept learning,Ferguson,4,102,0.0392156862745098
-Label advantage in concept learning,Ferry,10,102,0.09803921568627451
-Label advantage in concept learning,Fulkerson,28,102,0.27450980392156865
-Label advantage in concept learning,Haaf,24,102,0.23529411764705882
-Label advantage in concept learning,Hespos,10,102,0.09803921568627451
-Label advantage in concept learning,Perszyk,2,102,0.0196078431372549
-Label advantage in concept learning,Plunkett,3,102,0.029411764705882353
-Label advantage in concept learning,Robinson,12,102,0.11764705882352941
-Label advantage in concept learning,Sloutsky,12,102,0.11764705882352941
-Label advantage in concept learning,Waxman,59,102,0.5784313725490197
+Gaze following (combined),Astor,9,81,0.1111111111111111
+Gaze following (combined),Bedford,2,81,0.024691358024691357
+Gaze following (combined),Block,4,81,0.04938271604938271
+Gaze following (combined),Broesch,2,81,0.024691358024691357
+Gaze following (combined),Brooks,9,81,0.1111111111111111
+Gaze following (combined),Butler,8,81,0.09876543209876543
+Gaze following (combined),Call,2,81,0.024691358024691357
+Gaze following (combined),Card,2,81,0.024691358024691357
+Gaze following (combined),Caron,8,81,0.09876543209876543
+Gaze following (combined),Charman,6,81,0.07407407407407407
+Gaze following (combined),Cillessen,4,81,0.04938271604938271
+Gaze following (combined),Cox,4,81,0.04938271604938271
+Gaze following (combined),Crowson,1,81,0.012345679012345678
+Gaze following (combined),Csibra,4,81,0.04938271604938271
+Gaze following (combined),deBordes,4,81,0.04938271604938271
+Gaze following (combined),DeGroote,3,81,0.037037037037037035
+Gaze following (combined),Delgado,15,81,0.18518518518518517
+Gaze following (combined),Elsabbagh,4,81,0.04938271604938271
+Gaze following (combined),Fawcett,8,81,0.09876543209876543
+Gaze following (combined),Forssman,2,81,0.024691358024691357
+Gaze following (combined),Fox,2,81,0.024691358024691357
+Gaze following (combined),Fransson,2,81,0.024691358024691357
+Gaze following (combined),Ganea,2,81,0.024691358024691357
+Gaze following (combined),Gliga,2,81,0.024691358024691357
+Gaze following (combined),Gomes,2,81,0.024691358024691357
+Gaze following (combined),Gredebäck,16,81,0.19753086419753085
+Gaze following (combined),Hasselman,4,81,0.04938271604938271
+Gaze following (combined),Hauf,4,81,0.04938271604938271
+Gaze following (combined),Hernik,2,81,0.024691358024691357
+Gaze following (combined),Hudry,4,81,0.04938271604938271
+Gaze following (combined),Ishiguro,3,81,0.037037037037037035
+Gaze following (combined),Ishikawa,3,81,0.037037037037037035
+Gaze following (combined),Itakura,14,81,0.1728395061728395
+Gaze following (combined),Johnson,6,81,0.07407407407407407
+Gaze following (combined),Kanakogi,11,81,0.13580246913580246
+Gaze following (combined),Kanda,3,81,0.037037037037037035
+Gaze following (combined),Kano,2,81,0.024691358024691357
+Gaze following (combined),Kenward,6,81,0.07407407407407407
+Gaze following (combined),Kobayashi,8,81,0.09876543209876543
+Gaze following (combined),Lindskog,2,81,0.024691358024691357
+Gaze following (combined),Markus,3,81,0.037037037037037035
+Gaze following (combined),Meltzoff,1,81,0.012345679012345678
+Gaze following (combined),Messinger,7,81,0.08641975308641975
+Gaze following (combined),Morales,10,81,0.12345679012345678
+Gaze following (combined),Mundy,19,81,0.2345679012345679
+Gaze following (combined),Neal,8,81,0.09876543209876543
+Gaze following (combined),Okumura,11,81,0.13580246913580246
+Gaze following (combined),Parlade,4,81,0.04938271604938271
+Gaze following (combined),Pasco,2,81,0.024691358024691357
+Gaze following (combined),Pickles,2,81,0.024691358024691357
+Gaze following (combined),Pomares,4,81,0.04938271604938271
+Gaze following (combined),Roeyers,3,81,0.037037037037037035
+Gaze following (combined),Rohlfing,5,81,0.06172839506172839
+Gaze following (combined),Schwartz,9,81,0.1111111111111111
+Gaze following (combined),Senju,10,81,0.12345679012345678
+Gaze following (combined),Skalkidou,2,81,0.024691358024691357
+Gaze following (combined),Striano,3,81,0.037037037037037035
+Gaze following (combined),Szufnarowska,5,81,0.06172839506172839
+Gaze following (combined),Theuring,4,81,0.04938271604938271
+Gaze following (combined),Tucker,4,81,0.04938271604938271
+Gaze following (combined),VanHecke,4,81,0.04938271604938271
+Gaze following (combined),Vernetti,2,81,0.024691358024691357
+Gaze following (combined),Yale,11,81,0.13580246913580246
+Infant directed speech preference,Cooper,13,83,0.1566265060240964
+Infant directed speech preference,Curtin,4,83,0.04819277108433735
+Infant directed speech preference,Droucker,4,83,0.04819277108433735
+Infant directed speech preference,Goldstein,4,83,0.04819277108433735
+Infant directed speech preference,Hayashi,3,83,0.03614457831325301
+Infant directed speech preference,Huckeby,4,83,0.04819277108433735
+Infant directed speech preference,Inoue,2,83,0.024096385542168676
+Infant directed speech preference,Kaplan,4,83,0.04819277108433735
+Infant directed speech preference,Koga,2,83,0.024096385542168676
+Infant directed speech preference,Kondou,2,83,0.024096385542168676
+Infant directed speech preference,Nakagawa,2,83,0.024096385542168676
+Infant directed speech preference,Newman,10,83,0.12048192771084337
+Infant directed speech preference,Owren,2,83,0.024096385542168676
+Infant directed speech preference,Pegg,4,83,0.04819277108433735
+Infant directed speech preference,Robertson,2,83,0.024096385542168676
+Infant directed speech preference,Schachner,2,83,0.024096385542168676
+Infant directed speech preference,Segal,4,83,0.04819277108433735
+Infant directed speech preference,Shinohara,2,83,0.024096385542168676
+Infant directed speech preference,Singh,14,83,0.1686746987951807
+Infant directed speech preference,Trainor,6,83,0.07228915662650602
+Infant directed speech preference,Werker,15,83,0.18072289156626506
+Infant directed speech preference,NA,4,83,0.04819277108433735
+Label advantage in concept learning,Althaus,3,100,0.03
+Label advantage in concept learning,Balaban,7,100,0.07
+Label advantage in concept learning,Booth,28,100,0.28
+Label advantage in concept learning,Braun,3,100,0.03
+Label advantage in concept learning,Deng,4,100,0.04
+Label advantage in concept learning,Ferguson,2,100,0.02
+Label advantage in concept learning,Ferry,10,100,0.1
+Label advantage in concept learning,Fulkerson,28,100,0.28
+Label advantage in concept learning,Haaf,24,100,0.24
+Label advantage in concept learning,Hespos,10,100,0.1
+Label advantage in concept learning,Plunkett,3,100,0.03
+Label advantage in concept learning,Robinson,12,100,0.12
+Label advantage in concept learning,Sloutsky,12,100,0.12
+Label advantage in concept learning,Waxman,57,100,0.57
 Language discrimination and preference,Amiel-Tison,14,153,0.0915032679738562
 Language discrimination and preference,Ashida,1,153,0.006535947712418301
 Language discrimination and preference,Bahrick,1,153,0.006535947712418301
@@ -309,138 +307,135 @@ Language discrimination and preference,Werker,9,153,0.058823529411764705
 Language discrimination and preference,White,7,153,0.0457516339869281
 Language discrimination and preference,XuRattanasone,4,153,0.026143790849673203
 Language discrimination and preference,NA,2,153,0.013071895424836602
-Mispronunciation sensitivity,Altvater-Mackensen,13,251,0.05179282868525897
-Mispronunciation sensitivity,Aslin,10,251,0.0398406374501992
-Mispronunciation sensitivity,Ballem,3,251,0.01195219123505976
-Mispronunciation sensitivity,Basbøll,6,251,0.02390438247011952
-Mispronunciation sensitivity,Bergelson,9,251,0.035856573705179286
-Mispronunciation sensitivity,Bernier,4,251,0.01593625498007968
-Mispronunciation sensitivity,Blese,6,251,0.02390438247011952
-Mispronunciation sensitivity,Bosch,18,251,0.07171314741035857
-Mispronunciation sensitivity,Cabrol,4,251,0.01593625498007968
-Mispronunciation sensitivity,Caporali,6,251,0.02390438247011952
-Mispronunciation sensitivity,Cattani,4,251,0.01593625498007968
-Mispronunciation sensitivity,Coleman,4,251,0.01593625498007968
-Mispronunciation sensitivity,DelleLuche,8,251,0.03187250996015936
-Mispronunciation sensitivity,Durrant,8,251,0.03187250996015936
-Mispronunciation sensitivity,Floccia,8,251,0.03187250996015936
-Mispronunciation sensitivity,Frauenfelder,6,251,0.02390438247011952
-Mispronunciation sensitivity,Höhle,4,251,0.01593625498007968
-Mispronunciation sensitivity,Højen,6,251,0.02390438247011952
-Mispronunciation sensitivity,Jöhr,8,251,0.03187250996015936
-Mispronunciation sensitivity,Levy,6,251,0.02390438247011952
-Mispronunciation sensitivity,Lozeron,6,251,0.02390438247011952
-Mispronunciation sensitivity,Madsen,6,251,0.02390438247011952
-Mispronunciation sensitivity,Mani,45,251,0.17928286852589642
-Mispronunciation sensitivity,Morgan,20,251,0.0796812749003984
-Mispronunciation sensitivity,Peperkamp,4,251,0.01593625498007968
-Mispronunciation sensitivity,Plunkett,54,251,0.2151394422310757
-Mispronunciation sensitivity,Poltrock,4,251,0.01593625498007968
-Mispronunciation sensitivity,Qinmei,10,251,0.0398406374501992
-Mispronunciation sensitivity,Ramon-Casas,18,251,0.07171314741035857
-Mispronunciation sensitivity,Ren,8,251,0.03187250996015936
-Mispronunciation sensitivity,Sebastian-Gallés,14,251,0.055776892430278883
-Mispronunciation sensitivity,Singh,8,251,0.03187250996015936
-Mispronunciation sensitivity,Skoruppa,4,251,0.01593625498007968
-Mispronunciation sensitivity,Swingley,48,251,0.19123505976095617
-Mispronunciation sensitivity,Tamasi,4,251,0.01593625498007968
-Mispronunciation sensitivity,Tao,10,251,0.0398406374501992
-Mispronunciation sensitivity,Vach,6,251,0.02390438247011952
-Mispronunciation sensitivity,VanderFeest,16,251,0.06374501992031872
-Mispronunciation sensitivity,vandeVijver,4,251,0.01593625498007968
-Mispronunciation sensitivity,Weissenborn,4,251,0.01593625498007968
-Mispronunciation sensitivity,Wewalaarachchi,8,251,0.03187250996015936
-Mispronunciation sensitivity,White,20,251,0.0796812749003984
-Mispronunciation sensitivity,Wong,8,251,0.03187250996015936
-Mispronunciation sensitivity,Zesiger,14,251,0.055776892430278883
-Mispronunciation sensitivity,NA,39,251,0.1553784860557769
-Mutual exclusivity,Allen,1,146,0.00684931506849315
-Mutual exclusivity,Baker,1,146,0.00684931506849315
-Mutual exclusivity,Bedford,2,146,0.0136986301369863
-Mutual exclusivity,Behrend,1,146,0.00684931506849315
-Mutual exclusivity,Bertrand,2,146,0.0136986301369863
-Mutual exclusivity,Beverly,7,146,0.04794520547945205
-Mutual exclusivity,Bion,3,146,0.02054794520547945
-Mutual exclusivity,Borovsky,3,146,0.02054794520547945
-Mutual exclusivity,Broekman,3,146,0.02054794520547945
-Mutual exclusivity,Byers-Heinlein,1,146,0.00684931506849315
-Mutual exclusivity,Byers-Heinlein,3,146,0.02054794520547945
-Mutual exclusivity,Caloghiris,2,146,0.0136986301369863
-Mutual exclusivity,Carey,2,146,0.0136986301369863
-Mutual exclusivity,Chandler,2,146,0.0136986301369863
-Mutual exclusivity,Choi,2,146,0.0136986301369863
-Mutual exclusivity,Chong,3,146,0.02054794520547945
-Mutual exclusivity,Collins,3,146,0.02054794520547945
-Mutual exclusivity,Davidson,6,146,0.0410958904109589
-Mutual exclusivity,Deak,2,146,0.0136986301369863
-Mutual exclusivity,deMarchena,2,146,0.0136986301369863
-Mutual exclusivity,Diesendruck,2,146,0.0136986301369863
-Mutual exclusivity,Eigsti,2,146,0.0136986301369863
-Mutual exclusivity,Estis,4,146,0.0273972602739726
-Mutual exclusivity,Evey,6,146,0.0410958904109589
-Mutual exclusivity,Fernald,3,146,0.02054794520547945
-Mutual exclusivity,Frame,2,146,0.0136986301369863
-Mutual exclusivity,Frank,16,146,0.1095890410958904
-Mutual exclusivity,Gliga,5,146,0.03424657534246575
-Mutual exclusivity,Gollek,4,146,0.0273972602739726
-Mutual exclusivity,Graham,4,146,0.0273972602739726
-Mutual exclusivity,Grassmann,5,146,0.03424657534246575
-Mutual exclusivity,Halberda,5,146,0.03424657534246575
-Mutual exclusivity,Horowitz,12,146,0.0821917808219178
-Mutual exclusivity,Horst,8,146,0.0547945205479452
-Mutual exclusivity,Houston-Price,2,146,0.0136986301369863
-Mutual exclusivity,Hudry,2,146,0.0136986301369863
-Mutual exclusivity,Imami,6,146,0.0410958904109589
-Mutual exclusivity,Jarvis,1,146,0.00684931506849315
-Mutual exclusivity,Jergovic,6,146,0.0410958904109589
-Mutual exclusivity,Johnson,2,146,0.0136986301369863
-Mutual exclusivity,Kalashnikova,4,146,0.0273972602739726
-Mutual exclusivity,Kwek,3,146,0.02054794520547945
-Mutual exclusivity,Lam,3,146,0.02054794520547945
-Mutual exclusivity,Lederberg,6,146,0.0410958904109589
-Mutual exclusivity,Lewis,12,146,0.0821917808219178
-Mutual exclusivity,Li,3,146,0.02054794520547945
-Mutual exclusivity,Marazita,5,146,0.03424657534246575
-Mutual exclusivity,Markman,2,146,0.0136986301369863
-Mutual exclusivity,Markson,2,146,0.0136986301369863
-Mutual exclusivity,Mather,4,146,0.0273972602739726
-Mutual exclusivity,Mattock,4,146,0.0273972602739726
-Mutual exclusivity,Merriman,38,146,0.2602739726027397
-Mutual exclusivity,Mervis,2,146,0.0136986301369863
-Mutual exclusivity,Momen,2,146,0.0136986301369863
-Mutual exclusivity,Monaghan,3,146,0.02054794520547945
-Mutual exclusivity,Morgan,3,146,0.02054794520547945
-Mutual exclusivity,Namy,1,146,0.00684931506849315
-Mutual exclusivity,Nilsen,3,146,0.02054794520547945
-Mutual exclusivity,Olineck,3,146,0.02054794520547945
-Mutual exclusivity,Ono,2,146,0.0136986301369863
-Mutual exclusivity,Pettit,2,146,0.0136986301369863
-Mutual exclusivity,Plunkett,4,146,0.0273972602739726
-Mutual exclusivity,Pollard,3,146,0.02054794520547945
-Mutual exclusivity,Poulin-Dubois,1,146,0.00684931506849315
-Mutual exclusivity,Preissler,2,146,0.0136986301369863
-Mutual exclusivity,Prezbindowski,1,146,0.00684931506849315
-Mutual exclusivity,Raviglione,2,146,0.0136986301369863
-Mutual exclusivity,Samuelson,5,146,0.03424657534246575
-Mutual exclusivity,Schulze,3,146,0.02054794520547945
-Mutual exclusivity,Schuster,8,146,0.0547945205479452
-Mutual exclusivity,Scofield,3,146,0.02054794520547945
-Mutual exclusivity,Scott,3,146,0.02054794520547945
-Mutual exclusivity,Snedeker,2,146,0.0136986301369863
-Mutual exclusivity,Spencer,6,146,0.0410958904109589
-Mutual exclusivity,Spiegel,1,146,0.00684931506849315
-Mutual exclusivity,Suanda,2,146,0.0136986301369863
-Mutual exclusivity,Sugarman,12,146,0.0821917808219178
-Mutual exclusivity,Theodos,6,146,0.0410958904109589
-Mutual exclusivity,Tomasello,2,146,0.0136986301369863
-Mutual exclusivity,Wachtel,2,146,0.0136986301369863
-Mutual exclusivity,Werker,4,146,0.0273972602739726
-Mutual exclusivity,White,3,146,0.02054794520547945
-Mutual exclusivity,Williams,4,146,0.0273972602739726
-Mutual exclusivity,Worek,2,146,0.0136986301369863
-Mutual exclusivity,Yen,2,146,0.0136986301369863
-Mutual exclusivity,Yow,3,146,0.02054794520547945
-Mutual exclusivity,Yurovsky,12,146,0.0821917808219178
+Mispronunciation sensitivity,Altvater-Mackensen,13,249,0.05220883534136546
+Mispronunciation sensitivity,Aslin,10,249,0.040160642570281124
+Mispronunciation sensitivity,Ballem,3,249,0.012048192771084338
+Mispronunciation sensitivity,Basbøll,6,249,0.024096385542168676
+Mispronunciation sensitivity,Bergelson,9,249,0.03614457831325301
+Mispronunciation sensitivity,Bernier,4,249,0.01606425702811245
+Mispronunciation sensitivity,Blese,6,249,0.024096385542168676
+Mispronunciation sensitivity,Bosch,18,249,0.07228915662650602
+Mispronunciation sensitivity,Cabrol,4,249,0.01606425702811245
+Mispronunciation sensitivity,Caporali,6,249,0.024096385542168676
+Mispronunciation sensitivity,Cattani,4,249,0.01606425702811245
+Mispronunciation sensitivity,Coleman,4,249,0.01606425702811245
+Mispronunciation sensitivity,DelleLuche,8,249,0.0321285140562249
+Mispronunciation sensitivity,Durrant,8,249,0.0321285140562249
+Mispronunciation sensitivity,Floccia,8,249,0.0321285140562249
+Mispronunciation sensitivity,Frauenfelder,6,249,0.024096385542168676
+Mispronunciation sensitivity,Höhle,2,249,0.008032128514056224
+Mispronunciation sensitivity,Højen,6,249,0.024096385542168676
+Mispronunciation sensitivity,Jöhr,8,249,0.0321285140562249
+Mispronunciation sensitivity,Levy,6,249,0.024096385542168676
+Mispronunciation sensitivity,Lozeron,6,249,0.024096385542168676
+Mispronunciation sensitivity,Madsen,6,249,0.024096385542168676
+Mispronunciation sensitivity,Mani,45,249,0.18072289156626506
+Mispronunciation sensitivity,Morgan,20,249,0.08032128514056225
+Mispronunciation sensitivity,Peperkamp,4,249,0.01606425702811245
+Mispronunciation sensitivity,Plunkett,54,249,0.21686746987951808
+Mispronunciation sensitivity,Poltrock,4,249,0.01606425702811245
+Mispronunciation sensitivity,Qinmei,10,249,0.040160642570281124
+Mispronunciation sensitivity,Ramon-Casas,18,249,0.07228915662650602
+Mispronunciation sensitivity,Ren,8,249,0.0321285140562249
+Mispronunciation sensitivity,Sebastian-Gallés,14,249,0.05622489959839357
+Mispronunciation sensitivity,Singh,8,249,0.0321285140562249
+Mispronunciation sensitivity,Skoruppa,4,249,0.01606425702811245
+Mispronunciation sensitivity,Swingley,48,249,0.1927710843373494
+Mispronunciation sensitivity,Tamasi,4,249,0.01606425702811245
+Mispronunciation sensitivity,Tao,10,249,0.040160642570281124
+Mispronunciation sensitivity,Vach,6,249,0.024096385542168676
+Mispronunciation sensitivity,VanderFeest,16,249,0.0642570281124498
+Mispronunciation sensitivity,vandeVijver,2,249,0.008032128514056224
+Mispronunciation sensitivity,Weissenborn,2,249,0.008032128514056224
+Mispronunciation sensitivity,Wewalaarachchi,8,249,0.0321285140562249
+Mispronunciation sensitivity,White,20,249,0.08032128514056225
+Mispronunciation sensitivity,Wong,8,249,0.0321285140562249
+Mispronunciation sensitivity,Zesiger,14,249,0.05622489959839357
+Mispronunciation sensitivity,NA,39,249,0.1566265060240964
+Mutual exclusivity,Allen,1,131,0.007633587786259542
+Mutual exclusivity,Baker,1,131,0.007633587786259542
+Mutual exclusivity,Bedford,1,131,0.007633587786259542
+Mutual exclusivity,Behrend,1,131,0.007633587786259542
+Mutual exclusivity,Bertrand,1,131,0.007633587786259542
+Mutual exclusivity,Beverly,4,131,0.030534351145038167
+Mutual exclusivity,Bion,3,131,0.022900763358778626
+Mutual exclusivity,Borovsky,3,131,0.022900763358778626
+Mutual exclusivity,Broekman,3,131,0.022900763358778626
+Mutual exclusivity,Byers-Heinlein,1,131,0.007633587786259542
+Mutual exclusivity,Byers-Heinlein,3,131,0.022900763358778626
+Mutual exclusivity,Caloghiris,2,131,0.015267175572519083
+Mutual exclusivity,Carey,1,131,0.007633587786259542
+Mutual exclusivity,Chandler,1,131,0.007633587786259542
+Mutual exclusivity,Choi,1,131,0.007633587786259542
+Mutual exclusivity,Chong,3,131,0.022900763358778626
+Mutual exclusivity,Collins,3,131,0.022900763358778626
+Mutual exclusivity,Davidson,6,131,0.04580152671755725
+Mutual exclusivity,Deak,2,131,0.015267175572519083
+Mutual exclusivity,deMarchena,1,131,0.007633587786259542
+Mutual exclusivity,Diesendruck,2,131,0.015267175572519083
+Mutual exclusivity,Eigsti,1,131,0.007633587786259542
+Mutual exclusivity,Estis,2,131,0.015267175572519083
+Mutual exclusivity,Evey,6,131,0.04580152671755725
+Mutual exclusivity,Fernald,3,131,0.022900763358778626
+Mutual exclusivity,Frame,1,131,0.007633587786259542
+Mutual exclusivity,Frank,16,131,0.12213740458015267
+Mutual exclusivity,Gliga,4,131,0.030534351145038167
+Mutual exclusivity,Gollek,4,131,0.030534351145038167
+Mutual exclusivity,Graham,4,131,0.030534351145038167
+Mutual exclusivity,Grassmann,5,131,0.03816793893129771
+Mutual exclusivity,Halberda,5,131,0.03816793893129771
+Mutual exclusivity,Horowitz,12,131,0.0916030534351145
+Mutual exclusivity,Horst,8,131,0.061068702290076333
+Mutual exclusivity,Houston-Price,2,131,0.015267175572519083
+Mutual exclusivity,Hudry,1,131,0.007633587786259542
+Mutual exclusivity,Imami,6,131,0.04580152671755725
+Mutual exclusivity,Jarvis,1,131,0.007633587786259542
+Mutual exclusivity,Jergovic,6,131,0.04580152671755725
+Mutual exclusivity,Johnson,1,131,0.007633587786259542
+Mutual exclusivity,Kalashnikova,4,131,0.030534351145038167
+Mutual exclusivity,Kwek,3,131,0.022900763358778626
+Mutual exclusivity,Lam,3,131,0.022900763358778626
+Mutual exclusivity,Lewis,12,131,0.0916030534351145
+Mutual exclusivity,Li,3,131,0.022900763358778626
+Mutual exclusivity,Marazita,5,131,0.03816793893129771
+Mutual exclusivity,Markman,2,131,0.015267175572519083
+Mutual exclusivity,Markson,2,131,0.015267175572519083
+Mutual exclusivity,Mather,4,131,0.030534351145038167
+Mutual exclusivity,Mattock,4,131,0.030534351145038167
+Mutual exclusivity,Merriman,38,131,0.2900763358778626
+Mutual exclusivity,Mervis,1,131,0.007633587786259542
+Mutual exclusivity,Momen,2,131,0.015267175572519083
+Mutual exclusivity,Monaghan,3,131,0.022900763358778626
+Mutual exclusivity,Morgan,3,131,0.022900763358778626
+Mutual exclusivity,Namy,1,131,0.007633587786259542
+Mutual exclusivity,Nilsen,3,131,0.022900763358778626
+Mutual exclusivity,Olineck,3,131,0.022900763358778626
+Mutual exclusivity,Ono,1,131,0.007633587786259542
+Mutual exclusivity,Pettit,2,131,0.015267175572519083
+Mutual exclusivity,Plunkett,4,131,0.030534351145038167
+Mutual exclusivity,Pollard,3,131,0.022900763358778626
+Mutual exclusivity,Poulin-Dubois,1,131,0.007633587786259542
+Mutual exclusivity,Preissler,1,131,0.007633587786259542
+Mutual exclusivity,Raviglione,2,131,0.015267175572519083
+Mutual exclusivity,Samuelson,5,131,0.03816793893129771
+Mutual exclusivity,Schulze,3,131,0.022900763358778626
+Mutual exclusivity,Schuster,8,131,0.061068702290076333
+Mutual exclusivity,Scofield,3,131,0.022900763358778626
+Mutual exclusivity,Scott,3,131,0.022900763358778626
+Mutual exclusivity,Snedeker,1,131,0.007633587786259542
+Mutual exclusivity,Spiegel,1,131,0.007633587786259542
+Mutual exclusivity,Suanda,2,131,0.015267175572519083
+Mutual exclusivity,Sugarman,12,131,0.0916030534351145
+Mutual exclusivity,Theodos,6,131,0.04580152671755725
+Mutual exclusivity,Tomasello,2,131,0.015267175572519083
+Mutual exclusivity,Wachtel,2,131,0.015267175572519083
+Mutual exclusivity,Werker,4,131,0.030534351145038167
+Mutual exclusivity,White,3,131,0.022900763358778626
+Mutual exclusivity,Williams,3,131,0.022900763358778626
+Mutual exclusivity,Worek,1,131,0.007633587786259542
+Mutual exclusivity,Yen,2,131,0.015267175572519083
+Mutual exclusivity,Yow,3,131,0.022900763358778626
+Mutual exclusivity,Yurovsky,12,131,0.0916030534351145
 Natural speech preference,Bundy,1,55,0.01818181818181818
 Natural speech preference,CalignanoG,1,55,0.01818181818181818
 Natural speech preference,Colombo,1,55,0.01818181818181818
@@ -470,15 +465,15 @@ Natural speech preference,Vouloumanos,29,55,0.5272727272727272
 Natural speech preference,Werker,7,55,0.12727272727272726
 Natural speech preference,Yamashiro,1,55,0.01818181818181818
 Natural speech preference,Zettersten,3,55,0.05454545454545454
-Online word recognition,Bates,1,15,0.06666666666666667
-Online word recognition,Fernald,15,15,1
-Online word recognition,Hurtado,4,15,0.26666666666666666
-Online word recognition,Klarman,1,15,0.06666666666666667
-Online word recognition,Marchman,10,15,0.6666666666666666
-Online word recognition,Perfors,4,15,0.26666666666666666
-Online word recognition,Thal,1,15,0.06666666666666667
-Online word recognition,Weisleder,4,15,0.26666666666666666
-Online word recognition,Zangl,1,15,0.06666666666666667
+Online word recognition,Bates,1,14,0.07142857142857142
+Online word recognition,Fernald,14,14,1
+Online word recognition,Hurtado,4,14,0.2857142857142857
+Online word recognition,Klarman,1,14,0.07142857142857142
+Online word recognition,Marchman,10,14,0.7142857142857143
+Online word recognition,Perfors,4,14,0.2857142857142857
+Online word recognition,Thal,1,14,0.07142857142857142
+Online word recognition,Weisleder,4,14,0.2857142857142857
+Online word recognition,Zangl,1,14,0.07142857142857142
 Prosocial agents,NA,61,61,1
 Simple arithmetic competences,Berger,1,14,0.07142857142857142
 Simple arithmetic competences,Cocas,4,14,0.2857142857142857
@@ -739,85 +734,85 @@ Syntactic bootstrapping,Scott,2,60,0.03333333333333333
 Syntactic bootstrapping,Snedeker,10,60,0.16666666666666666
 Syntactic bootstrapping,Waxman,6,60,0.1
 Syntactic bootstrapping,Yuan,16,60,0.26666666666666666
-Vowel discrimination (native),Aaltonen,2,145,0.013793103448275862
-Vowel discrimination (native),Albareda-Castellot,15,145,0.10344827586206896
-Vowel discrimination (native),Alho,2,145,0.013793103448275862
-Vowel discrimination (native),Alku,2,145,0.013793103448275862
-Vowel discrimination (native),Amano,6,145,0.041379310344827586
-Vowel discrimination (native),AslinRN,2,145,0.013793103448275862
-Vowel discrimination (native),Benders,2,145,0.013793103448275862
-Vowel discrimination (native),Bergmann,3,145,0.020689655172413793
-Vowel discrimination (native),Bohn,22,145,0.15172413793103448
-Vowel discrimination (native),BonnCD,2,145,0.013793103448275862
-Vowel discrimination (native),Bosch,16,145,0.1103448275862069
-Vowel discrimination (native),BoschGalceran,4,145,0.027586206896551724
-Vowel discrimination (native),Ceponiene,2,145,0.013793103448275862
-Vowel discrimination (native),Cheour,2,145,0.013793103448275862
-Vowel discrimination (native),ChládkováK,2,145,0.013793103448275862
-Vowel discrimination (native),Cowan,2,145,0.013793103448275862
-Vowel discrimination (native),Cristia,8,145,0.05517241379310345
-Vowel discrimination (native),Derrah,2,145,0.013793103448275862
-Vowel discrimination (native),Desjardins,4,145,0.027586206896551724
-Vowel discrimination (native),Dietrich,6,145,0.041379310344827586
-Vowel discrimination (native),Dupoux,6,145,0.041379310344827586
-Vowel discrimination (native),Eimas,1,145,0.006896551724137931
-Vowel discrimination (native),EscuderoP,2,145,0.013793103448275862
-Vowel discrimination (native),Fais,6,145,0.041379310344827586
-Vowel discrimination (native),FiguerasMontiu,4,145,0.027586206896551724
-Vowel discrimination (native),Fikkert,5,145,0.034482758620689655
-Vowel discrimination (native),Filippin,4,145,0.027586206896551724
-Vowel discrimination (native),Furuya,5,145,0.034482758620689655
-Vowel discrimination (native),Gogate,8,145,0.05517241379310345
-Vowel discrimination (native),Hagoort,4,145,0.027586206896551724
-Vowel discrimination (native),Hallman,2,145,0.013793103448275862
-Vowel discrimination (native),Hayashi,5,145,0.034482758620689655
-Vowel discrimination (native),Houston,8,145,0.05517241379310345
-Vowel discrimination (native),Huotilainen,2,145,0.013793103448275862
-Vowel discrimination (native),Jansson-Verkalo,2,145,0.013793103448275862
-Vowel discrimination (native),Jusczyk,2,145,0.013793103448275862
-Vowel discrimination (native),Kaukola,2,145,0.013793103448275862
-Vowel discrimination (native),Koijima,4,145,0.027586206896551724
-Vowel discrimination (native),Koizumi,5,145,0.034482758620689655
-Vowel discrimination (native),Kojima,2,145,0.013793103448275862
-Vowel discrimination (native),Kuhl,5,145,0.034482758620689655
-Vowel discrimination (native),Kushnerenko,2,145,0.013793103448275862
-Vowel discrimination (native),Linda,8,145,0.05517241379310345
-Vowel discrimination (native),Liu,8,145,0.05517241379310345
-Vowel discrimination (native),Luotonen,2,145,0.013793103448275862
-Vowel discrimination (native),Marean,3,145,0.020689655172413793
-Vowel discrimination (native),Mazuka,9,145,0.06206896551724138
-Vowel discrimination (native),Miller,2,145,0.013793103448275862
-Vowel discrimination (native),Minagawa,4,145,0.027586206896551724
-Vowel discrimination (native),Minagawa-Kawai,11,145,0.07586206896551724
-Vowel discrimination (native),Mori,9,145,0.06206896551724138
-Vowel discrimination (native),Mugitani,6,145,0.041379310344827586
-Vowel discrimination (native),MulakKE,2,145,0.013793103448275862
-Vowel discrimination (native),Naatanen,2,145,0.013793103448275862
-Vowel discrimination (native),Naoi,6,145,0.041379310344827586
-Vowel discrimination (native),Nishijima,2,145,0.013793103448275862
-Vowel discrimination (native),Phan,8,145,0.05517241379310345
-Vowel discrimination (native),Pohjavuori,2,145,0.013793103448275862
-Vowel discrimination (native),Polka,22,145,0.15172413793103448
-Vowel discrimination (native),Pons,21,145,0.14482758620689656
-Vowel discrimination (native),Reinikainen,2,145,0.013793103448275862
-Vowel discrimination (native),Ruusuvirta,2,145,0.013793103448275862
-Vowel discrimination (native),Rytky,2,145,0.013793103448275862
-Vowel discrimination (native),Sainio,2,145,0.013793103448275862
-Vowel discrimination (native),Sato,14,145,0.09655172413793103
-Vowel discrimination (native),Scutellaro,4,145,0.027586206896551724
-Vowel discrimination (native),Sebastián-Gallés,17,145,0.11724137931034483
-Vowel discrimination (native),Sebastián-Gallés,14,145,0.09655172413793103
-Vowel discrimination (native),Sogabe,9,145,0.06206896551724138
-Vowel discrimination (native),Sundara,4,145,0.027586206896551724
-Vowel discrimination (native),Suomi,2,145,0.013793103448275862
-Vowel discrimination (native),Suominen,2,145,0.013793103448275862
-Vowel discrimination (native),Tolonen,2,145,0.013793103448275862
-Vowel discrimination (native),Trainor,4,145,0.027586206896551724
-Vowel discrimination (native),Trehub,4,145,0.027586206896551724
-Vowel discrimination (native),Tsuji,5,145,0.034482758620689655
-Vowel discrimination (native),Versteegh,5,145,0.034482758620689655
-Vowel discrimination (native),Werker,6,145,0.041379310344827586
-Vowel discrimination (native),Werner,3,145,0.020689655172413793
+Vowel discrimination (native),Aaltonen,2,143,0.013986013986013986
+Vowel discrimination (native),Albareda-Castellot,15,143,0.1048951048951049
+Vowel discrimination (native),Alho,2,143,0.013986013986013986
+Vowel discrimination (native),Alku,2,143,0.013986013986013986
+Vowel discrimination (native),Amano,6,143,0.04195804195804196
+Vowel discrimination (native),AslinRN,2,143,0.013986013986013986
+Vowel discrimination (native),Benders,2,143,0.013986013986013986
+Vowel discrimination (native),Bergmann,3,143,0.02097902097902098
+Vowel discrimination (native),Bohn,22,143,0.15384615384615385
+Vowel discrimination (native),BonnCD,2,143,0.013986013986013986
+Vowel discrimination (native),Bosch,16,143,0.11188811188811189
+Vowel discrimination (native),BoschGalceran,2,143,0.013986013986013986
+Vowel discrimination (native),Ceponiene,2,143,0.013986013986013986
+Vowel discrimination (native),Cheour,2,143,0.013986013986013986
+Vowel discrimination (native),ChládkováK,2,143,0.013986013986013986
+Vowel discrimination (native),Cowan,2,143,0.013986013986013986
+Vowel discrimination (native),Cristia,8,143,0.055944055944055944
+Vowel discrimination (native),Derrah,2,143,0.013986013986013986
+Vowel discrimination (native),Desjardins,4,143,0.027972027972027972
+Vowel discrimination (native),Dietrich,6,143,0.04195804195804196
+Vowel discrimination (native),Dupoux,6,143,0.04195804195804196
+Vowel discrimination (native),Eimas,1,143,0.006993006993006993
+Vowel discrimination (native),EscuderoP,2,143,0.013986013986013986
+Vowel discrimination (native),Fais,6,143,0.04195804195804196
+Vowel discrimination (native),FiguerasMontiu,2,143,0.013986013986013986
+Vowel discrimination (native),Fikkert,5,143,0.03496503496503497
+Vowel discrimination (native),Filippin,4,143,0.027972027972027972
+Vowel discrimination (native),Furuya,5,143,0.03496503496503497
+Vowel discrimination (native),Gogate,8,143,0.055944055944055944
+Vowel discrimination (native),Hagoort,4,143,0.027972027972027972
+Vowel discrimination (native),Hallman,2,143,0.013986013986013986
+Vowel discrimination (native),Hayashi,5,143,0.03496503496503497
+Vowel discrimination (native),Houston,8,143,0.055944055944055944
+Vowel discrimination (native),Huotilainen,2,143,0.013986013986013986
+Vowel discrimination (native),Jansson-Verkalo,2,143,0.013986013986013986
+Vowel discrimination (native),Jusczyk,2,143,0.013986013986013986
+Vowel discrimination (native),Kaukola,2,143,0.013986013986013986
+Vowel discrimination (native),Koijima,4,143,0.027972027972027972
+Vowel discrimination (native),Koizumi,5,143,0.03496503496503497
+Vowel discrimination (native),Kojima,2,143,0.013986013986013986
+Vowel discrimination (native),Kuhl,5,143,0.03496503496503497
+Vowel discrimination (native),Kushnerenko,2,143,0.013986013986013986
+Vowel discrimination (native),Linda,8,143,0.055944055944055944
+Vowel discrimination (native),Liu,8,143,0.055944055944055944
+Vowel discrimination (native),Luotonen,2,143,0.013986013986013986
+Vowel discrimination (native),Marean,3,143,0.02097902097902098
+Vowel discrimination (native),Mazuka,9,143,0.06293706293706294
+Vowel discrimination (native),Miller,2,143,0.013986013986013986
+Vowel discrimination (native),Minagawa,4,143,0.027972027972027972
+Vowel discrimination (native),Minagawa-Kawai,11,143,0.07692307692307693
+Vowel discrimination (native),Mori,9,143,0.06293706293706294
+Vowel discrimination (native),Mugitani,6,143,0.04195804195804196
+Vowel discrimination (native),MulakKE,2,143,0.013986013986013986
+Vowel discrimination (native),Naatanen,2,143,0.013986013986013986
+Vowel discrimination (native),Naoi,6,143,0.04195804195804196
+Vowel discrimination (native),Nishijima,2,143,0.013986013986013986
+Vowel discrimination (native),Phan,8,143,0.055944055944055944
+Vowel discrimination (native),Pohjavuori,2,143,0.013986013986013986
+Vowel discrimination (native),Polka,22,143,0.15384615384615385
+Vowel discrimination (native),Pons,21,143,0.14685314685314685
+Vowel discrimination (native),Reinikainen,2,143,0.013986013986013986
+Vowel discrimination (native),Ruusuvirta,2,143,0.013986013986013986
+Vowel discrimination (native),Rytky,2,143,0.013986013986013986
+Vowel discrimination (native),Sainio,2,143,0.013986013986013986
+Vowel discrimination (native),Sato,14,143,0.0979020979020979
+Vowel discrimination (native),Scutellaro,4,143,0.027972027972027972
+Vowel discrimination (native),Sebastián-Gallés,17,143,0.11888111888111888
+Vowel discrimination (native),Sebastián-Gallés,14,143,0.0979020979020979
+Vowel discrimination (native),Sogabe,9,143,0.06293706293706294
+Vowel discrimination (native),Sundara,4,143,0.027972027972027972
+Vowel discrimination (native),Suomi,2,143,0.013986013986013986
+Vowel discrimination (native),Suominen,2,143,0.013986013986013986
+Vowel discrimination (native),Tolonen,2,143,0.013986013986013986
+Vowel discrimination (native),Trainor,4,143,0.027972027972027972
+Vowel discrimination (native),Trehub,4,143,0.027972027972027972
+Vowel discrimination (native),Tsuji,5,143,0.03496503496503497
+Vowel discrimination (native),Versteegh,5,143,0.03496503496503497
+Vowel discrimination (native),Werker,6,143,0.04195804195804196
+Vowel discrimination (native),Werner,3,143,0.02097902097902098
 Vowel discrimination (non-native),Albareda-Castellot,1,49,0.02040816326530612
 Vowel discrimination (non-native),Alku,2,49,0.04081632653061224
 Vowel discrimination (non-native),Amano,2,49,0.04081632653061224
@@ -873,107 +868,107 @@ Vowel discrimination (non-native),Tsao,1,49,0.02040816326530612
 Vowel discrimination (non-native),Tsuji,13,49,0.2653061224489796
 Vowel discrimination (non-native),Versteegh,1,49,0.02040816326530612
 Vowel discrimination (non-native),Werker,2,49,0.04081632653061224
-Word Segmentation (combined),Alcantara,8,316,0.02531645569620253
-Word Segmentation (combined),Altvater-Mackensen,3,316,0.00949367088607595
-Word Segmentation (combined),Altvater‐Mackensen,4,316,0.012658227848101266
-Word Segmentation (combined),Babineau,5,316,0.015822784810126583
-Word Segmentation (combined),Barker,2,316,0.006329113924050633
-Word Segmentation (combined),Bartels,2,316,0.006329113924050633
-Word Segmentation (combined),Baud,2,316,0.006329113924050633
-Word Segmentation (combined),Bauman,6,316,0.0189873417721519
-Word Segmentation (combined),Berdasco‐Munoz,2,316,0.006329113924050633
-Word Segmentation (combined),Bergmann,2,316,0.006329113924050633
-Word Segmentation (combined),Bertoncini,8,316,0.02531645569620253
-Word Segmentation (combined),Biran,2,316,0.006329113924050633
-Word Segmentation (combined),Bortfeld,14,316,0.04430379746835443
-Word Segmentation (combined),Bosch,6,316,0.0189873417721519
-Word Segmentation (combined),Braun,4,316,0.012658227848101266
-Word Segmentation (combined),Butler,2,316,0.006329113924050633
-Word Segmentation (combined),Christophe,2,316,0.006329113924050633
-Word Segmentation (combined),Coolen,5,316,0.015822784810126583
-Word Segmentation (combined),Cristia,3,316,0.00949367088607595
-Word Segmentation (combined),Cruickshank,4,316,0.012658227848101266
-Word Segmentation (combined),Cutler,17,316,0.05379746835443038
-Word Segmentation (combined),Darcy,2,316,0.006329113924050633
-Word Segmentation (combined),DelleLuche,13,316,0.04113924050632911
-Word Segmentation (combined),DePaolis,13,316,0.04113924050632911
-Word Segmentation (combined),Dilley,6,316,0.0189873417721519
-Word Segmentation (combined),Duffy,13,316,0.04113924050632911
-Word Segmentation (combined),Durrant,13,316,0.04113924050632911
-Word Segmentation (combined),Figueras,6,316,0.0189873417721519
-Word Segmentation (combined),Floccia,13,316,0.04113924050632911
-Word Segmentation (combined),Frédonie,8,316,0.02531645569620253
-Word Segmentation (combined),Frota,2,316,0.006329113924050633
-Word Segmentation (combined),Gauthier,4,316,0.012658227848101266
-Word Segmentation (combined),Golinkoff,6,316,0.0189873417721519
-Word Segmentation (combined),Gonzalez-Gomez,4,316,0.012658227848101266
-Word Segmentation (combined),Goslin,13,316,0.04113924050632911
-Word Segmentation (combined),Gout,2,316,0.006329113924050633
-Word Segmentation (combined),Goyet,8,316,0.02531645569620253
-Word Segmentation (combined),Hakuno,3,316,0.00949367088607595
-Word Segmentation (combined),Haryu,5,316,0.015822784810126583
-Word Segmentation (combined),Höhle,4,316,0.012658227848101266
-Word Segmentation (combined),Hohne,6,316,0.0189873417721519
-Word Segmentation (combined),Hollich,4,316,0.012658227848101266
-Word Segmentation (combined),Houston,34,316,0.10759493670886076
-Word Segmentation (combined),Houston-Price,2,316,0.006329113924050633
-Word Segmentation (combined),Iakimova,16,316,0.05063291139240506
-Word Segmentation (combined),Johnson,20,316,0.06329113924050633
-Word Segmentation (combined),Jusczyk,60,316,0.189873417721519
-Word Segmentation (combined),Kajikawa,5,316,0.015822784810126583
-Word Segmentation (combined),Katz-Gershon,4,316,0.012658227848101266
-Word Segmentation (combined),Keren-Portnoy,13,316,0.04113924050632911
-Word Segmentation (combined),Kim,4,316,0.012658227848101266
-Word Segmentation (combined),Kobayashi,3,316,0.00949367088607595
-Word Segmentation (combined),Kojima,3,316,0.00949367088607595
-Word Segmentation (combined),Kuijpers,5,316,0.015822784810126583
-Word Segmentation (combined),Llanos,4,316,0.012658227848101266
-Word Segmentation (combined),Mani,6,316,0.0189873417721519
-Word Segmentation (combined),Marquis,11,316,0.03481012658227848
-Word Segmentation (combined),Mason-Apps,2,316,0.006329113924050633
-Word Segmentation (combined),Mattys,11,316,0.03481012658227848
-Word Segmentation (combined),Mersad,8,316,0.02531645569620253
-Word Segmentation (combined),Minagawa,3,316,0.00949367088607595
-Word Segmentation (combined),Morgan,26,316,0.08227848101265822
-Word Segmentation (combined),Naoi,3,316,0.00949367088607595
-Word Segmentation (combined),Nazzi,32,316,0.10126582278481013
-Word Segmentation (combined),Nestor,12,316,0.0379746835443038
-Word Segmentation (combined),Newman,9,316,0.028481012658227847
-Word Segmentation (combined),Newsome,15,316,0.04746835443037975
-Word Segmentation (combined),Nishibayashi,10,316,0.03164556962025317
-Word Segmentation (combined),NiveditaManiWiebkePätzold,2,316,0.006329113924050633
-Word Segmentation (combined),Norris,8,316,0.02531645569620253
-Word Segmentation (combined),Orena,6,316,0.0189873417721519
-Word Segmentation (combined),Ota,1,316,0.0031645569620253164
-Word Segmentation (combined),Parikh,4,316,0.012658227848101266
-Word Segmentation (combined),Polka,21,316,0.06645569620253164
-Word Segmentation (combined),Porto,1,316,0.0031645569620253164
-Word Segmentation (combined),Ramon-Casas,6,316,0.0189873417721519
-Word Segmentation (combined),Rathbun,6,316,0.0189873417721519
-Word Segmentation (combined),Reznick,3,316,0.00949367088607595
-Word Segmentation (combined),Saffran,3,316,0.00949367088607595
-Word Segmentation (combined),Santelmann,6,316,0.0189873417721519
-Word Segmentation (combined),Schmale,8,316,0.02531645569620253
-Word Segmentation (combined),Schönhuber,4,316,0.012658227848101266
-Word Segmentation (combined),Schreiner,6,316,0.0189873417721519
-Word Segmentation (combined),Seidenberg,3,316,0.00949367088607595
-Word Segmentation (combined),Seidl,17,316,0.05379746835443038
-Word Segmentation (combined),Shattuck-Hufnagel,6,316,0.0189873417721519
-Word Segmentation (combined),Shi,14,316,0.04430379746835443
-Word Segmentation (combined),Singh,65,316,0.20569620253164558
-Word Segmentation (combined),Skarabela,1,316,0.0031645569620253164
-Word Segmentation (combined),Stojanovik,2,316,0.006329113924050633
-Word Segmentation (combined),Sundara,14,316,0.04430379746835443
-Word Segmentation (combined),Teixidó,6,316,0.0189873417721519
-Word Segmentation (combined),Tincoff,1,316,0.0031645569620253164
-Word Segmentation (combined),Tsay,3,316,0.00949367088607595
-Word Segmentation (combined),Tyler,2,316,0.006329113924050633
-Word Segmentation (combined),vanHeugten,2,316,0.006329113924050633
-Word Segmentation (combined),Vihman,13,316,0.04113924050632911
-Word Segmentation (combined),Wang,4,316,0.012658227848101266
-Word Segmentation (combined),Werker,4,316,0.012658227848101266
-Word Segmentation (combined),White,31,316,0.0981012658227848
-Word Segmentation (combined),Willits,3,316,0.00949367088607595
-Word Segmentation (combined),Xuehua,3,316,0.00949367088607595
-Word Segmentation (combined),Yull,4,316,0.012658227848101266
-Word Segmentation (combined),Zahner,4,316,0.012658227848101266
+Word Segmentation (combined),Alcantara,8,315,0.025396825396825397
+Word Segmentation (combined),Altvater-Mackensen,3,315,0.009523809523809525
+Word Segmentation (combined),Altvater‐Mackensen,4,315,0.012698412698412698
+Word Segmentation (combined),Babineau,5,315,0.015873015873015872
+Word Segmentation (combined),Barker,2,315,0.006349206349206349
+Word Segmentation (combined),Bartels,2,315,0.006349206349206349
+Word Segmentation (combined),Baud,1,315,0.0031746031746031746
+Word Segmentation (combined),Bauman,6,315,0.01904761904761905
+Word Segmentation (combined),Berdasco‐Munoz,1,315,0.0031746031746031746
+Word Segmentation (combined),Bergmann,2,315,0.006349206349206349
+Word Segmentation (combined),Bertoncini,8,315,0.025396825396825397
+Word Segmentation (combined),Biran,1,315,0.0031746031746031746
+Word Segmentation (combined),Bortfeld,14,315,0.044444444444444446
+Word Segmentation (combined),Bosch,6,315,0.01904761904761905
+Word Segmentation (combined),Braun,4,315,0.012698412698412698
+Word Segmentation (combined),Butler,2,315,0.006349206349206349
+Word Segmentation (combined),Christophe,2,315,0.006349206349206349
+Word Segmentation (combined),Coolen,5,315,0.015873015873015872
+Word Segmentation (combined),Cristia,3,315,0.009523809523809525
+Word Segmentation (combined),Cruickshank,4,315,0.012698412698412698
+Word Segmentation (combined),Cutler,17,315,0.05396825396825397
+Word Segmentation (combined),Darcy,2,315,0.006349206349206349
+Word Segmentation (combined),DelleLuche,13,315,0.04126984126984127
+Word Segmentation (combined),DePaolis,13,315,0.04126984126984127
+Word Segmentation (combined),Dilley,6,315,0.01904761904761905
+Word Segmentation (combined),Duffy,13,315,0.04126984126984127
+Word Segmentation (combined),Durrant,13,315,0.04126984126984127
+Word Segmentation (combined),Figueras,6,315,0.01904761904761905
+Word Segmentation (combined),Floccia,13,315,0.04126984126984127
+Word Segmentation (combined),Frédonie,8,315,0.025396825396825397
+Word Segmentation (combined),Frota,2,315,0.006349206349206349
+Word Segmentation (combined),Gauthier,4,315,0.012698412698412698
+Word Segmentation (combined),Golinkoff,6,315,0.01904761904761905
+Word Segmentation (combined),Gonzalez-Gomez,4,315,0.012698412698412698
+Word Segmentation (combined),Goslin,13,315,0.04126984126984127
+Word Segmentation (combined),Gout,2,315,0.006349206349206349
+Word Segmentation (combined),Goyet,8,315,0.025396825396825397
+Word Segmentation (combined),Hakuno,3,315,0.009523809523809525
+Word Segmentation (combined),Haryu,5,315,0.015873015873015872
+Word Segmentation (combined),Höhle,4,315,0.012698412698412698
+Word Segmentation (combined),Hohne,6,315,0.01904761904761905
+Word Segmentation (combined),Hollich,4,315,0.012698412698412698
+Word Segmentation (combined),Houston,34,315,0.10793650793650794
+Word Segmentation (combined),Houston-Price,2,315,0.006349206349206349
+Word Segmentation (combined),Iakimova,16,315,0.050793650793650794
+Word Segmentation (combined),Johnson,20,315,0.06349206349206349
+Word Segmentation (combined),Jusczyk,60,315,0.19047619047619047
+Word Segmentation (combined),Kajikawa,5,315,0.015873015873015872
+Word Segmentation (combined),Katz-Gershon,4,315,0.012698412698412698
+Word Segmentation (combined),Keren-Portnoy,13,315,0.04126984126984127
+Word Segmentation (combined),Kim,4,315,0.012698412698412698
+Word Segmentation (combined),Kobayashi,3,315,0.009523809523809525
+Word Segmentation (combined),Kojima,3,315,0.009523809523809525
+Word Segmentation (combined),Kuijpers,5,315,0.015873015873015872
+Word Segmentation (combined),Llanos,4,315,0.012698412698412698
+Word Segmentation (combined),Mani,6,315,0.01904761904761905
+Word Segmentation (combined),Marquis,11,315,0.03492063492063492
+Word Segmentation (combined),Mason-Apps,2,315,0.006349206349206349
+Word Segmentation (combined),Mattys,11,315,0.03492063492063492
+Word Segmentation (combined),Mersad,8,315,0.025396825396825397
+Word Segmentation (combined),Minagawa,3,315,0.009523809523809525
+Word Segmentation (combined),Morgan,26,315,0.08253968253968254
+Word Segmentation (combined),Naoi,3,315,0.009523809523809525
+Word Segmentation (combined),Nazzi,31,315,0.09841269841269841
+Word Segmentation (combined),Nestor,12,315,0.0380952380952381
+Word Segmentation (combined),Newman,9,315,0.02857142857142857
+Word Segmentation (combined),Newsome,15,315,0.047619047619047616
+Word Segmentation (combined),Nishibayashi,9,315,0.02857142857142857
+Word Segmentation (combined),NiveditaManiWiebkePätzold,2,315,0.006349206349206349
+Word Segmentation (combined),Norris,8,315,0.025396825396825397
+Word Segmentation (combined),Orena,6,315,0.01904761904761905
+Word Segmentation (combined),Ota,1,315,0.0031746031746031746
+Word Segmentation (combined),Parikh,4,315,0.012698412698412698
+Word Segmentation (combined),Polka,21,315,0.06666666666666667
+Word Segmentation (combined),Porto,1,315,0.0031746031746031746
+Word Segmentation (combined),Ramon-Casas,6,315,0.01904761904761905
+Word Segmentation (combined),Rathbun,6,315,0.01904761904761905
+Word Segmentation (combined),Reznick,3,315,0.009523809523809525
+Word Segmentation (combined),Saffran,3,315,0.009523809523809525
+Word Segmentation (combined),Santelmann,6,315,0.01904761904761905
+Word Segmentation (combined),Schmale,8,315,0.025396825396825397
+Word Segmentation (combined),Schönhuber,4,315,0.012698412698412698
+Word Segmentation (combined),Schreiner,6,315,0.01904761904761905
+Word Segmentation (combined),Seidenberg,3,315,0.009523809523809525
+Word Segmentation (combined),Seidl,17,315,0.05396825396825397
+Word Segmentation (combined),Shattuck-Hufnagel,6,315,0.01904761904761905
+Word Segmentation (combined),Shi,14,315,0.044444444444444446
+Word Segmentation (combined),Singh,65,315,0.20634920634920634
+Word Segmentation (combined),Skarabela,1,315,0.0031746031746031746
+Word Segmentation (combined),Stojanovik,2,315,0.006349206349206349
+Word Segmentation (combined),Sundara,14,315,0.044444444444444446
+Word Segmentation (combined),Teixidó,6,315,0.01904761904761905
+Word Segmentation (combined),Tincoff,1,315,0.0031746031746031746
+Word Segmentation (combined),Tsay,3,315,0.009523809523809525
+Word Segmentation (combined),Tyler,2,315,0.006349206349206349
+Word Segmentation (combined),vanHeugten,2,315,0.006349206349206349
+Word Segmentation (combined),Vihman,13,315,0.04126984126984127
+Word Segmentation (combined),Wang,4,315,0.012698412698412698
+Word Segmentation (combined),Werker,4,315,0.012698412698412698
+Word Segmentation (combined),White,31,315,0.09841269841269841
+Word Segmentation (combined),Willits,3,315,0.009523809523809525
+Word Segmentation (combined),Xuehua,3,315,0.009523809523809525
+Word Segmentation (combined),Yull,4,315,0.012698412698412698
+Word Segmentation (combined),Zahner,4,315,0.012698412698412698
