@@ -1,5 +1,5 @@
 ---
-title: "trimming.Rmd"
+title: "00_trimming.Rmd"
 author: "anjie"
 date: "`r Sys.Date()`"
 output: html_document
@@ -18,12 +18,14 @@ library(ggthemes)
 # write_csv(metalab_data, here("data/metalab_data.csv"))
 
 metalab_data <- read_csv(here("data/metalab_data.csv"))
-ids_data <- read_csv(here("data/ids_clean.csv")) %>% 
+ids_data <- read_csv(here("data/rework/ids_clean.csv")) %>% 
   mutate(ds_clean = "Infant directed speech preference")
 ```
 
 
-# metalab_data
+# metalab_data trimming procedure 
+
+## 1. Replace dataset and/or get rid of dataset
 
 ```{r}
 trimmed_data <- metalab_data %>% 
@@ -65,8 +67,47 @@ trimmed_data <- metalab_data %>%
       mutate(ds_clean = "Word Segmentation (combined)")
     
   )
+
+```
+
+
+## 2. import method recode 
+
+```{r}
+m_recode <- read_csv(here("data/rework/ds_clean_rework.csv"))
+
+
+trimmed_data <- m_recode %>% 
+  select(-note) %>% 
+  left_join(trimmed_data, by = c("ds_clean", "response_mode", "method", "dependent_measure"))
   
 ```
+
+## 3. import infant recode 
+
+```{r}
+it_recode <- read_csv(here("data/rework/infant_type_rework.csv"))
+
+
+trimmed_data <- it_recode %>% 
+  select(-long_cite) %>% 
+  left_join(trimmed_data, by = c("ds_clean", "native_lang", "infant_type")) %>% 
+  rename(infant_type_clincal =  `infant_type_clinical (typical vs nt (preterm / delayed / developmental disorder)`)
+```
+
+## 4. prune infant recode (little variation)
+
+- currently preserve the non-monolingual kids because the impact of bilingualism might be different for cog dev dataset than for lang dev dataset 
+
+```{r}
+trimmed_data <- trimmed_data %>% 
+  filter(infant_type_clincal == "typical")
+```
+
+
+
+
+
 
 # basic stats 
 
@@ -189,48 +230,7 @@ trimmed_data %>%
 ```
 
 
-ok everything above looks very messy, let's create some birdeye view on all methods & do some recoding 
-
-```{r}
-trimmed_data %>% 
-  mutate(mega_method = paste(response_mode, method, dependent_measure, sep = "_")) %>% 
-  distinct(ds_clean, mega_method) %>% 
-  group_by(ds_clean) %>% 
-  count() %>% 
-  ggplot(aes(reorder(ds_clean,-n), n)) + 
-  geom_point() + 
-  theme_classic() + 
-  theme() + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
-  labs(title = "unique mega_method")
-```
-
-```{r}
-trimmed_data %>% 
-  mutate(mega_method = paste(response_mode, method, dependent_measure, sep = "_")) %>% 
-  distinct(ds_clean, mega_method)
-```
-
-response mode doesn't feel like a very meaningful categories? 
-
-```{r}
-trimmed_data %>% 
-  distinct(ds_clean, response_mode) 
-```
-
-
-importing some recoding of the method (categorize based on look vs no-look)
-
-```{r}
-m_recode <- read_csv(here("data/ds_clean_rework.csv"))
-
-
-trimmed_data <- m_recode %>% 
-  select(-note) %>% 
-  left_join(trimmed_data, by = c("ds_clean", "response_mode", "method", "dependent_measure"))
-```
-
-actually didn't see much "looking" for young children trend 
+### coded: looking 
 
 ```{r}
 filter(trimmed_data, 
@@ -247,7 +247,38 @@ filter(trimmed_data,
   ggthemes::theme_few()
 ```
 
-let's see familiarization vs habituation vs test only in paradigms measuring looking 
+### coded: behavioral_measure
+
+```{r}
+filter(trimmed_data, 
+       mean_age_months < 36) %>%
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc,  
+             color = behavioral_measure),
+             alpha = .3) + 
+  facet_wrap(~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few()
+
+filter(trimmed_data, 
+       mean_age_months < 36) %>%
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc,  
+             color = behavioral_measure),
+             alpha = .3 
+            ) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  ggthemes::theme_few()
+```
+
+
+### fam vs hab vs test only 
 
 ```{r}
 filter(trimmed_data, 
@@ -269,54 +300,8 @@ filter(trimmed_data,
 
 
 
-## infant type distribution 
 
-```{r}
-it_recode <- read_csv(here("data/infant_type_rework.csv"))
-
-
-trimmed_data <- it_recode %>% 
-  select(-long_cite) %>% 
-  left_join(trimmed_data, by = c("ds_clean", "native_lang", "infant_type")) %>% 
-  rename(infant_type_clincal =  `infant_type_clinical (typical vs nt (preterm / delayed / developmental disorder)`)
-```
-
-
-very little to be meaningful, should probably prune? 
-
-```{r}
-filter(trimmed_data, 
-       mean_age_months < 36)  %>% 
-  ggplot(aes(x = mean_age_months, y = d_calc, 
-             weight = 1/d_var_calc)) +
-  geom_point(aes(size = 1/d_var_calc,  
-             color = infant_type_clincal),
-             alpha = .3) + 
-  facet_wrap( ~ ds_clean) + 
-  geom_hline(yintercept = 0, lty = 2, col = "black") + 
-  xlab("Mean age (months)") +
-  ylab("Effect size (d)") +
-  ggthemes::theme_few() 
-```
-
-this has a spread, may consider recode something? 
-
-```{r}
-filter(trimmed_data, 
-       mean_age_months < 36)  %>% 
-  ggplot(aes(x = mean_age_months, y = d_calc, 
-             weight = 1/d_var_calc)) +
-  geom_point(aes(size = 1/d_var_calc,  
-             color = infant_type_language),
-             alpha = .3) + 
-  facet_wrap( ~ ds_clean) + 
-  geom_hline(yintercept = 0, lty = 2, col = "black") + 
-  xlab("Mean age (months)") +
-  ylab("Effect size (d)") +
-  ggthemes::theme_few() 
-```
-
-# publicaion year? 
+## publicaion year? 
 
 citation density?
 
@@ -937,7 +922,7 @@ trimmed_data %>%
 
 
 ```{r}
-filter(trimmed_data, 
+filter(d, 
        mean_age_months < 36) %>%
   ggplot(aes(x = mean_age_months, y = d_calc, 
              weight = 1/d_var_calc)) +
