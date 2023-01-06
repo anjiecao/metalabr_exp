@@ -1,0 +1,357 @@
+---
+title: "devo curve"
+author: "anjie"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: yes
+    theme: paper
+    toc: yes
+    toc_float: yes
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(ggthemes)
+library(metafor)
+
+d <- read_csv(here("data/clean_data.csv"))
+source(here("helper/model_comparison_help.r"))
+
+
+```
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+
+
+# Vanilla figure 
+
+```{r}
+filter(d, 
+       mean_age_months < 36) %>%
+  ggplot(aes(x = mean_age_months, y = d_calc, 
+             weight = 1/d_var_calc)) +
+  geom_point(aes(size = 1/d_var_calc),
+             alpha = .3) + 
+  geom_smooth(method="lm", formula = y ~ x, 
+              aes(col = "Linear"), 
+              se = FALSE) + 
+  geom_smooth(method="lm", formula = y ~ log(x), 
+              aes(col = "Log"),
+              se = FALSE) + 
+  geom_smooth(method="lm", formula = y ~ I(x^2),
+              aes(col = "Quadratic"),
+              se = FALSE) +
+  facet_wrap(~ ds_clean) + 
+  geom_hline(yintercept = 0, lty = 2, col = "black") + 
+  xlab("Mean age (months)") +
+  ylab("Effect size (d)") +
+  scale_colour_solarized(name="Models", breaks = c("Linear", "Log",
+                                                "Quadratic", "Linear and Log"),
+                                     labels=c("Linear" = "Linear",
+                                              "Log" = "Log",
+                                              "Quadratic" = "Quadratic",
+                                              "Linear and Log" = "Linear and Log")) +
+  ggthemes::theme_few()
+```
+
+
+# 1. Get Moderators for each dataset
+
+
+## Kitchen sink: contains all moderators
+
+```{r}
+
+kitchen_sink_df <- lapply((d %>% arrange(ds_clean) %>% distinct(ds_clean)) %>% pull(), 
+        function(x){
+          get_moderators(x)
+        }) %>% 
+   bind_rows() 
+
+```
+
+## Key moderators: 
+
+just the ones with some common methodological moderators 
+
+```{r}
+
+key_modearators_df <- d %>% 
+  select("ds_clean", "response_mode", "behavioral_measure", "exposure_phase") %>% 
+  group_by(ds_clean) %>% 
+  summarise_all(n_distinct) %>% 
+  pivot_longer(cols = c("response_mode", "behavioral_measure", "exposure_phase"), 
+                 names_to = "column_name", 
+                 values_to = "n_distinct_value") %>% 
+  filter(n_distinct_value!=1) %>% 
+  select(-n_distinct_value) %>% 
+  nest(moderators =column_name)
+  
+  
+  lapply((d %>% arrange(ds_clean) %>% distinct(ds_clean)) %>% pull(), 
+        function(x){
+          get_moderators(x)
+        }) %>% 
+   bind_rows() 
+```
+
+
+
+# 2. Fitting different types of models 
+
+## Kitchen sink models
+
+```{r}
+kitchen_sink_models_df <- lapply(kitchen_sink_df$ds_clean, 
+       function(name){
+         #print(name)
+         tryCatch(get_compare_IC_df(d, name, (kitchen_sink_df %>% filter(ds_clean == name))$moderator_name[[1]] %>% pull()), error = function(e) NULL)
+       }) %>% 
+  bind_rows()
+```
+
+
+## Key moderators models 
+
+```{r}
+key_modearators_model_df <- lapply(key_modearators_df$ds_clean, 
+       function(name){
+         print(name)
+         tryCatch(get_compare_IC_df(d, name, (key_modearators_df %>% filter(ds_clean == name))$moderators[[1]] %>% pull()), error = function(e) NULL)
+       }) %>% 
+  bind_rows()
+```
+
+
+## age models
+
+```{r}
+age_models_df <- lapply(kitchen_sink_df$ds_clean, 
+       function(name){
+         print(name)
+         get_compare_IC_df(d, name, NULL)
+       }) %>% 
+  bind_rows()
+```
+
+
+
+# 3. Model comparison
+
+## compare everything 
+
+currently put together all of the models ran and compare everything 
+
+```{r}
+
+min_AIC_df <- bind_rows(kitchen_sink_models_df, age_models_df, key_modearators_df) %>% 
+   filter(ic == "AICc") %>% 
+  group_by(dataset) %>% 
+  filter(REML == min(REML)) 
+
+
+```
+
+but let's ignore all of those and select the min of all
+
+```{r}
+min_AIC_df <- age_models_df %>% mutate(model_type = "base_age") %>% 
+  bind_rows(kitchen_sink_models_df %>% mutate(model_type = "kitchen_sink")) %>% 
+  bind_rows(key_modearators_model_df %>% mutate(model_type = "key_moderator_df")) %>% 
+  filter(ic == "AICc") %>% 
+  group_by(dataset) %>% 
+  filter(REML == min(REML)) 
+
+min_AIC_df <- min_AIC_df %>% 
+  mutate(
+    min_AIC_df = case_when(
+      model_spec == "d_calc ~ I(mean_age_months^2)" | model_spec == "d_calc ~ log(mean_age_months)" | model_spec == "d_calc ~ mean_age_months" ~ "base_age_model", 
+      TRUE ~ "method_moderators_model"
+    )
+  )
+
+min_AIC_df %>% kableExtra::kable()
+```
+## Just compare age base model 
+
+```{r}
+min_age_AIC_df <- age_models_df %>% 
+  group_by(dataset) %>% 
+  filter(ic == "AICc") %>% 
+  filter(REML == min(REML)) 
+
+min_age_AIC_df %>% kableExtra::kable()
+```
+
+
+
+
+# 4. Get Prediction
+
+```{r}
+min_AIC_df %>% 
+  rename(ds_name = dataset) %>% 
+  mutate(
+    ds_type = case_when(
+      ds_name %in% c("Familiar word recognition", 
+                     "Infant directed speech preference", 
+                     "Language discrimination and preference", 
+                     "Mispronunciation sensitivity", 
+                     "Natural speech preference", "Sound symbolism",
+                     "Statistical sound category learning (habituation)",
+                     "Statistical word segmentation",
+                     "Vowel discrimination (native)",
+                     "Vowel discrimination (non-native)" ,"Word Segmentation (combined)" ) ~ "Language - perceptual", 
+      ds_name %in% c("Cross-situational word learning", 
+                      "Label advantage in concept learning",
+                     "Mutual exclusivity",
+                     "Online word recognition",
+                     "Switch task",
+                     "Syntactic bootstrapping" 
+                     ) ~ "Language - conceptual", 
+      ds_name %in% c("Gaze following (combined)", "Prosocial agents") ~ "Social",
+      ds_name %in% c("Abstract rule learning",  "Categorization bias", 
+                     "Simple arithmetic competences", "Symbolic play") ~ "Cognitive"
+     )
+  ) %>% 
+  group_by(ds_type, model_type) %>% 
+  count() %>% 
+  kableExtra::kable()
+```
+
+
+
+
+## Just age
+
+```{r}
+saveRDS(min_age_AIC_df, here("min_age_df.RDS"))
+min_age_df <- readRDS(here("min_age_df.RDS"))
+
+
+all_age_pred <- lapply(seq(1, nrow(min_age_df)), 
+       function(x){
+         get_age_model_prediction(min_age_df$dataset[[x]], min_age_df, d)
+       }) %>% 
+  bind_rows() 
+
+
+```
+
+categorize 
+
+```{r message=FALSE, warning=FALSE}
+
+all_age_pred %>% 
+  select(pred, ds_name) %>% 
+  group_by(ds_name) %>% 
+  mutate(mean_age_months = (row_number() + 1) / 2) %>% 
+  mutate(
+    ds_type = case_when(
+      ds_name %in% c("Familiar word recognition", 
+                     "Infant directed speech preference", 
+                     "Language discrimination and preference", 
+                     "Mispronunciation sensitivity", 
+                     "Natural speech preference", "Sound symbolism",
+                     "Statistical sound category learning (habituation)",
+                     "Statistical word segmentation",
+                     "Vowel discrimination (native)",
+                     "Vowel discrimination (non-native)" ,"Word Segmentation (combined)" ) ~ "Language - perceptual", 
+      ds_name %in% c("Cross-situational word learning", 
+                      "Label advantage in concept learning",
+                     "Mutual exclusivity",
+                     "Online word recognition",
+                     "Switch task",
+                     "Syntactic bootstrapping" 
+                     ) ~ "Language - conceptual", 
+      ds_name %in% c("Gaze following (combined)", "Prosocial agents") ~ "Social",
+      ds_name %in% c("Abstract rule learning",  "Categorization bias", 
+                     "Simple arithmetic competences", "Symbolic play") ~ "Cognitive"
+     )
+  ) %>% 
+  select(ds_name, ds_type, mean_age_months, pred) %>% 
+  ggplot(aes(x = mean_age_months, y = pred, group = ds_name, color = ds_name)) + 
+  geom_point(alpha = .3)+ 
+  facet_wrap(~ds_type)
+  
+```
+
+## with method
+
+```{r}
+min_AIC_df
+```
+
+
+
+# Draft for adding method moderators 
+
+summary(model)$X.f for coding 
+
+drop the rows that's dropped when fitting models:
+  current_df$keep = model$not.na
+  current_df = current_df[current_df$keep, ]
+  
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+test_d <- d %>% filter(ds_clean == "Gaze following (combined)")
+test_d <- test_d %>% mutate(cue_type = as.factor(cue_type))
+
+contrasts(test_d$cue_type) <-  contr.sum(4)
+
+
+
+
+res_m_method <- rma.mv(d_calc ~ mean_age_months + cue_type, 
+    V = d_var_calc, 
+    random = ~ 1 | short_cite/same_infant/unique_row, 
+    data = test_d)
+
+res_m_method_log <- rma.mv(d_calc ~ log(mean_age_months) + cue_type, 
+    V = d_var_calc, 
+    random = ~ 1 | short_cite/same_infant/unique_row, 
+    data = test_d)
+
+res_method_square <-  rma.mv(d_calc ~ I(mean_age_months^2) + cue_type, 
+    V = d_var_calc, 
+    random = ~ 1 | short_cite/same_infant/unique_row, 
+    data = test_d)
+
+p.res_method <- predict(res_m_method, addx =TRUE) %>% as.data.frame()
+p.res_method_log <- predict(res_m_method_log, addx = TRUE) %>% as.data.frame()
+p.res_method_square <- predict(res_method_square, addx = TRUE) %>% as.data.frame()
+
+prediction_df <- p.res_method %>% 
+  rename(p.linear = pred)
+
+prediction_df$p.log = p.res_method_log$pred
+prediction_df$p.square = p.res_method_square$pred
+
+
+
+prediction_df %>% 
+  pivot_longer(cols = starts_with("p."), 
+               names_to = "prediction_type", 
+               values_to = "prediction_val") %>% 
+  ggplot(aes(x = X.mean_age_months, y = prediction_val, color = prediction_type)) + 
+  geom_point() + 
+  facet_wrap(~prediction_type)
+
+  left_join(p.res_method_log
+            %>% rename(p.log = pred), 
+            by = c("X.intrcpt", "X.mean_age_months", "X.cue_type1", "X.cue_type2", "X.cue_type3")) %>% 
+  left_join(p.res_method_square %>% rename(p.square = pred), 
+            by = c("X.intrcpt", "X.mean_age_months", "X.cue_type1", "X.cue_type2", "X.cue_type3"))
+
+
+
+
+
+```
+
