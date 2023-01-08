@@ -34,7 +34,7 @@ get_age_model_prediction <- function(ds_name, min_age_df, all_ds){
   }else if(model_type == "Quadratic"){
     age = (seq(1, 36, .5)) ** 2
   }else{
-    age = seq(1, 10, .5)
+    age = seq(1, 36, .5)
   }
   
   

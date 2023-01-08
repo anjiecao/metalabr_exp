@@ -16,6 +16,7 @@ library(tidyverse)
 library(here)
 library(ggthemes)
 library(metafor)
+library(ggrepel)
 
 d <- read_csv(here("data/clean_data.csv"))
 source(here("helper/model_comparison_help.r"))
@@ -176,7 +177,7 @@ min_AIC_df <- min_AIC_df %>%
     )
   )
 
-min_AIC_df %>% kableExtra::kable()
+min_AIC_df 
 ```
 ## Just compare age base model 
 
@@ -248,7 +249,9 @@ categorize
 
 ```{r message=FALSE, warning=FALSE}
 
-all_age_pred %>% 
+
+
+categorized_age_pred_df <- all_age_pred %>% 
   select(pred, ds_name) %>% 
   group_by(ds_name) %>% 
   mutate(mean_age_months = (row_number() + 1) / 2) %>% 
@@ -275,12 +278,169 @@ all_age_pred %>%
                      "Simple arithmetic competences", "Symbolic play") ~ "Cognitive"
      )
   ) %>% 
-  select(ds_name, ds_type, mean_age_months, pred) %>% 
-  ggplot(aes(x = mean_age_months, y = pred, group = ds_name, color = ds_name)) + 
-  geom_point(alpha = .3)+ 
-  facet_wrap(~ds_type)
   
+  select(ds_name, ds_type, mean_age_months, pred) 
+
+
+
+label_df <- categorized_age_pred_df %>% 
+  filter(mean_age_months == 30)
+
+
+p <- categorized_age_pred_df %>% 
+  ggplot(aes(x = mean_age_months, y = pred, group = ds_name, color = ds_name)) + 
+  geom_label_repel(data = label_df, aes(x = mean_age_months, y = pred, label = ds_name, 
+                                      
+                                       box.padding = 0.3), 
+                   size = 2, 
+                   position = "jitter",
+                   force = 1100, 
+                   max.overlaps = Inf,
+                    expand = expansion(mult = 0.5)) + 
+  geom_line(alpha = .8)+ 
+  facet_wrap(~ds_type) + 
+  theme_few()+
+  theme(legend.position = "none") 
+  
+
+p
+
 ```
+
+
+```{r}
+age_range_df <- d %>% 
+  group_by(ds_clean) %>% 
+  summarise(min_age = min(mean_age_months, na.rm = TRUE), 
+            max_age = max(mean_age_months, na.rm = TRUE)) %>% 
+  rename(ds_name = ds_clean)
+```
+
+
+
+```{r}
+
+
+categorized_age_pred_df <- all_age_pred %>% 
+  select(pred, ds_name) %>% 
+  group_by(ds_name) %>% 
+  mutate(mean_age_months = (row_number() + 1) / 2) %>% 
+  left_join(age_range_df, by = c("ds_name")) %>% 
+  filter(mean_age_months > min_age, 
+         mean_age_months < min(36, max_age)) %>% 
+  mutate(
+    ds_type = case_when(
+      ds_name %in% c( "Language discrimination and preference", 
+                     "Mispronunciation sensitivity", 
+                     "Natural speech preference", "Sound symbolism", "Statistical sound category learning (habituation)", 
+                     "Vowel discrimination (native)",
+                     "Vowel discrimination (non-native)" ,"Word Segmentation (combined)",
+                     "Statistical word segmentation") ~ "Sounds", 
+      
+      ds_name %in% c("Familiar word recognition", 
+                     "Cross-situational word learning", 
+                      "Label advantage in concept learning",
+                     "Mutual exclusivity",
+                     "Online word recognition",
+                     "Syntactic bootstrapping",
+                     "Switch task") ~ "Words",
+      
+      ds_name %in% c("Gaze following (combined)",
+                     "Prosocial agents",
+                     "Symbolic play", 
+                     "Infant directed speech preference") ~ "Communication", 
+      
+      ds_name %in% c("Abstract rule learning",  
+                     "Categorization bias", 
+                     "Simple arithmetic competences") ~ "Cognitive"
+     )
+  ) %>% 
+  mutate(pred = case_when(
+    ds_name == "Abstract rule learning" ~ -pred, 
+    ds_name == "Switch task" ~ -pred,
+    TRUE ~ pred
+  )) %>% 
+  select(ds_name, ds_type, mean_age_months, pred) 
+
+
+
+label_df <- categorized_age_pred_df %>% 
+  filter(mean_age_months == max(mean_age_months)) 
+
+label_df$x = c(
+  13 + 2, 
+  35.5 + 2, 
+  35.5 + 4, 
+  15 + 2, 
+  23.5, 
+  18.5 + 12, 
+  17.5 + 4, 
+  11.5 + 16, # problem
+  35.5 + 4,
+  35.5,
+  12.5 + 5,
+  30.0,
+  31.5 + 8, 
+  9 + 4, 
+  35.5 + 6,
+  11 + 3, 
+  18.5, 
+  24.5, 
+  35.5 + 5, 
+  35.5 + 3, 
+  29.5 + 12, 
+  17.5 + 8, 
+  24.5
+  
+)
+label_df$y = c(
+  0.05004268 - 0.5, 
+  0.27548039 + 0.3, 
+  0.54489342 - 0.2, 
+  0.80489381 + 0.6, 
+  2.98616109 + 0.3, 
+  1.43817970 + 0.3,
+  
+  0.52126530 + 0.5, 
+  0.26533988 - 0.5, 
+  1.61860775 + 0.3,
+  1.44122780 + 0.3,
+  0.81136554 + 0.3,
+  2.96433139 + 0.5,
+  0.3505974, 
+  0.3903635 + 0.5,
+  0.3828921, 
+  0.9685146 + 0.6, 
+  -0.3027715 - 0.3, 
+  0.3034464 - 0.6, 
+  0.6137494 + 0.3, 
+  0.1028029 - 0.2, 
+  0.5170778 + 0.5, 
+  0.4909005 + 0.3, 0.2914371
+  
+)
+
+p <- categorized_age_pred_df %>% 
+  ggplot(aes(x = mean_age_months, y = pred, group = ds_name, color = ds_name)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = .5) + 
+  geom_line(alpha = 1, width = 2)+ 
+  geom_text(data = label_df, aes(x = x, y = y, label = ds_name), 
+                   size = 2.2,
+                  segment.color = NA) + 
+  xlim(0, 48) + 
+  ylim(-2, 4) + 
+  facet_wrap(~ds_type, scales = "free") + 
+  theme_few()+
+  theme(legend.position = "none") + 
+  xlab("Age (months)") + 
+  ylab("Predicted Value")
+  
+
+p
+
+```
+
+
 
 ## with method
 
