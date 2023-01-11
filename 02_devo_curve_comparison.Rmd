@@ -1,0 +1,63 @@
+---
+title: "02_devo_curve_comparison.Rmd"
+author: "anjie"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(ggthemes)
+library(metafor)
+library(ggrepel)
+
+d <- read_csv(here("data/clean_data.csv"))
+source(here("helper/model_comparison_help.r"))
+```
+# Fit Models 
+
+```{r}
+age_models_df <- lapply(unique(d$ds_clean), 
+       function(name){
+         print(name)
+         get_compare_IC_df(d, name, NULL)
+       }) %>% 
+  bind_rows()
+
+saveRDS(age_models_df, here("cached_data/age_models_df.Rds"))
+```
+
+# visualization 
+
+```{r}
+age_models_df %>% 
+  filter(ic == "AICc") %>% 
+  select(REML, model_spec_clean, dataset) %>% 
+  group_by(dataset) %>% 
+  mutate(
+    min_REML = (REML == min(REML))
+  ) %>% 
+  ggplot(aes(x = model_spec_clean, y = REML, color = min_REML)) + 
+  geom_point() + 
+  facet_wrap(~dataset, scales = "free") + 
+  theme(legend.position = "none") + 
+  theme_few()
+```
+
+```{r}
+age_models_df %>% 
+  filter(ic == "AICc") %>% 
+  rename(Dataset = dataset) %>% 
+  select(REML, model_spec_clean, Dataset) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML) %>% 
+  kableExtra::kable(digits = 2)
+```
+
+
+
+
+
+
+

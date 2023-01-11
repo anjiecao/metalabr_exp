@@ -1,5 +1,146 @@
 
 
+get_author_model_fits <- function(d, ds_name, major_author_name){
+  
+  current_d <- (d %>% 
+                  filter(ds_clean == ds_name, major_author == major_author_name))$data[[1]]
+  
+  linear_model_formula <- paste0("d_calc ~ mean_age_months + by_major_author")
+  log_model_formula <- paste0("d_calc ~ log(mean_age_months) + by_major_author")
+  qua_model_formula <- paste0("d_calc ~ I(mean_age_months^2) + by_major_author")
+  const_model_formula <-  paste0("d_calc ~ 1 + by_major_author")
+  
+  
+  
+  res = lapply(c(linear_model_formula, 
+                 log_model_formula, 
+                 qua_model_formula, 
+                 const_model_formula), 
+               function(m){
+                 #print(m)
+                 # check if the random variable has everything
+                 
+                 
+                 
+                 if (!nrow(current_d %>% filter(!is.na(same_infant))) == nrow(current_d)){
+                   
+                   raw_df <- broom::tidy(rma.mv(as.formula(m), 
+                                                V = d_var_calc, 
+                                                random = ~ 1 | short_cite/unique_row, 
+                                                data = current_d)) %>% 
+                     mutate(model_spec = m) 
+                   
+                 }else if(!nrow(current_d %>% filter(!is.na(unique_row))) == nrow(current_d)){
+                   
+                   raw_df <- broom::tidy(rma.mv(as.formula(m), 
+                                                V = d_var_calc, 
+                                                random = ~ 1 | short_cite/same_infant, 
+                                                data = current_d)) %>% 
+                     mutate(model_spec = m) 
+                   
+                 }else{
+                   
+                   raw_df <- broom::tidy(rma.mv(as.formula(m), 
+                                                V = d_var_calc, 
+                                                random = ~ 1 | short_cite/same_infant/unique_row, 
+                                                data = current_d)) %>% 
+                     mutate(model_spec = m) 
+                   
+                   
+                 }
+                 
+                 
+               }) %>% 
+    bind_rows() %>% 
+    mutate(dataset = ds_name, 
+           major_author = major_author_name) %>% 
+    mutate(model_spec_clean = case_when(
+      grepl("log", model_spec) ~ "Log", 
+      grepl("2", model_spec) ~ "Quadratic", 
+      grepl("1", model_spec) ~ "Const",
+      TRUE ~ "Linear"
+    ))
+  
+  return (res)
+  
+    
+}
+
+
+
+
+get_author_model_comparison <- function(d, ds_name, major_author_name){
+  
+  current_d <- (d %>% 
+    filter(ds_clean == ds_name, major_author == major_author_name))$data[[1]]
+  
+  linear_model_formula <- paste0("d_calc ~ mean_age_months + by_major_author")
+  log_model_formula <- paste0("d_calc ~ log(mean_age_months) + by_major_author")
+  qua_model_formula <- paste0("d_calc ~ I(mean_age_months^2) + by_major_author")
+  const_model_formula <-  paste0("d_calc ~ 1 + by_major_author")
+  
+  
+  
+  res = lapply(c(linear_model_formula, 
+                 log_model_formula, 
+                 qua_model_formula, 
+                 const_model_formula), 
+               function(m){
+                 #print(m)
+                 # check if the random variable has everything
+                 
+            
+                 
+                 if (!nrow(current_d %>% filter(!is.na(same_infant))) == nrow(current_d)){
+                   
+                   raw_df <- (summary(rma.mv(as.formula(m), 
+                                             V = d_var_calc, 
+                                             random = ~ 1 | short_cite/unique_row, 
+                                             data = current_d))$fit.stats
+                   ) %>% 
+                     mutate(model_spec = m) %>% 
+                     rownames_to_column("ic") 
+                   
+                 }else if(!nrow(current_d %>% filter(!is.na(unique_row))) == nrow(current_d)){
+                   
+                   raw_df <- (summary(rma.mv(as.formula(m), 
+                                             V = d_var_calc, 
+                                             random = ~ 1 | short_cite/same_infant, 
+                                             data = current_d))$fit.stats) %>% 
+                     mutate(model_spec = m) %>% 
+                     rownames_to_column("ic") 
+                   
+                 }else{
+                   
+                   raw_df <- (summary(rma.mv(as.formula(m), 
+                                             V = d_var_calc, 
+                                             random = ~ 1 | short_cite/same_infant/unique_row, 
+                                             data = current_d))$fit.stats) %>% 
+                     mutate(model_spec = m) %>% 
+                     rownames_to_column("ic") 
+                   
+                 }
+                 
+                 
+               }) %>% 
+    bind_rows() %>% 
+    mutate(dataset = ds_name, 
+           major_author = major_author_name) %>% 
+    mutate(model_spec_clean = case_when(
+      grepl("log", model_spec) ~ "Log", 
+      grepl("2", model_spec) ~ "Quadratic", 
+      grepl("1", model_spec) ~ "Const",
+      TRUE ~ "Linear"
+    ))
+ 
+  return (res)
+   
+}
+
+
+
+
+
 get_major_author_effect <- function(main_d, ds_name, ds_author_percent, age_limit = FALSE){
   d <- ds_author_percent %>% 
     filter(percent_by_author > .15) %>% 
