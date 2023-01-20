@@ -133,7 +133,7 @@ key_modearators_model_df <- lapply(key_modearators_df$ds_clean,
 ## age models
 
 ```{r}
-age_models_df <- lapply(kitchen_sink_df$ds_clean, 
+age_models_df <- lapply(unique(d$ds_clean), 
        function(name){
          print(name)
          get_compare_IC_df(d, name, NULL)
@@ -232,8 +232,14 @@ min_AIC_df %>%
 ## Just age
 
 ```{r}
-saveRDS(min_age_AIC_df, here("min_age_df.RDS"))
-min_age_df <- readRDS(here("min_age_df.RDS"))
+min_age_AIC_df <- age_models_df %>% 
+  group_by(dataset) %>% 
+  filter(ic == "AICc") %>% 
+  filter(REML == min(REML)) 
+
+
+saveRDS(min_age_AIC_df, here("cached_data/min_age_df.RDS"))
+min_age_df <- readRDS(here("cached_data/min_age_df.RDS"))
 
 
 all_age_pred <- lapply(seq(1, nrow(min_age_df)), 
@@ -242,7 +248,7 @@ all_age_pred <- lapply(seq(1, nrow(min_age_df)),
        }) %>% 
   bind_rows() 
 
-
+saveRDS(all_age_pred, here("cached_data/min_age_pred_df.RDS"))
 ```
 
 categorize 
