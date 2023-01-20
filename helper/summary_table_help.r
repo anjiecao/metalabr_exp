@@ -57,10 +57,18 @@ get_ma_effect_size <- function(d){
     
   }
   
+  # formula to calculate i^2
+  # source: https://www.metafor-project.org/doku.php/tips:i2_multilevel_multivariate
+  W <- diag(1/model$vi)
+  X <- model.matrix(model)
+  P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+  i2 <- sum(model$sigma2) / (sum(model$sigma2) + (model$k-model$p)/sum(diag(P)))
+  
   es <- tibble(
     "es" = model$b[[1]],
     "es_lb" = model$ci.lb,
-    "es_ub" = model$ci.ub
+    "es_ub" = model$ci.ub, 
+    "i2" = i2
   ) 
   
   
