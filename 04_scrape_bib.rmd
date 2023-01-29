@@ -1,0 +1,133 @@
+---
+title: "04_bib_info.Rmd"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(rvest)
+library(rscopus)
+
+d <- read_csv(here("data/clean_data.csv")) %>% 
+  filter(ds_clean == "Label advantage in concept learning")
+```
+
+```{r}
+# try one 
+test <- unique(d$long_cite)[[1]]
+
+if (have_api_key()){
+    res = scopus_search(query = " Timing matters: The impact of label synchrony on infant categorisation.", type = "article", max_count = 10, count = 10)
+  df = gen_entries_to_df(res[[1]])
+}
+
+df
+
+if (have_api_key()){
+
+res = metadata_retrieval(query = " Timing matters: The impact of label synchrony on infant categorisation.")
+}
+```
+```{r}
+res = scopus_search("title(Timing matters: The impact of label synchrony on infant categorisation.)", max_count = 20, count = 10)
+
+df = gen_entries_to_df(res[[1]])$df %>% select(`dc:title`, `dc:identifier`) %>% 
+  rename(full_title = `dc:title`, 
+         scopus_id = `dc:identifier`)
+```
+
+
+```{r}
+search_for_title_scopus_id <- function(query) {
+    out <- tryCatch(
+        {
+            s = scopus_search(query, max_count = 50, count = 20, wait_time = 1)
+            gen_entries_to_df(s[[1]])$df
+
+        },
+        error=function(cond) {
+            message("Here's the original error message:")
+            message(cond)
+            return(tibble("search_status" = "failed_search"))
+        },
+        warning=function(cond) {
+            message("Here's the original warning message:")
+            message(cond)
+            # Choose a return value in case of warning
+            return(NULL)
+        },
+        finally={
+            message("Some other message at the end")
+        }
+    )    
+    return(out)
+}
+```
+
+
+
+```{r}
+all_paper_title <- unique(d$long_cite)
+parsed_paper_title <- str_trim(sub("^.*?\\b(?:19|20)\\d{2}\\).([^.]+).*", "\\1", all_paper, perl=TRUE))
+
+
+raw_title_with_scopus_id <- lapply(parsed_paper_title, 
+       function(title){
+         query = paste0("title(", title, ")")
+         res = search_for_title_scopus_id(query) %>% 
+           mutate(title = title)
+       }) %>% 
+  bind_rows()
+
+
+```
+
+
+```{r}
+clean_scopus_id <- raw_title_with_scopus_id %>% 
+  select(title, search_status, `dc:identifier`, `prism:publicationName`, `citedby-count`) %>% 
+  rename(scopus_id = `dc:identifier`, 
+         publication_journal = `prism:publicationName`, 
+         cited_by_count = `citedby-count`) %>% 
+  mutate(
+    search_status = case_when(
+      is.na(scopus_id)  ~ "failed", 
+      TRUE ~ "success"
+    )
+  )
+```
+
+
+
+# Step 1: get Scopus ID for all the paper 
+
+```{r}
+test <- unique(d$long_cite)[[1]]
+
+```
+
+
+
+
+# Step 2: Use Scopus ID to compile comprehensive author list 
+
+
+# Step 3: Use Comprehensive author list to look at 
+
+## affiliation 
+
+## citation network(?)
+
+
+```{r}
+scopus_id ="84924716287"
+
+meta_data = article_retrieval(id = scopus_id, view = "META", identifier = "scopus_id")
+meta_data %>% View()
+
+# tricky to get the data 
+meta_data$content$`full-text-retrieval-response`$coredata$`dc:creator`[[1]]$`$`
+```
+
