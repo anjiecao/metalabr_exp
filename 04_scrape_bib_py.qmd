@@ -1,0 +1,264 @@
+---
+title: "srape_with_quarto"
+format: html
+editor: visual
+---
+```{r}
+library(tidyverse)
+library(here)
+library(rvest)
+library(rscopus)
+library(rcrossref)
+library(easyPubMed)
+library(reticulate)
+
+d <- read_csv(here("data/clean_data.csv")) 
+
+```
+
+```{r}
+search_for_title_scopus_id <- function(query) {
+    out <- tryCatch(
+        {
+            s = scopus_search(query, max_count = 50, count = 20, wait_time = 1)
+            gen_entries_to_df(s[[1]])$df
+
+        },
+        error=function(cond) {
+            message("Here's the original error message:")
+            message(cond)
+            return(tibble("search_status" = "failed_search"))
+        },
+        warning=function(cond) {
+            message("Here's the original warning message:")
+            message(cond)
+            # Choose a return value in case of warning
+            return(NULL)
+        },
+        finally={
+            message("Some other message at the end")
+        }
+    )    
+    return(out)
+}
+```
+
+
+
+```{r}
+all_paper_title <- d %>% distinct(ds_clean, long_cite)
+all_paper_title$parsed_paper_title <- str_trim(sub("^.*?\\b(?:19|20)\\d{2}\\).([^.]+).*", "\\1", all_paper_title$long_cite, perl=TRUE))
+write_csv(all_paper_title, here("data/bib/clean_title.csv"))
+
+```
+
+
+
+
+
+```{r}
+
+manual_revive_paper_title <- read_csv(here("data/bib/clean_title_manual.csv"))
+# a subset of ones with proper title
+manual_revive_paper_title <- manual_revive_paper_title %>% 
+  filter(!is.na(parsed_paper_title)) %>% 
+  distinct(ds_clean, parsed_paper_title)
+
+raw_title_with_scopus_id <- lapply(manual_revive_paper_title$parsed_paper_title, 
+       function(title){
+         query = paste0("title(", title, ")")
+         res = search_for_title_scopus_id(query) %>% 
+           mutate(title = title)
+       }) %>% 
+  bind_rows()
+
+clean_scopus_id <- raw_title_with_scopus_id %>% 
+  select(title, search_status, eid,`dc:identifier`, `prism:doi`, `prism:publicationName`, `citedby-count`) %>% 
+  rename(scopus_id = `dc:identifier`, 
+         publication_journal = `prism:publicationName`, 
+         cited_by_count = `citedby-count`, 
+         doi = `prism:doi`) %>% 
+  mutate(
+    search_status = case_when(
+      is.na(scopus_id)  ~ "failed", 
+      TRUE ~ "success"
+    )
+  ) %>% 
+  mutate(scopus_id = gsub("SCOPUS_ID:", "", scopus_id)) %>% 
+  filter(search_status == "success")
+
+
+
+```
+
+```{r}
+# sometimes the same title gives multiple doi 
+
+clean_scopus_id %>% 
+  left_join(manual_revive_paper_title %>% rename(title = parsed_paper_title), 
+            by = c("title")) %>% 
+  group_by(ds_clean, title) %>% 
+  count() %>% 
+  filter(n > 1)
+```
+
+
+```{r}
+# currently only previewing the searhc results that succesfully returned doi
+doi_df <- clean_scopus_id %>% 
+  left_join(manual_revive_paper_title %>% rename(title = parsed_paper_title), 
+            by = c("title")) %>% 
+  filter(!is.na(doi))
+  
+
+write_csv(doi_df, here("data/bib/doi.csv"))
+```
+
+
+```{r}
+doi_df <- read_csv(here("data/bib/doi.csv"))
+```
+
+
+# PYTHON: author affi
+```{python}
+import pybliometrics
+from pybliometrics.scopus import AbstractRetrieval
+from pybliometrics.scopus import AuthorRetrieval
+ from pybliometrics.scopus import AffiliationRetrieval
+import pandas as pd
+
+author_info_df = r.doi_df
+
+```
+
+
+## helper functions 
+
+```{python}
+def get_info_from_doi(doi):
+  try: 
+    ab = AbstractRetrieval(doi)
+    title = ab.title
+    authors = ab.authors
+    cited_by = ab.citedby_count
+    info = pd.DataFrame(authors)
+    info["title"] = title 
+    info["doi"] = doi
+    info["cited_by"] = cited_by
+  except: 
+    info = pd.DataFrame({"doi": [doi],
+                        'auid': [""], 
+                        'indexed_name':[""],
+                        'surname':[""], 
+                        'given_name':[""], 
+                        'affiliation':[""],
+                        "title" : [""], 
+                        "cited_by": [""]})
+  
+  return (info)
+
+def get_affiliation_info(af_id):
+  try:
+    af_id = int(af_id)
+    af_info = AffiliationRetrieval(af_id)
+    info = pd.DataFrame({
+      "af_id": [af_id], 
+      "af_name": [af_info.affiliation_name], 
+      "af_country": [af_info.country], 
+      "af_city": [af_info.city],
+      "af_state": [af_info.state],
+      "af_type": [af_info.org_type],
+      "af_postal": [af_info.postal_code]
+      })
+    
+  except: 
+    info = pd.DataFrame({
+      "af_id": [af_id], 
+      "af_name": [""], 
+      "af_country": [""], 
+      "af_city": [""],
+      "af_state": [""],
+      "af_type": [""],
+      "af_postal": [""]
+      })
+      
+  return(info)
+  
+  
+```
+
+
+## get basic info
+
+```{python}
+dois = author_info_df["doi"].tolist()
+info_list = []
+for doi in dois:
+  print(doi)
+  info = get_info_from_doi(doi)
+  info_list.append(info)
+info_df = pd.concat(info_list)  
+
+```
+
+## get more detailed info abt affiliation
+
+```{python}
+# get all affiliation and put it in a list 
+affiliation_list = info_df["affiliation"].dropna().tolist()
+raw_aff_list = list(map(lambda x: x.split(";"), affiliation_list))
+aff_list = [item for sublist in raw_aff_list for item in sublist]
+
+# retreive all affiliation_info
+aff_df_list = []
+for aff_id in aff_list: 
+  print(aff_id)
+  aff_info = get_affiliation_info(aff_id)
+  aff_df_list.append(aff_info)
+aff_info_df = pd.concat(aff_df_list)
+
+```
+
+
+
+# R: cache things
+
+```{r}
+aff_df <- py$aff_info_df
+aff_df <- aff_df %>% 
+  filter(af_name != "") %>% 
+  unnest(everything()) %>% 
+  distinct()
+write_csv(aff_df, here("data/bib/aff_info.csv"))
+```
+
+```{r}
+aff_df <- read_csv(here("data/bib/aff_info.csv"))
+author_df <- py$info_df 
+
+author_info <- author_df %>% 
+  filter(title != "") %>% 
+  unnest(c(auid, cited_by, affiliation))
+
+
+author_with_aff_df <- author_info %>% 
+  mutate(aff_break = as.list(strsplit(affiliation, ";"))) %>% 
+  unnest(aff_break) %>% 
+  select(-affiliation) %>% 
+  rename(affiliation = aff_break) %>% 
+  mutate(affiliation = as.numeric(affiliation)) %>% 
+  left_join(aff_df %>% rename(affiliation = af_id), 
+            by = c("affiliation"))
+
+
+write_csv(author_with_aff_df, here("data/bib/author_info.csv"))
+```
+
+```{r}
+
+
+  
+  
+```
+

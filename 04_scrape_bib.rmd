@@ -9,34 +9,13 @@ library(tidyverse)
 library(here)
 library(rvest)
 library(rscopus)
+library(rcrossref)
+library(easyPubMed)
 
 d <- read_csv(here("data/clean_data.csv")) %>% 
   filter(ds_clean == "Label advantage in concept learning")
 ```
 
-```{r}
-# try one 
-test <- unique(d$long_cite)[[1]]
-
-if (have_api_key()){
-    res = scopus_search(query = " Timing matters: The impact of label synchrony on infant categorisation.", type = "article", max_count = 10, count = 10)
-  df = gen_entries_to_df(res[[1]])
-}
-
-df
-
-if (have_api_key()){
-
-res = metadata_retrieval(query = " Timing matters: The impact of label synchrony on infant categorisation.")
-}
-```
-```{r}
-res = scopus_search("title(Timing matters: The impact of label synchrony on infant categorisation.)", max_count = 20, count = 10)
-
-df = gen_entries_to_df(res[[1]])$df %>% select(`dc:title`, `dc:identifier`) %>% 
-  rename(full_title = `dc:title`, 
-         scopus_id = `dc:identifier`)
-```
 
 
 ```{r}
@@ -68,9 +47,12 @@ search_for_title_scopus_id <- function(query) {
 
 
 
+
+
+
 ```{r}
 all_paper_title <- unique(d$long_cite)
-parsed_paper_title <- str_trim(sub("^.*?\\b(?:19|20)\\d{2}\\).([^.]+).*", "\\1", all_paper, perl=TRUE))
+parsed_paper_title <- str_trim(sub("^.*?\\b(?:19|20)\\d{2}\\).([^.]+).*", "\\1", all_paper_title, perl=TRUE))
 
 
 raw_title_with_scopus_id <- lapply(parsed_paper_title, 
@@ -86,8 +68,15 @@ raw_title_with_scopus_id <- lapply(parsed_paper_title,
 
 
 ```{r}
+get_pubmed_ids_by_fulltitle( "Timing matters: The impact of label synchrony on infant categorisation"   )
+```
+
+
+# Step 1: get Scopus ID for all the paper 
+
+```{r}
 clean_scopus_id <- raw_title_with_scopus_id %>% 
-  select(title, search_status, `dc:identifier`, `prism:publicationName`, `citedby-count`) %>% 
+  select(title, search_status, eid,`dc:identifier`, `prism:publicationName`, `citedby-count`) %>% 
   rename(scopus_id = `dc:identifier`, 
          publication_journal = `prism:publicationName`, 
          cited_by_count = `citedby-count`) %>% 
@@ -96,22 +85,37 @@ clean_scopus_id <- raw_title_with_scopus_id %>%
       is.na(scopus_id)  ~ "failed", 
       TRUE ~ "success"
     )
-  )
+  ) %>% 
+  mutate(scopus_id = gsub("SCOPUS_ID:", "", scopus_id))
 ```
-
-
-
-# Step 1: get Scopus ID for all the paper 
-
-```{r}
-test <- unique(d$long_cite)[[1]]
-
-```
-
-
 
 
 # Step 2: Use Scopus ID to compile comprehensive author list 
+```{r}
+test_id <- clean_scopus_id %>% 
+  filter(search_status == "success") %>% 
+  pull(eid)
+  
+  
+test_res <- lapply( test_id, 
+     function(x){
+       meta_data = article_retrieval(id = x, view = "META_ABS", identifier = "eid")
+       ds <- meta_data$content
+       return (ds)
+     }
+  )
+
+
+scopus_id ="84924716287"
+
+meta_data %>% View()
+
+# tricky to get the data 
+authors <- meta_data$content$`full-text-retrieval-response`$coredata$`dc:creator` %>% as.data.frame()
+
+```
+
+
 
 
 # Step 3: Use Comprehensive author list to look at 
@@ -121,13 +125,5 @@ test <- unique(d$long_cite)[[1]]
 ## citation network(?)
 
 
-```{r}
-scopus_id ="84924716287"
 
-meta_data = article_retrieval(id = scopus_id, view = "META", identifier = "scopus_id")
-meta_data %>% View()
-
-# tricky to get the data 
-meta_data$content$`full-text-retrieval-response`$coredata$`dc:creator`[[1]]$`$`
-```
 

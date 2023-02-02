@@ -1,0 +1,283 @@
+af_id,af_name,af_country,af_city,af_state,af_type,af_postal
+60026851,University of Oxford,United Kingdom,Oxford,Oxfordshire,univ,OX1 2JD
+60003500,The Ohio State University,United States,Columbus,OH,univ,43210-1132
+60007363,Northwestern University,United States,Evanston,IL,univ,60208-0001
+60012227,Scuola Internazionale Superiore di Studi Avanzati,Italy,Trieste,TS,univ,34136
+60021624,The University of Toledo,United States,Toledo,OH,univ,43606-3390
+60001576,Universitat de Barcelona,Spain,Barcelona,Barcelona,univ,08007
+60032942,Universitat Pompeu Fabra Barcelona,Spain,Barcelona,Barcelona,univ,08002
+60009391,Utrecht Institute of Linguistics OTS,Netherlands,Utrecht,NA,resi,3512 JK
+60008134,CNRS Centre National de la Recherche Scientifique,France,Paris,NA,resi,75794
+60024516,Max Planck Institute for Psycholinguistics,Netherlands,Nijmegen,Gelderland,resi,6525 XD
+60025555,Nippon Telegraph and Telephone Corporation,Japan,Tokyo,NA,comp,100-8116
+60010365,The University of British Columbia,Canada,Vancouver,BC,univ,V6T 1Z4
+60020829,RIKEN Center for Brain Science,Japan,Wako,Saitama,resi,351-0198
+60008724,Duke University,United States,Durham,NC,univ,27705-3191
+60025997,Keio University,Japan,Tokyo,NA,univ,108-8345
+60015682,Japan Science and Technology Agency,Japan,Kawaguchi,Saitama,resi,332-0012
+60022148,University College London,United Kingdom,London,NA,univ,WC1E 6BT
+60092959,National Rehabilitation Center for Persons with Disabilities,Japan,Tokorozawa,Saitama,hosp,359-8555
+60107806,"The MARCS Institute for Brain, Behaviour and Development",Australia,Bankstown,NSW,resi,2214
+60017803,Western Sydney University,Australia,Penrith,NSW,univ,2751
+60027165,University of Rochester,United States,Rochester,NY,univ,14627-9000
+60210214,Integrative Neuroscience and Cognition Center,France,Paris,Ile-de-France,resi,75006
+60002483,Universiteit van Amsterdam,Netherlands,Amsterdam,Noord-Holland,univ,1012 WX
+60008042,Universität Leipzig,Germany,Leipzig,Sachsen,univ,4109
+60027550,"University of California, Los Angeles",United States,Los Angeles,CA,univ,90095-9000
+60006297,University of Pennsylvania,United States,Philadelphia,PA,univ,19104-6303
+60015481,University of Washington,United States,Seattle,WA,univ,98195-9505
+60105775,Laboratoire de Sciences Cognitives et Psycholinguistique,France,Paris,Ile-de-France,resi,75005
+60012317,University of Oregon,United States,Eugene,OR,univ,97403-1657
+60015913,Dalhousie University,Canada,Halifax,NS,univ,B3H 4R2
+60016478,Central Institute for the Deaf - St. Louis,United States,St. Louis,MO,resi,63110
+60011460,Brown University,United States,Providence,RI,univ,02912-0001
+60028628,Northeastern University,United States,Boston,MA,univ,02115-5000
+60029616,Aarhus Universitet,Denmark,Aarhus,Midtjylland,univ,8000
+60002494,Université McGill,Canada,Montreal,QC,univ,H3A 0G4
+60025187,Eötvös Loránd Tudományegyetem,Hungary,Budapest,NA,univ,1053
+60027811,Magyar Tudomanyos Akademia,Hungary,Budapest,Budapest,resi,1051
+60024812,Semmelweis Egyetem,Hungary,Budapest,NA,univ,1085
+60002388,Albert Einstein College of Medicine of Yeshiva University,United States,New York,NY,resi,10461-1975
+60002952,Helsingin Yliopisto,Finland,Helsinki,Uusimaa,univ,00014
+60006876,Turun yliopisto,Finland,Turku,Southwest Finland,univ,20014
+60012954,Oulun Yliopisto,Finland,Oulu,North Ostrobothnia,univ,90570
+60016622,Oulu University Hospital,Finland,Oulu,NA,hosp,90220
+60032398,University of Jyväskylä,Finland,Jyvaskyla,Central Finland,univ,40014
+60103653,Aalto University,Finland,Espoo,Uusimaa,univ,02150
+100368375,School of Psychology,United Kingdom,Exeter,NA,NA,EX4 4QG
+60016849,University of Toronto,Canada,Toronto,ON,univ,M5S 1A1
+60031828,McMaster University,Canada,Hamilton,ON,univ,L8S 4L8
+60002337,State University of New York System,United States,Albany,NY,univ,12246
+60016529,Radboud Universiteit,Netherlands,Nijmegen,Gelderland,univ,6525 XZ
+60122558,International Max Planck Research School for Language Sciences,Netherlands,Nijmegen,Gelderland,resi,6525 XD
+60005429,National Taiwan University,Taiwan,Taipei,NA,univ,10617
+60022637,National Taiwan Normal University,Taiwan,Taipei,NA,univ,106
+60021519,University of Miami Leonard M. Miller School of Medicine,United States,Miami,FL,meds,33136-1015
+60032179,University of Wisconsin-Madison,United States,Madison,WI,univ,53715-1007
+60015574,"The University of Tennessee, Knoxville",United States,Knoxville,TN,univ,37996-0001
+60005248,Johns Hopkins University,United States,Baltimore,MD,univ,21218-2680
+60009254,Purdue University,United States,West Lafayette,IN,univ,47907-2040
+60014455,Waisman Center,United States,Madison,WI,resi,53705-2280
+60106288,Neuroimagerie Cognitive,France,Gif-sur-Yvette,Ile-de-France,resi,"91191, Cedex"
+60007816,Commissariat a l'Energie Atomique et aux Energies Alternatives,France,Gif-sur-Yvette,NA,resi,91191
+60106017,Université Paris-Saclay,France,Gif-sur-Yvette,Ile-de-France,univ,91190
+60029681,Pontificia Universidad Católica de Chile,Chile,Santiago,RM,univ,NA
+60024690,University of Ferrara,Italy,Ferrara,FE,univ,44121
+60021508,University of Notre Dame,United States,Notre Dame,IN,univ,NA
+60014439,"University of California, Davis",United States,Davis,CA,univ,95616-5270
+60027950,Carnegie Mellon University,United States,Pittsburgh,PA,univ,15213-3890
+60003269,Princeton University,United States,Princeton,NJ,univ,08540-7106
+60027627,San Francisco State University,United States,San Francisco,CA,univ,94132-1740
+60005510,Nanyang Technological University,Singapore,Singapore City,NA,univ,639798
+60006240,University of Ulsan College of Medicine,South Korea,Seoul,NA,meds,05505
+60028178,Hanshin University,South Korea,Osan,Gyeonggi-do,univ,447-791
+60123796,Université Paris Cité,France,Paris,Ile-de-France,univ,75006
+60018491,Simon Fraser University,Canada,Burnaby,BC,univ,V5A 1S6
+60031810,Université de Bourgogne,France,Dijon,Bourgogne-Franche-Comte,univ,"21078, cedex"
+60009016,"Birkbeck, University of London",United Kingdom,London,NA,univ,WC1E 7HX
+60012708,Stanford University,United States,Palo Alto,CA,univ,94305
+60022195,Massachusetts Institute of Technology,United States,Cambridge,MA,univ,02139-4301
+60030612,"University of California, San Diego",United States,San Diego,CA,univ,92093-0021
+60018926,San Diego State University,United States,San Diego,CA,univ,92182-7455
+60006242,UCL Institute of Education,United Kingdom,London,NA,univ,WC1H 0AL
+60006925,La Trobe University,Australia,Melbourne,Victoria,univ,3086
+60000705,University of South Alabama,United States,Mobile,AL,univ,36688-0002
+60017317,University of Sussex,United Kingdom,Brighton,East Sussex,univ,BN1 9RH
+60117769,"Department of Psychology, Lancaster University",United Kingdom,Lancaster,Lancashire,univ,LA1 4YF
+60029653,Kent State University,United States,Kent,OH,univ,44242-0001
+60003545,Loyola University of Chicago,United States,Chicago,IL,univ,60626
+60022659,University of Connecticut,United States,Storrs,CT,univ,06269
+60009982,Harvard University,United States,Cambridge,MA,univ,02138-3800
+60002765,Bar-Ilan University,Israel,Ramat Gan,Tel Aviv,univ,5290002
+60021784,New York University,United States,New York,NY,univ,10012-1019
+60005455,Yale University,United States,New Haven,CT,univ,06510-7012
+113605268,University of Alabama,United States,Mobile,AL,NA,35486
+60025371,The University of Alabama,United States,Tuscaloosa,AL,univ,35401-2028
+124185099,University of Arkansas,United States,Stuttgart,AR,NA,72351
+60024324,University of Iowa,United States,Iowa City,IA,univ,52242-1396
+60025200,University of Stirling,United Kingdom,Stirling,Stirlingshire,univ,FK9 4LA
+60160138,"University of East Anglia, Faculty of Social Sciences",United Kingdom,Norwich,Norfolk,univ,NR4 7TJ
+60023643,Lancaster University,United Kingdom,Lancaster,Lancashire,univ,LA1 4YW
+60012197,University of Reading,United Kingdom,Reading,Berkshire,univ,RG6 6AH
+60023998,Cardiff University,United Kingdom,Cardiff,"South Glamorgan, Wales",univ,CF10 3AT
+60005807,Max-Planck-Institut für evolutionäre Anthropologie,Germany,Leipzig,Sachsen,resi,04103
+60002306,University of Calgary,Canada,Calgary,AB,univ,T2N 1N4
+60033154,Concordia University,Canada,Montreal,QC,univ,H3G 1M8
+60001343,Brock University,Canada,St. Catharines,ON,univ,L2S 3A1
+60022913,Edgewood College,United States,Madison,WI,coll,NA
+60029659,Otsuma Women's University,Japan,Tokyo,NA,univ,102-8357
+60013991,Tamagawa University,Japan,Machida,Tokyo,univ,194-8610
+60011375,Japan Advanced Institute of Science and Technology,Japan,Nomi,Ishikawa,univ,923-1292
+60019702,University of Birmingham,United Kingdom,Birmingham,West Midlands,univ,B15 2TT
+60022020,University of Warwick,United Kingdom,Coventry,West Midlands,univ,CV4 7AL
+60019374,Rikkyo University,Japan,Tokyo,NA,univ,171-8501
+60025779,Bangor University,United Kingdom,Bangor,Gwynedd,univ,LL57 2DG
+60029251,University of Miami,United States,Coral Gables,FL,univ,33146-2926
+60016653,Rheinisch-Westfälische Technische Hochschule Aachen,Germany,Aachen,Nordrhein-Westfalen,univ,52062
+60001097,Uniklinik RWTH Aachen,Germany,Aachen,Nordrhein-Westfalen,hosp,52074
+60015879,Medical Research Council,United Kingdom,London,NA,resi,W1B 1AL
+60029194,University of North Carolina Wilmington,United States,Wilmington,NC,univ,28403-3201
+100316212,Laboratoire de Psychologie Expérimentale,France,Paris,NA,NA,75006
+60027272,The University of Edinburgh,United Kingdom,Edinburgh,Scotland,univ,EH8 9YL
+60005658,James Madison University,United States,Harrisonburg,VA,univ,22807
+60016418,University of York,United Kingdom,York,North Yorkshire,univ,YO10 5DD
+60018805,Deakin University,Australia,Geelong,VIC,univ,3220
+60030102,Haskins Laboratories New Haven,United States,New Haven,CT,resi,06511
+60029788,Wesleyan University Middletown,United States,Middletown,CT,univ,06459
+60010065,The University of Arizona,United States,Tucson,AZ,univ,85721-0073
+60032372,Amherst College,United States,Amherst,MA,coll,01002-5000
+60012306,Università degli Studi di Milano-Bicocca,Italy,Milan,NA,univ,20126
+60000481,Università degli Studi di Padova,Italy,Padua,PD,univ,35122
+60006541,The University of Hong Kong,Hong Kong,Pokfulam,NA,univ,NA
+60028897,University of Ottawa,Canada,Ottawa,ON,univ,K1N 6N5
+60024063,University of Massachusetts Boston,United States,Boston,MA,univ,02125-3393
+60117737,"Fylde College, Lancaster University",United Kingdom,Lancaster,Lancashire,coll,LA1 4YF
+60014313,University of Massachusetts Amherst,United States,Amherst MA,MA,univ,01003-9290
+60098529,Thames Valley District School Board,Canada,London,ON,coll,N5W5P2
+60025778,"University of Michigan, Ann Arbor",United States,Ann Arbor,MI,univ,48109-1382
+60019499,Chinese Academy of Sciences,China,Beijing,Beijing,resi,100864
+60014966,Peking University,China,Beijing,NA,univ,100871
+60021121,Indiana University Bloomington,United States,Bloomington,IN,univ,47405-7000
+60028599,University of Memphis,United States,Memphis,TN,univ,38152-3520
+60017161,National University of Singapore,Singapore,Singapore City,NA,univ,119077
+60023004,University of Delaware,United States,Newark,DE,univ,19716-5200
+60004718,Université de Genève,Switzerland,Geneva,NA,univ,1211
+60031514,Georg-August-Universität Göttingen,Germany,Gottingen,Niedersachsen,univ,37073
+60001359,University of Essex,United Kingdom,Colchester,Essex,univ,CO4 3SQ
+113813899,Université Paris,France,Descartes,NA,NA,F-75006
+60020661,University of Liverpool,United Kingdom,Liverpool,Merseyside,univ,L69 7ZX
+60024779,University of Plymouth,United Kingdom,Plymouth,Devon,univ,PL4 8AA
+60025323,Max Planck Institute for Human Cognitive and Brain Sciences,Germany,Leipzig,Sachsen,resi,04103
+60013372,The University of Texas at Austin,United States,Austin,TX,univ,78705-1139
+60021763,Universität Potsdam,Germany,Potsdam,Brandenburg,univ,14469
+60000762,Humboldt-Universität zu Berlin,Germany,Berlin,NA,univ,10099
+60027161,Ben-Gurion University of the Negev,Israel,Beer Sheva,NA,univ,8410501
+60021143,West Virginia University,United States,Morgantown,WV,univ,26506-6009
+60001439,Pennsylvania State University,United States,University Park,PA,univ,16802
+60032706,Miami University,United States,Oxford,OH,univ,45056
+60032048,St. Francis Xavier University,Canada,Antigonish,NS,univ,B2G 2W5
+60017777,National Institute of Child Health and Human Development (NICHD),United States,Bethesda,MD,resi,20892-2425
+60102026,University of Chester,United Kingdom,Chester,Cheshire,univ,CH1 4BJ
+60003771,The University of Manchester,United Kingdom,Manchester,Greater Manchester,univ,M13 9PL
+60008950,The Australian National University,Australia,Canberra,ACT,univ,2600
+60031707,Michigan State University,United States,East Lansing,MI,univ,48824-2600
+60021918,University of Virginia,United States,Charlottesville,VA,univ,NA
+60021497,Williams College,United States,Williamstown,MA,univ,01267
+60009952,Universitat de Girona,Spain,Girona,Girona,univ,17004
+60029311,University of Southern California,United States,Los Angeles,CA,univ,90089-0911
+60020802,Johns Hopkins University Washington,United States,"Washington, D.C.",DC,univ,20036-2005
+101163590,Center for Childhood Communication,United States,Philadelphia,PA,NA,19104
+60025111,The University of North Carolina at Chapel Hill,United States,Chapel Hill,NC,univ,27514-4105
+60009415,The University of Texas at Dallas,United States,Richardson,TX,univ,75080-3021
+60026600,Aichi University of Education,Japan,Kariya,Aichi,univ,448-8542
+60000221,University of Colorado Boulder,United States,Boulder,CO,univ,80309-0001
+60001426,East Tennessee State University,United States,Johnson,TN,univ,37614-1700
+60016747,Bryn Mawr College,United States,Bryn Mawr,PA,coll,19010-2899
+60119141,Rutgers University–New Brunswick,United States,New Brunswick,NJ,univ,08901-8554
+119763363,Natl. Inst. Child Hlth. Hum. Devmt,NA,NA,NA,NA,NA
+60083392,ANU College of Health & Medicine,Australia,Canberra,ACT,meds,2601
+60033351,Western Health,Australia,NA,VIC,hosp,NA
+112801723,Recovre,Australia,Melbourne,NA,NA,NA
+110475312,Specialist Children’s Services,Australia,NA,VI,NA,NA
+60160408,ARC Centre of Excellence for the Dynamics of Language,Australia,Canberra,ACT,resi,2601
+60031101,University of Cambridge,United Kingdom,Cambridge,Cambridgeshire,univ,CB2 1TN
+60025272,The University of Tokyo,Japan,Tokyo,NA,univ,113-8654
+60015197,Università degli Studi di Pavia,Italy,Pavia,PV,univ,27100
+60012113,The Open University,United Kingdom,Milton Keynes,Buckinghamshire,univ,MK7 6AA
+60001881,The University of Sheffield,United Kingdom,Sheffield,South Yorkshire,univ,S10 2TN
+60011520,King's College London,United Kingdom,London,NA,univ,WC2R 2LS
+60009797,Guy's Hospital,United Kingdom,London,NA,hosp,SE1 9RT
+60025709,The University of Sydney,Australia,Sydney,NSW,univ,2006
+60008734,Vrije Universiteit Amsterdam,Netherlands,Amsterdam,Noord-Holland,univ,1081 HV
+60011664,University of Wollongong,Australia,Wollongong,NSW,univ,2522
+60025475,University of Portsmouth,United Kingdom,Portsmouth,Hampshire,univ,PO1 2UP
+60031004,The University of Queensland,Australia,Brisbane,QLD,univ,4072
+106273438,Minds and Hearts,Australia,West End,QL,NA,4101
+60022175,Durham University,United Kingdom,Durham,County Durham,univ,DH1 3LE
+60189168,Shirayuri University,Japan,Chofu,Tokyo,univ,182-8525
+60002784,Sophia University,Japan,Tokyo,NA,univ,102-8554
+60027086,The University of Alabama at Birmingham,United States,Birmingham,AL,univ,35294-0004
+60018474,The University of North Carolina at Greensboro,United States,Greensboro,NC,univ,27412-5015
+60027090,Virginia Polytechnic Institute and State University,United States,Blacksburg,VA,univ,24061-0001
+60005681,Tel Aviv University,Israel,Tel Aviv-Yafo,Tel Aviv District,univ,6997801
+60015986,Università di Trento,Italy,Trento,TN,univ,38122
+60032083,"University at Buffalo, The State University of New York",United States,Buffalo,NY,univ,14260-1660
+60009164,UC Merced,United States,Merced,CA,univ,95343-5001
+60000745,University of Illinois Urbana-Champaign,United States,Urbana,IL,univ,61801-3444
+60002032,Rush University,United States,Chicago,IL,univ,60612-3806
+60000928,Emory University,United States,Atlanta,GA,univ,30322-1061
+60016005,Queen’s University,Canada,Kingston,ON,univ,K7L 3N6
+60007776,Cornell University,United States,Ithaca,NY,univ,14853-0001
+60001525,Smith College,United States,Northampton,MA,univ,01063-6304
+60030398,Temple University,United States,Philadelphia,PA,univ,19122-6003
+60017246,Eberhard Karls Universität Tübingen,Germany,Tubingen,Baden-Wurttemberg,univ,72074
+60025988,Universität Wien,Austria,Vienna,Vienna,univ,1010
+60107150,"Laboratoire CNRS Institute of Language, Communication and the Brain",France,Aix-en-Provence,Provence-Alpes-Cote d'Azur,resi,"13604, cedex 1"
+60104521,University of Taipei,Taiwan,Taipei,NA,univ,NA
+60086726,Australian Research Council,Australia,Canberra,ACT,govt,2609
+60015206,Florida International University,United States,Miami,FL,univ,33199-2516
+60106051,Universidade de Lisboa,Portugal,Lisbon,NA,univ,1649-004
+60019163,Hopital Cochin AP-HP,France,Paris,Ile-de-France,hosp,75014
+60025070,École des Hautes Études en Sciences Sociales,France,Paris,Ile-de-France,univ,75006
+114219475,Clinique Universitaire Baudelocque,France,NA,NA,NA,NA
+60109771,UCL Institute of Cognitive Neuroscience,United Kingdom,London,NA,resi,WC1N 3AZ
+60022109,Queen Mary University of London,United Kingdom,London,NA,univ,E1 4NS
+60027276,Tokyo Gakugei University,Japan,Koganei,Tokyo,univ,184-8501
+60009357,L'Organisation de Coopération et de Développement Economiques,France,Paris,Ile-de-France,govt,"75775, Cedex 16"
+60000179,École Normale Supérieure,France,Paris,France,univ,"75230, Cedex 05"
+60020547,Texas A&M University,United States,College Station,TX,univ,77843-0001
+60003381,"Hitachi, Ltd.",Japan,Tokyo,NA,comp,100-8280
+100779550,Hiroshima City Child Guid. Clin. C.,Japan,Hiroshima,NA,NA,732-0052
+60031955,Shinshu University,Japan,Matsumoto,Nagano,univ,390-8621
+60002106,Shinshu University Faculty of Medicine,Japan,Matsumoto,Nagano,meds,390-8621
+60011001,Kyoto University,Japan,Kyoto,Kyoto,univ,606-8501
+60010726,Doshisha University,Japan,Kyoto,Kyoto,univ,602-8580
+60001795,Pacific Lutheran University,United States,Tacoma,WA,univ,98447
+60030162,Columbia University,United States,New York,NY,univ,10027-7041
+60029304,Hofstra University,United States,Hempstead,NY,univ,11549-1000
+60019674,Boston University,United States,Boston,MA,univ,02215-1405
+60002798,Chinese University of Hong Kong,Hong Kong,Hong Kong,NA,univ,NA
+60163091,"Faculty of Science, Engineering and Medicine",United Kingdom,Coventry,West Midlands,univ,CV4 7AL
+60025038,"University of California, Berkeley",United States,Berkeley,CA,univ,94720-2284
+60012851,State University of New York at Plattsburgh,United States,Plattsburgh,NY,univ,12901
+60027561,University of Illinois at Chicago,United States,Chicago,IL,univ,60607-3320
+60015543,University of Pittsburgh,United States,Pittsburgh,PA,univ,15260-0001
+60033316,Universiteit Gent,Belgium,Ghent,VOV,univ,9000
+60003915,Vanderbilt University,United States,Nashville,TN,univ,37235-0002
+60003858,Uppsala Universitet,Sweden,Uppsala,Uppsala,univ,751 05
+60001271,Advanced Telecommunications Research Institute International (ATR),Japan,Kyoto,Kyoto,comp,619-0288
+60024322,Osaka University,Japan,Suita,Osaka,univ,565-0871
+60009563,Central European University,Austria,Vienna,Vienna,univ,1100
+60010348,Universitetet i Oslo,Norway,Oslo,Oslo,univ,0316
+60015540,Japan Society for the Promotion of Science,Japan,Tokyo,Tokyo,resi,102-8471
+60007989,Universiteit Utrecht,Netherlands,Utrecht,NA,univ,3584 CS
+60010023,Rijksuniversiteit Groningen,Netherlands,Groningen,Groningen,univ,9700 AB
+60032253,Otemon Gakuin University,Japan,Ibaraki,Osaka,univ,567-8502
+60014564,Oxford Brookes University,United Kingdom,Oxford,Oxfordshire,univ,OX3 0BP
+121805271,Independent Researcher,Netherlands,Amsterdam,NA,NA,1082GA
+60028229,Universität Hamburg,Germany,Hamburg,Hamburg,univ,20148
+60025525,Universität Konstanz,Germany,Konstanz,Baden-Wurttemberg,univ,78464
+60027863,Université du Québec à Montréal,Canada,Montreal,QC,univ,H3C 3P8
+60041243,Faculdade de Letras da Universidade de Lisboa,Portugal,Lisbon,NA,resi,1600-214
+60020304,"University of Maryland, College Park",United States,College Park,MD,univ,20742-0001
+60013430,Hopital de Bicetre,France,Le Kremlin-Bicetre,NA,hosp,94275
+60122579,College of Health and Human Sciences,United States,West Lafayette,IN,coll,47907-2040
+60021947,Indiana University School of Medicine,United States,Indianapolis,IN,meds,46202-3082
+60024609,Indiana University-Purdue University Indianapolis,United States,Indianapolis,IN,univ,46202-5147
+60023908,Portland State University,United States,Portland,OR,univ,97207-0751
+60029069,MRC Cognition and Brain Sciences Unit,United Kingdom,Cambridge,Cambridgeshire,resi,CB2 7EF
+60014300,AT&T Inc.,United States,San Antonio,TX,comp,78205
+60020650,University of Bristol,United Kingdom,Bristol,NA,univ,BS8 1QU
+100320431,Northern University,United States,Chicago,IL,NA,60625
+60119760,North Park University,United States,Chicago,IL,univ,60625-4895
+60009500,University of Vermont,United States,Burlington,VT,univ,05405-0001
+60017717,The University of North Carolina System,United States,Chapel Hill,NC,univ,27515
+114002219,Hopital Universitaire Robert-Debre,France,NA,NA,NA,NA
+60010307,University of Colorado Denver,United States,Denver,CO,univ,80202-1702
+115470789,University of Tennessee,United States,Chattanooga,UT,NA,37403
+60031892,"University of Nevada, Las Vegas",United States,Las Vegas,NV,univ,89154-9901
+60029680,Acadia University,Canada,Wolfville,NS,univ,B4P 2R6
+105765261,Acadia University,United Kingdom,NA,Scotland,NA,NA
+60011846,Nagasaki University,Japan,Nagasaki,Nagasaki,univ,852-8521
+60022781,Asahi Kasei Corporation,Japan,Tokyo,NA,comp,101-8101
+60189537,Nagasaki Junshin Catholic University,Japan,Nagasaki,Nagasaki,univ,852-8558
