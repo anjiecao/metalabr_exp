@@ -11,6 +11,7 @@ library(rscopus)
 library(rcrossref)
 library(easyPubMed)
 library(reticulate)
+library(tidycensus)
 
 d <- read_csv(here("data/clean_data.csv")) 
 
@@ -136,17 +137,24 @@ author_info_df = r.doi_df
 ## helper functions 
 
 ```{python}
-def get_info_from_doi(doi):
+def get_info_from_doi(doi, author_info_df):
   try: 
     ab = AbstractRetrieval(doi)
     title = ab.title
     authors = ab.authors
     cited_by = ab.citedby_count
     info = pd.DataFrame(authors)
-    info["title"] = title 
+    info["db_title"] = title
     info["doi"] = doi
     info["cited_by"] = cited_by
+    info["pub_date"] = ab.coverDate
+    
+    info["parsed_title"] = author_info_df[author_info_df["doi"] == doi]["title"].iloc[0]
+    info["ds_clean"] = author_info_df[author_info_df["doi"] == doi]["ds_clean"].iloc[0]
+    
   except: 
+    
+
     info = pd.DataFrame({"doi": [doi],
                         'auid': [""], 
                         'indexed_name':[""],
@@ -154,7 +162,10 @@ def get_info_from_doi(doi):
                         'given_name':[""], 
                         'affiliation':[""],
                         "title" : [""], 
-                        "cited_by": [""]})
+                        "cited_by": [""], 
+                        "pub_date":[""],
+                        "parsed_title": [author_info_df[author_info_df["doi"] == doi]["title"].iloc[0]], 
+                        "ds_clean": [author_info_df[author_info_df["doi"] == doi]["ds_clean"].iloc[0]]})
   
   return (info)
 
@@ -196,7 +207,7 @@ dois = author_info_df["doi"].tolist()
 info_list = []
 for doi in dois:
   print(doi)
-  info = get_info_from_doi(doi)
+  info = get_info_from_doi(doi, author_info_df)
   info_list.append(info)
 info_df = pd.concat(info_list)  
 
@@ -239,7 +250,7 @@ author_df <- py$info_df
 
 author_info <- author_df %>% 
   filter(title != "") %>% 
-  unnest(c(auid, cited_by, affiliation))
+  unnest(c(auid, cited_by, affiliation, db_title))
 
 
 author_with_aff_df <- author_info %>% 
@@ -255,10 +266,269 @@ author_with_aff_df <- author_info %>%
 write_csv(author_with_aff_df, here("data/bib/author_info.csv"))
 ```
 
+
 ```{r}
 
+author_with_aff_df %>% 
+  group_by(af_country, ds_clean) %>% 
+  count() %>% 
+  filter(!is.na(af_country)) %>% 
+  ggplot(aes(x = reorder(af_country, -n), y = n)) + 
+  geom_point() + 
+  theme_classic() + 
+  theme(axis.text.x  = element_text(angle = 90)) + 
+  facet_wrap(~ds_clean, scales = "free")
+  
+```
 
+
+
+# Map? 
+
+```{r}
+library(tidycensus)
+library(maps)
+library(ggmap)
+
+# maybe $ so run with caution 
+geo_coe_aff_df <- aff_df %>% 
+  mutate(geo_code = geocode(af_name))
+
+geo_code_aff_df <- geo_coe_aff_df %>% unnest(geo_code)
+
+
+coarser_search_geo_code <- geo_code_aff_df %>% 
+  # failed with location change
+  filter(is.na(lon)) %>%
   
+city_search_geo_code <- geo_code_aff_df %>% 
+  # failed with location change
+  filter(is.na(lon)) %>% 
+  filter(!is.na(af_city)) %>% 
+  mutate(geo_code = geocode(af_city)) %>% 
+  select(-c(lon, lat)) %>% 
+  unnest(geo_code)
   
+  filter(!is.na())
+  mutate(
+    geo_code = case_when(
+      !is.na(af_city) ~ geocode(af_city), 
+      TRUE ~ geocode(af_country)
+    )
+  ) %>% 
+  unnest(geo_code)
+```
+
+```{r}
+
+world_map <- map_data("world")
+
+p <- ggplot() + coord_fixed() +
+  xlab("") + ylab("")
+
+#Add map to base plot
+base_world_messy <- p + geom_polygon(data=world_map, aes(x=long, y=lat, group=group), 
+                               colour="light green", fill="light green")
+
+cleanup <- 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = 'white', colour = 'white'), 
+        axis.line = element_line(colour = "white"), legend.position="none",
+        axis.ticks=element_blank(), axis.text.x=element_blank(),
+        axis.text.y=element_blank())
+
+base_world <- base_world_messy + cleanup
+
+base_world +
+  geom_point(data=geo_code_aff_df %>% filter(!is.na(lon)), 
+             aes(x=lon, y=lat), colour="Deep Pink", 
+             fill="Pink",pch=21, size=1, alpha=0.7)
+```
+
+```{r}
+write_csv(geo_code_aff_df, here("data/bib/geo_code_aff.csv"))
+```
+
+
+# play with census? 
+```{r}
+
+library(sp)
+library(maps)
+library(maptools)
+
+lonlat_to_state_sp <- function(pointsDF) {
+    # Prepare SpatialPolygons object with one SpatialPolygon
+    # per state (plus DC, minus HI & AK)
+    states <- maps::map('county', fill=TRUE, col="transparent", plot=FALSE)
+    IDs <- sapply(strsplit(states$names, ":"), function(x) x[1])
+    states_sp <- map2SpatialPolygons(states, IDs=IDs,
+                     proj4string=CRS("+proj=longlat +datum=WGS84"))
+
+    # Convert pointsDF to a SpatialPoints object 
+    pointsSP <- SpatialPoints(pointsDF, 
+                    proj4string=CRS("+proj=longlat +datum=WGS84"))
+
+    # Use 'over' to get _indices_ of the Polygons object containing each point 
+        indices <- over(pointsSP, states_sp)
+
+    # Return the state names of the Polygons object containing each point
+    stateNames <- sapply(states_sp@polygons, function(x) x@ID)
+    stateNames[indices]
+}
+
+# Test the function using points in Wisconsin and Oregon.
+testPoints <- data.frame(x = c(-90, -120), y = c(44, 44))
+
+lonlat_to_state_sp(testPoints)
+
+
+```
+
+
+## get county name 
+
+```{r}
+
+geo_code_aff <- read_csv(here("data/bib/geo_code_aff.csv"))
+
+us_city_with_code <- geo_code_aff %>% 
+  filter(af_country == "United States") %>% 
+  filter(!is.na(lon))
+
+us_city_with_code$county <- us_city_with_code %>% 
+  select(lon, lat) %>% 
+  lonlat_to_state_sp
+
+us_county <- us_city_with_code %>% 
+  separate(county, into = c("state", "county"), sep = ",")
+
+
+```
+
+## link with US publication year
+
+```{r}
+us_county_year <- author_with_aff_df %>% 
+  separate(pub_date, into = c("year", "month", "day"), sep = "-") %>% 
+  select(-c("month", "day")) %>% 
+  mutate(year = as.numeric(year)) %>% 
+  rename(af_id = affiliation) %>% 
+  left_join(us_county %>% select(af_id, county), by = c("af_id")) %>% 
+  filter(!is.na(county)) %>% 
+  distinct(year, county)
+
+
+```
+
+
+```{r}
+#1990 deciennial data has been removed 
+
+# before 2000, use sf3 
+
+```
+
+
+
+```{r}
+v16 <- load_variables(2016, "acs5", cache = TRUE)
+m_income_v16_label <- "B06011_001"
+
+
+get_avg_median_income <- function(county_name, state_name, year){
+  
+  income_df <- tryCatch(
+        {
+              get_acs(
+                  geography = "tract", 
+                  variables = "B06011_001", 
+                  state = state_name,
+                  county = county_name,
+                  survey = "acs5",
+                  year = year
+              )
+
+        },
+        error=function(cond) {
+          return(tibble("search_status" = "failed_search"))
+        },
+        warning=function(cond) {
+            message("Here's the original warning message:")
+            message(cond)
+            # Choose a return value in case of warning
+            return(NULL)
+        },
+        finally={
+            message("Some other message at the end")
+        }
+    )    
+    
+    
+  
+
+  return (mean(income_df$estimate, na.rm = TRUE))
+  
+}
+
+
+
+
+CA_income <- get_acs(
+  geography = "county", 
+  variables = "B06011_001", 
+  state = "ca",
+  year = 2020
+)
+
+```
+
+
+
+```{r}
+author_with_aff_df %>% 
+  group_by(parsed_title) %>% 
+  count(affiliation)
+
+author_with_aff_df %>% 
+  group_by(parsed_title) %>% 
+  count(indexed_name)
+```
+
+
+
+```{r}
+test_df <- geo_code_aff_df %>% 
+  # failed with location change
+  filter(is.na(lon)) %>% 
+  head(5)
+
+test_df %>% 
+   mutate(
+    geo_code = case_when(
+      # not uniquely coded
+      af_city == "Exeter" ~ geocode("Japan"),
+      af_city != "Exeter" & !is.na(af_city) ~ geocode("France"), 
+      TRUE ~ geocode("France")
+    )
+  )
+```
+
+
+
+
+# Put everything together? 
+
+
+```{r}
+clean_title_manual_df <- read_csv(here("data/bib/clean_title_manual.csv"))
+d <- read_csv(here("data/clean_data.csv"))
+
+db_with_author <- author_with_aff_df %>% 
+  left_join(clean_title_manual_df %>% rename(parsed_title = parsed_paper_title), 
+            by= c("parsed_title", "ds_clean")) %>% 
+  left_join(d, by = c("ds_clean", "long_cite"))
+  
+
 ```
 

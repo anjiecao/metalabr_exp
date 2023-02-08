@@ -64,8 +64,15 @@ get_ma_effect_size <- function(d){
   P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
   i2 <- sum(model$sigma2) / (sum(model$sigma2) + (model$k-model$p)/sum(diag(P)))
   
+  
+  n = nrow(d)
+  se = model$se
+  sd = se * sqrt(n)
+  
   es <- tibble(
     "es" = model$b[[1]],
+    "n" = n,
+    "sd" = sd, 
     "es_lb" = model$ci.lb,
     "es_ub" = model$ci.ub, 
     "i2" = i2

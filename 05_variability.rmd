@@ -1,0 +1,44 @@
+---
+title: "05_variability.Rmd"
+author: "Anjie Cao, Molly Lewis, and Michael Frank"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(ggthemes)
+library(metafor)
+
+source(here("helper/summary_table_help.r"))
+d <- read_csv(here("data/clean_data.csv"))
+```
+
+# Get CV for each domain 
+
+```{r}
+summary_d <- d %>% 
+  group_by(ds_clean) %>% 
+  nest(data = -ds_clean) %>% 
+  mutate(mod = map(data, get_ma_effect_size), 
+         descriptive = map(data, get_descriptive_stas)) %>% 
+  unnest(c(mod, descriptive)) %>% 
+  select(-data)
+```
+
+
+
+```{r}
+summary_d %>% 
+  mutate(cv = sd / abs(es), 
+         sem = cv / sqrt(2*n)) %>% 
+  ggplot(aes(x = reorder(ds_clean, cv), y = cv)) + 
+  geom_pointrange(aes(ymin = cv - sem, ymax = cv + sem,  alpha = 0.3)) +
+  coord_flip() + 
+  theme_few() + 
+  ylab("")
+```
+
+
+
