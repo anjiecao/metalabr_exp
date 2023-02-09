@@ -10,6 +10,7 @@ library(tidyverse)
 library(here)
 library(ggthemes)
 library(metafor)
+library(PublicationBias)
 
 source(here("helper/summary_table_help.r"))
 d <- read_csv(here("data/clean_data.csv"))
@@ -27,7 +28,24 @@ summary_d <- d %>%
   select(-data)
 ```
 
+# Overall 
 
+## tau and i^2
+
+```{r}
+summary_d %>% 
+  select(ds_clean, tau2, i2) %>% 
+  pivot_longer(cols = c(tau2, i2), 
+               names_to = "value_type", 
+               values_to = "val") %>% 
+  ggplot(aes(x = reorder(ds_clean, val), y = val)) + 
+  geom_point() + 
+  coord_flip() + 
+  facet_wrap(~value_type, scales = "free")
+```
+
+
+## cv 
 
 ```{r}
 summary_d %>% 
@@ -39,6 +57,200 @@ summary_d %>%
   theme_few() + 
   ylab("")
 ```
+
+# Controlled for age 
+
+first get the best fitting models 
+
+```{r}
+age_model <- readRDS(here("cached_data/min_age_df.RDS"))
+
+
+age_controlled_estimate <- d %>% 
+  group_by(ds_clean) %>% 
+  nest(data = -ds_clean) %>% 
+  left_join(age_model %>% rename(ds_clean = dataset), by = c("ds_clean")) %>% 
+  mutate(mod = map2(data, model_spec, get_ma_effect_size_controlled)) %>% 
+  unnest(mod)
+
+```
+
+
+is the intercept even meaningful? assuming age = 0?
+
+```{r}
+age_controlled_estimate %>% 
+  ggplot(aes(x = reorder(ds_clean, es), y = es, color = model_spec_clean)) + 
+  geom_pointrange(aes(ymin = es_lb, ymax = es_ub, alpha = .3)) + 
+  
+  coord_flip() + 
+  theme_few()
+ 
+```
+
+look at cv
+ 
+```{r}
+age_controlled_estimate %>% 
+  mutate(cv = sd / abs(es), 
+         sem = cv / sqrt(2*n)) %>% 
+  ggplot(aes(x = reorder(ds_clean, cv), y = cv)) + 
+  geom_pointrange(aes(ymin = cv - sem, ymax = cv + sem,  alpha = 0.3)) +
+  coord_flip() + 
+  theme_few() + 
+  ylab("")
+```
+
+
+comparison 
+
+lol why is controlling age doing more harm than good 
+probalby because "But, because the mean bias is very close to zero, the coefficient of variation appears gigantic."???
+
+```{r}
+age_controlled_estimate %>% 
+  mutate(cv = sd / abs(es), 
+         sem = cv / sqrt(2*n)) %>% 
+  mutate(cv_type = "age_controlled") %>% 
+  bind_rows(
+    summary_d %>% 
+       mutate(cv = sd / abs(es), 
+         sem = cv / sqrt(2*n), 
+         cv_type = "plain") 
+  ) %>% 
+  ggplot(aes(x = reorder(ds_clean, cv), y = cv,  color = cv_type), group = cv_type) + 
+  geom_pointrange(aes(ymin = cv - sem, ymax = cv + sem,  alpha = 0.3), position = position_dodge(width = .3)) +
+  coord_flip() + 
+  theme_few() + 
+  ylab("")
+```
+
+# Controlled for methods moderators 
+
+## the basic way 
+
+- separate into subgroup and run plain model 
+
+### Behavioral measure 
+
+```{r}
+bm <- readRDS(here("cached_data/best_fit_behavioral_measure_df.Rds"))
+
+bm_cv <- d %>% filter(ds_clean %in% (bm %>% distinct(dataset) %>% pull)) %>% 
+  group_by(ds_clean, behavioral_measure) %>% 
+  nest(data = -c(ds_clean, behavioral_measure)) %>% 
+  mutate(mod = map(data, get_ma_effect_size)) %>% 
+  unnest(mod) %>% 
+  # NA ones are the one with only 1 study left in the grouping
+  filter(!is.na(es))
+
+```
+
+```{r}
+bm_cv %>% 
+   mutate(cv = sd / abs(es), 
+         sem = cv / sqrt(2*n)) %>% 
+  ggplot(aes(x = reorder(ds_clean, cv), y = cv,  color = behavioral_measure), group = behavioral_measure) + 
+  geom_pointrange(aes(ymin = cv - sem, ymax = cv + sem,  alpha = 0.3), position = position_dodge(width = .3)) +
+  coord_flip() + 
+  theme_few() + 
+  ylab("")
+```
+
+## Exposure phase 
+
+```{r}
+ep <- readRDS(here("cached_data/best_fit_exposure_phase.Rds"))
+
+ep_cv <- d %>% filter(ds_clean %in% (ep %>% distinct(dataset) %>% pull)) %>% 
+  group_by(ds_clean, exposure_phase) %>% 
+  nest(data = -c(ds_clean, exposure_phase)) %>% 
+  mutate(mod = map(data, get_ma_effect_size)) %>% 
+  unnest(mod) %>% 
+  # NA ones are the one with only 1 study left in the grouping
+  filter(!is.na(es))
+```
+
+
+```{r}
+ep_cv %>% 
+  filter(exposure_phase != "test_only") %>% 
+   mutate(cv = sd / abs(es), 
+         sem = cv / sqrt(2*n)) %>% 
+  ggplot(aes(x = reorder(ds_clean, cv), y = cv,  color = exposure_phase), group = exposure_phase) + 
+  geom_pointrange(aes(ymin = cv - sem, ymax = cv + sem,  alpha = 0.3), position = position_dodge(width = .3)) +
+  coord_flip() + 
+  theme_few() + 
+  ylab("")
+```
+
+
+
+## Stimuli naturalness 
+```{r}
+rv <- readRDS(here("cached_data/best_fit_real_visual_df.Rds"))
+ra <- readRDS(here("cached_data/best_fit_real_aud_df.Rds"))
+
+naturalness_ds <- bind_rows(ra, rv) %>% 
+  distinct(dataset)
+
+
+
+visual_stimulus_d <- bind_rows((d %>% 
+  filter(!is.na(object_stimulus)) %>% 
+  #select(ds_clean, object_stimulus) %>% 
+  mutate(
+    stimulus_naturalness = case_when(
+      object_stimulus %in% c("drawings", "digital", "paper",
+                             "picture", "word") ~ "artificial", 
+      TRUE ~ "natural"
+    )
+  )), (d %>% 
+  filter(!is.na(stimuli_type), ds_clean == "Prosocial agents") %>% 
+  mutate(stimulus_naturalness = case_when(
+    stimuli_type == "cartoon" ~ "artificial",
+    TRUE ~ "natural"
+  ))))
+
+aud_stimulus_d <- bind_rows(
+  d %>% 
+  filter(!is.na(stimuli_type)) %>% 
+  filter(ds_clean == "Statistical word segmentation") %>% 
+  mutate(stimulus_naturalness = stimuli_type), 
+  
+  d %>% 
+  filter(!is.na(Modality)) %>% 
+  mutate(stimulus_naturalness = case_when(
+    Modality == "Speech" ~ "natural", 
+    TRUE ~ "artificial"
+  ))
+)
+
+sn_df <- bind_rows(visual_stimulus_d, aud_stimulus_d) %>% 
+  group_by(ds_clean, stimulus_naturalness) %>% 
+  nest(data = -c("ds_clean", "stimulus_naturalness")) %>% 
+  mutate(mod = map(data, get_ma_effect_size)) %>% 
+  unnest(mod) %>% 
+  # NA ones are the one with only 1 study left in the grouping
+  filter(!is.na(es))
+
+```
+
+```{r}
+sn_df %>% 
+   mutate(cv = sd / abs(es), 
+         sem = cv / sqrt(2*n)) %>% 
+  ggplot(aes(x = reorder(ds_clean, cv), y = cv,  color = stimulus_naturalness), group = stimulus_naturalness) + 
+  geom_pointrange(aes(ymin = cv - sem, ymax = cv + sem,  alpha = 0.3), position = position_dodge(width = .3)) +
+  coord_flip() + 
+  theme_few() + 
+  ylab("")
+```
+
+
+
+
+
 
 
 

@@ -1,0 +1,103 @@
+---
+title: "06_pubbias.rmd"
+author: "Anjie Cao, Molly Lewis, and Michael Frank"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(ggthemes)
+library(metafor)
+library(PublicationBias)
+
+source(here("helper/summary_table_help.r"))
+source(here("helper/mod_pubbias.R"))
+d <- read_csv(here("data/clean_data.csv"))
+```
+
+
+```{r}
+
+pubbias_estimate <- function(d, ratio){
+  
+  print(d$long_cite[[1]])
+  print(ratio)
+  if(!is.na(d$long_cite[[1]])){
+      cluster_var = d$long_cite
+  }else{
+    cluster_var = d$study_ID
+  }
+  
+  if (cluster_var[[1]] == "Bahrick, L. E., & Pickens, J. N. (1988). Classification of bimodal English and Spanish language passages by infants. Infant Behavior and Development, 11(3), 277-296. https://doi.org/10.1016/0163-6383(88)90014-8" | cluster_var[[1]] ==  "Altvater-Mackensen, N., & Fikkert, P. (2010). The acquisition of the stop-fricative contrast in"){
+    favor_dir = FALSE
+  }else{
+    favor_dir = TRUE
+  }
+  
+  res <- mod_pubbias_meta(
+  yi = d$d_calc, 
+  vi = d$d_var_calc, 
+  cluster = cluster_var,
+  selection_ratio = ratio, 
+  model_type = "robust", 
+  favor_positive = favor_dir
+  )
+  
+  res <- res$stats %>% mutate(ratio = ratio)
+  
+  return(res)
+  
+}
+
+
+```
+
+
+```{r}
+
+nested_d <- d %>% 
+  group_by(ds_clean) %>% 
+  nest(data = -ds_clean) %>% 
+  crossing(
+    tibble(ratio = seq(1, 4, 0.2))
+  )
+
+
+sim_pub_ratio_df <- nested_d %>% 
+  mutate(res = map2_df(data, ratio, pubbias_estimate))
+
+```
+
+
+```{r}
+saveRDS(sim_pub_ratio_df, here("cached_data/pubbias_sim.Rds"))
+```
+
+
+
+```{r}
+tidy_sim_pub_ratio_df <- sim_pub_ratio_df %>% select(-c(ratio, data)) %>% unnest(res) %>%
+  mutate(sig_p = (p_value < 0.05))
+  
+```
+
+```{r}
+tidy_sim_pub_ratio_df %>% 
+ggplot(aes(x = ratio, y = estimate)) + 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper, color = sig_p)) +
+  geom_hline(yintercept = 0) + 
+  theme_few() + 
+  facet_wrap(~ds_clean)
+
+```
+
+
+
+
+
+
+
+
+

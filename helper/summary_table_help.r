@@ -34,6 +34,78 @@ get_ma_effect_size <- function(d){
   # building different random effect structure 
   formula = "d_calc ~ 1"
   
+  if (nrow(d) == 1){
+    return (
+      es <- tibble(
+        "es" = NA,
+        "n" = NA,
+        "sd" = NA, 
+        "es_lb" =NA,
+        "es_ub" = NA, 
+        "i2" = NA
+      ) 
+    )
+  }
+  
+  
+  if (!nrow(d %>% filter(!is.na(same_infant))) == nrow(d)){
+    
+    model <- rma.mv(as.formula(formula), 
+                    V = d_var_calc, 
+                    random = ~ 1 | short_cite/unique_row, 
+                    data = d) 
+    
+  }else if(!nrow(d %>% filter(!is.na(unique_row))) == nrow(d)){
+    
+    model <- rma.mv(as.formula(formula), 
+                    V = d_var_calc, 
+                    random = ~ 1 | short_cite/same_infant, 
+                    data = d) 
+    
+ 
+  }else{
+    
+    model <- rma.mv(as.formula(formula), 
+                    V = d_var_calc, 
+                    random = ~ 1 | short_cite/same_infant/unique_row, 
+                    data = d)
+    
+  }
+  
+  # formula to calculate i^2
+  # source: https://www.metafor-project.org/doku.php/tips:i2_multilevel_multivariate
+  W <- diag(1/model$vi)
+  X <- model.matrix(model)
+  P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+  i2 <- sum(model$sigma2) / (sum(model$sigma2) + (model$k-model$p)/sum(diag(P)))
+  
+  
+  n = nrow(d)
+  se = model$se
+  sd = se * sqrt(n)
+  tau2 = model$sigma
+  
+  es <- tibble(
+    "es" = model$b[[1]],
+    "n" = n,
+    "tau2" = sum(model$sigma2),
+    "sd" = sd, 
+    "es_lb" = model$ci.lb,
+    "es_ub" = model$ci.ub, 
+    "i2" = i2
+  ) 
+  
+  
+  return (es)
+  
+  
+}
+
+
+
+get_ma_effect_size_controlled <- function(d, formula){
+  
+  # building different random effect structure 
   if (!nrow(d %>% filter(!is.na(same_infant))) == nrow(d)){
     
     model <- rma.mv(as.formula(formula), 
@@ -66,15 +138,15 @@ get_ma_effect_size <- function(d){
   
   
   n = nrow(d)
-  se = model$se
+  se = model$se[[1]]
   sd = se * sqrt(n)
   
   es <- tibble(
     "es" = model$b[[1]],
     "n" = n,
     "sd" = sd, 
-    "es_lb" = model$ci.lb,
-    "es_ub" = model$ci.ub, 
+    "es_lb" = model$ci.lb[[1]],
+    "es_ub" = model$ci.ub[[1]], 
     "i2" = i2
   ) 
   
