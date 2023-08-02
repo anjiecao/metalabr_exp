@@ -3,6 +3,7 @@ title: "srape_with_quarto"
 format: html
 editor: visual
 ---
+
 ```{r}
 library(tidyverse)
 library(here)
@@ -44,18 +45,12 @@ search_for_title_scopus_id <- function(query) {
 }
 ```
 
-
-
 ```{r}
 all_paper_title <- d %>% distinct(ds_clean, long_cite)
 all_paper_title$parsed_paper_title <- str_trim(sub("^.*?\\b(?:19|20)\\d{2}\\).([^.]+).*", "\\1", all_paper_title$long_cite, perl=TRUE))
 write_csv(all_paper_title, here("data/bib/clean_title.csv"))
 
 ```
-
-
-
-
 
 ```{r}
 
@@ -103,7 +98,6 @@ clean_scopus_id %>%
   filter(n > 1)
 ```
 
-
 ```{r}
 # currently only previewing the searhc results that succesfully returned doi
 doi_df <- clean_scopus_id %>% 
@@ -115,13 +109,12 @@ doi_df <- clean_scopus_id %>%
 write_csv(doi_df, here("data/bib/doi.csv"))
 ```
 
-
 ```{r}
 doi_df <- read_csv(here("data/bib/doi.csv"))
 ```
 
-
 # PYTHON: author affi
+
 ```{python}
 import pybliometrics
 from pybliometrics.scopus import AbstractRetrieval
@@ -133,8 +126,7 @@ author_info_df = r.doi_df
 
 ```
 
-
-## helper functions 
+## helper functions
 
 ```{python}
 def get_info_from_doi(doi, author_info_df):
@@ -199,7 +191,6 @@ def get_affiliation_info(af_id):
   
 ```
 
-
 ## get basic info
 
 ```{python}
@@ -230,8 +221,6 @@ for aff_id in aff_list:
 aff_info_df = pd.concat(aff_df_list)
 
 ```
-
-
 
 # R: cache things
 
@@ -266,7 +255,6 @@ author_with_aff_df <- author_info %>%
 write_csv(author_with_aff_df, here("data/bib/author_info.csv"))
 ```
 
-
 ```{r}
 
 author_with_aff_df %>% 
@@ -281,9 +269,7 @@ author_with_aff_df %>%
   
 ```
 
-
-
-# Map? 
+# Map?
 
 ```{r}
 library(tidycensus)
@@ -349,8 +335,8 @@ base_world +
 write_csv(geo_code_aff_df, here("data/bib/geo_code_aff.csv"))
 ```
 
+# play with census?
 
-# play with census? 
 ```{r}
 
 library(sp)
@@ -385,8 +371,7 @@ lonlat_to_state_sp(testPoints)
 
 ```
 
-
-## get county name 
+## get county name
 
 ```{r}
 
@@ -421,15 +406,12 @@ us_county_year <- author_with_aff_df %>%
 
 ```
 
-
 ```{r}
 #1990 deciennial data has been removed 
 
 # before 2000, use sf3 
 
 ```
-
-
 
 ```{r}
 v16 <- load_variables(2016, "acs5", cache = TRUE)
@@ -483,8 +465,6 @@ CA_income <- get_acs(
 
 ```
 
-
-
 ```{r}
 author_with_aff_df %>% 
   group_by(parsed_title) %>% 
@@ -494,8 +474,6 @@ author_with_aff_df %>%
   group_by(parsed_title) %>% 
   count(indexed_name)
 ```
-
-
 
 ```{r}
 test_df <- geo_code_aff_df %>% 
@@ -514,11 +492,7 @@ test_df %>%
   )
 ```
 
-
-
-
-# Put everything together? 
-
+# Put everything together?
 
 ```{r}
 clean_title_manual_df <- read_csv(here("data/bib/clean_title_manual.csv"))
@@ -531,4 +505,3 @@ db_with_author <- author_with_aff_df %>%
   
 
 ```
-

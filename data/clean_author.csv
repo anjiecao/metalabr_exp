@@ -38,6 +38,73 @@ Abstract rule learning,vanLeeuven,3,95,0.031578947368421054
 Abstract rule learning,Vijayan,3,95,0.031578947368421054
 Abstract rule learning,Vishton,3,95,0.031578947368421054
 Abstract rule learning,Werker,1,95,0.010526315789473684
+Audio-Visual Congruence,Aldridge,4,92,0.043478260869565216
+Audio-Visual Congruence,Altvater-Mackensen,1,92,0.010869565217391304
+Audio-Visual Congruence,Bahrick,16,92,0.17391304347826086
+Audio-Visual Congruence,Berger,4,92,0.043478260869565216
+Audio-Visual Congruence,Bower,4,92,0.043478260869565216
+Audio-Visual Congruence,Braga,4,92,0.043478260869565216
+Audio-Visual Congruence,Brandon,12,92,0.13043478260869565
+Audio-Visual Congruence,Brcic,1,92,0.010869565217391304
+Audio-Visual Congruence,Chopin,2,92,0.021739130434782608
+Audio-Visual Congruence,Coulon,9,92,0.09782608695652174
+Audio-Visual Congruence,Derbyshire,3,92,0.03260869565217391
+Audio-Visual Congruence,Diaz,8,92,0.08695652173913043
+Audio-Visual Congruence,Dorn,1,92,0.010869565217391304
+Audio-Visual Congruence,Dupierrix,15,92,0.16304347826086957
+Audio-Visual Congruence,Falck-Ytter,1,92,0.010869565217391304
+Audio-Visual Congruence,Field,3,92,0.03260869565217391
+Audio-Visual Congruence,Flom,4,92,0.043478260869565216
+Audio-Visual Congruence,Gervain,14,92,0.15217391304347827
+Audio-Visual Congruence,Gonzalez,3,92,0.03260869565217391
+Audio-Visual Congruence,Grossmann,1,92,0.010869565217391304
+Audio-Visual Congruence,Guellai,2,92,0.021739130434782608
+Audio-Visual Congruence,Hernandez-Reif,8,92,0.08695652173913043
+Audio-Visual Congruence,HillairetdeBoisferon,22,92,0.2391304347826087
+Audio-Visual Congruence,Kenyon,3,92,0.03260869565217391
+Audio-Visual Congruence,Kitamura,2,92,0.021739130434782608
+Audio-Visual Congruence,Kubicek,14,92,0.15217391304347827
+Audio-Visual Congruence,Kuhl,1,92,0.010869565217391304
+Audio-Visual Congruence,Lee,4,92,0.043478260869565216
+Audio-Visual Congruence,Lewkowicz,28,92,0.30434782608695654
+Audio-Visual Congruence,Loevenbruck,22,92,0.2391304347826087
+Audio-Visual Congruence,MacKain,1,92,0.010869565217391304
+Audio-Visual Congruence,Mani,1,92,0.010869565217391304
+Audio-Visual Congruence,Marie,9,92,0.09782608695652174
+Audio-Visual Congruence,Martinez,3,92,0.03260869565217391
+Audio-Visual Congruence,Meltzoff,1,92,0.010869565217391304
+Audio-Visual Congruence,Minar,12,92,0.13043478260869565
+Audio-Visual Congruence,Molnar,1,92,0.010869565217391304
+Audio-Visual Congruence,Nawrocki,3,92,0.03260869565217391
+Audio-Visual Congruence,Netto,4,92,0.043478260869565216
+Audio-Visual Congruence,Pascalis,20,92,0.21739130434782608
+Audio-Visual Congruence,Patterson,7,92,0.07608695652173914
+Audio-Visual Congruence,Pejovic,1,92,0.010869565217391304
+Audio-Visual Congruence,Pickens,3,92,0.03260869565217391
+Audio-Visual Congruence,Plantinga,1,92,0.010869565217391304
+Audio-Visual Congruence,Pons,8,92,0.08695652173913043
+Audio-Visual Congruence,Poulindubois,3,92,0.03260869565217391
+Audio-Visual Congruence,Quinn,8,92,0.08695652173913043
+Audio-Visual Congruence,Raglioni,8,92,0.08695652173913043
+Audio-Visual Congruence,Richoz,4,92,0.043478260869565216
+Audio-Visual Congruence,Rider,2,92,0.021739130434782608
+Audio-Visual Congruence,Schwarzer,14,92,0.15217391304347827
+Audio-Visual Congruence,Sebastián-Gallés,4,92,0.043478260869565216
+Audio-Visual Congruence,Serbin,3,92,0.03260869565217391
+Audio-Visual Congruence,Soto-Faraco,4,92,0.043478260869565216
+Audio-Visual Congruence,Soutullo,3,92,0.03260869565217391
+Audio-Visual Congruence,Spieker,1,92,0.010869565217391304
+Audio-Visual Congruence,Stern,1,92,0.010869565217391304
+Audio-Visual Congruence,Streri,11,92,0.11956521739130435
+Audio-Visual Congruence,Studdert-Kennedy,1,92,0.010869565217391304
+Audio-Visual Congruence,Tift,12,92,0.13043478260869565
+Audio-Visual Congruence,Trehub,1,92,0.010869565217391304
+Audio-Visual Congruence,Walker-Andrews,8,92,0.08695652173913043
+Audio-Visual Congruence,Walton,4,92,0.043478260869565216
+Audio-Visual Congruence,Weinert,1,92,0.010869565217391304
+Audio-Visual Congruence,Werker,7,92,0.07608695652173914
+Audio-Visual Congruence,Yee,1,92,0.010869565217391304
+Audio-Visual Congruence,Yeung,9,92,0.09782608695652174
 Categorization bias,Baldwin,4,80,0.05
 Categorization bias,Bauer,18,80,0.225
 Categorization bias,Greenfield,8,80,0.1
@@ -189,28 +256,17 @@ Gaze following (combined),Tucker,4,81,0.04938271604938271
 Gaze following (combined),VanHecke,4,81,0.04938271604938271
 Gaze following (combined),Vernetti,2,81,0.024691358024691357
 Gaze following (combined),Yale,11,81,0.13580246913580246
-Infant directed speech preference,Cooper,13,83,0.1566265060240964
-Infant directed speech preference,Curtin,4,83,0.04819277108433735
-Infant directed speech preference,Droucker,4,83,0.04819277108433735
-Infant directed speech preference,Goldstein,4,83,0.04819277108433735
-Infant directed speech preference,Hayashi,3,83,0.03614457831325301
-Infant directed speech preference,Huckeby,4,83,0.04819277108433735
-Infant directed speech preference,Inoue,2,83,0.024096385542168676
-Infant directed speech preference,Kaplan,4,83,0.04819277108433735
-Infant directed speech preference,Koga,2,83,0.024096385542168676
-Infant directed speech preference,Kondou,2,83,0.024096385542168676
-Infant directed speech preference,Nakagawa,2,83,0.024096385542168676
-Infant directed speech preference,Newman,10,83,0.12048192771084337
-Infant directed speech preference,Owren,2,83,0.024096385542168676
-Infant directed speech preference,Pegg,4,83,0.04819277108433735
-Infant directed speech preference,Robertson,2,83,0.024096385542168676
-Infant directed speech preference,Schachner,2,83,0.024096385542168676
-Infant directed speech preference,Segal,4,83,0.04819277108433735
-Infant directed speech preference,Shinohara,2,83,0.024096385542168676
-Infant directed speech preference,Singh,14,83,0.1686746987951807
-Infant directed speech preference,Trainor,6,83,0.07228915662650602
-Infant directed speech preference,Werker,15,83,0.18072289156626506
-Infant directed speech preference,NA,4,83,0.04819277108433735
+Infant directed speech preference,Cooper,13,47,0.2765957446808511
+Infant directed speech preference,Goldstein,4,47,0.0851063829787234
+Infant directed speech preference,Huckeby,4,47,0.0851063829787234
+Infant directed speech preference,Kaplan,4,47,0.0851063829787234
+Infant directed speech preference,Newman,4,47,0.0851063829787234
+Infant directed speech preference,Owren,2,47,0.0425531914893617
+Infant directed speech preference,Pegg,2,47,0.0425531914893617
+Infant directed speech preference,Schachner,2,47,0.0425531914893617
+Infant directed speech preference,Singh,8,47,0.1702127659574468
+Infant directed speech preference,Werker,14,47,0.2978723404255319
+Infant directed speech preference,NA,4,47,0.0851063829787234
 Label advantage in concept learning,Althaus,3,100,0.03
 Label advantage in concept learning,Balaban,7,100,0.07
 Label advantage in concept learning,Booth,28,100,0.28
@@ -465,6 +521,54 @@ Natural speech preference,Vouloumanos,29,55,0.5272727272727272
 Natural speech preference,Werker,7,55,0.12727272727272726
 Natural speech preference,Yamashiro,1,55,0.01818181818181818
 Natural speech preference,Zettersten,3,55,0.05454545454545454
+Neonatal Imitation,Anisfeld,12,336,0.03571428571428571
+Neonatal Imitation,Barbosa,4,336,0.011904761904761904
+Neonatal Imitation,Canet,1,336,0.002976190476190476
+Neonatal Imitation,Chan,2,336,0.005952380952380952
+Neonatal Imitation,Cohen,8,336,0.023809523809523808
+Neonatal Imitation,Collins,3,336,0.008928571428571428
+Neonatal Imitation,Coulon,8,336,0.023809523809523808
+Neonatal Imitation,Courtial,1,336,0.002976190476190476
+Neonatal Imitation,Danon-Apter,1,336,0.002976190476190476
+Neonatal Imitation,Davis,225,336,0.6696428571428571
+Neonatal Imitation,Field,8,336,0.023809523809523808
+Neonatal Imitation,Fontaine,6,336,0.017857142857142856
+Neonatal Imitation,Garcia,3,336,0.008928571428571428
+Neonatal Imitation,Gluckman,2,336,0.005952380952380952
+Neonatal Imitation,Godfrey,2,336,0.005952380952380952
+Neonatal Imitation,Greenberg,8,336,0.023809523809523808
+Neonatal Imitation,Hamm,4,336,0.011904761904761904
+Neonatal Imitation,Heimann,20,336,0.05952380952380952
+Neonatal Imitation,Hemimou,8,336,0.023809523809523808
+Neonatal Imitation,Kennedy-Costantini,229,336,0.6815476190476191
+Neonatal Imitation,Koepke,4,336,0.011904761904761904
+Neonatal Imitation,Kompagne,3,336,0.008928571428571428
+Neonatal Imitation,Legerstee,8,336,0.023809523809523808
+Neonatal Imitation,McKenzie,8,336,0.023809523809523808
+Neonatal Imitation,Meltzoff,18,336,0.05357142857142857
+Neonatal Imitation,Moore,18,336,0.05357142857142857
+Neonatal Imitation,Nadel,1,336,0.002976190476190476
+Neonatal Imitation,Nagy,6,336,0.017857142857142856
+Neonatal Imitation,Nelson,8,336,0.023809523809523808
+Neonatal Imitation,Nielsen,225,336,0.6696428571428571
+Neonatal Imitation,Oostenbroek,225,336,0.6696428571428571
+Neonatal Imitation,Orvos,6,336,0.017857142857142856
+Neonatal Imitation,Over,8,336,0.023809523809523808
+Neonatal Imitation,Pal,6,336,0.017857142857142856
+Neonatal Imitation,Redshaw,225,336,0.6696428571428571
+Neonatal Imitation,Reissland,2,336,0.005952380952380952
+Neonatal Imitation,Rifkin-Graboi,2,336,0.005952380952380952
+Neonatal Imitation,Rose,12,336,0.03571428571428571
+Neonatal Imitation,Schaller,12,336,0.03571428571428571
+Neonatal Imitation,Soh,2,336,0.005952380952380952
+Neonatal Imitation,Soussignan,1,336,0.002976190476190476
+Neonatal Imitation,Streri,8,336,0.023809523809523808
+Neonatal Imitation,Suddendorf,225,336,0.6696428571428571
+Neonatal Imitation,Tint,2,336,0.005952380952380952
+Neonatal Imitation,Tjus,6,336,0.017857142857142856
+Neonatal Imitation,Turkewitz,12,336,0.03571428571428571
+Neonatal Imitation,Ullstadius,4,336,0.011904761904761904
+Neonatal Imitation,Woodson,8,336,0.023809523809523808
 Online word recognition,Bates,1,14,0.07142857142857142
 Online word recognition,Fernald,14,14,1
 Online word recognition,Hurtado,4,14,0.2857142857142857
@@ -641,75 +745,6 @@ Switch task,Werker,22,143,0.15384615384615385
 Switch task,Yee,5,143,0.03496503496503497
 Switch task,Zhao,2,143,0.013986013986013986
 Switch task,Zhu,4,143,0.027972027972027972
-Symbolic play,Acredolo,2,196,0.01020408163265306
-Symbolic play,Astington,3,196,0.015306122448979591
-Symbolic play,Bailey,12,196,0.061224489795918366
-Symbolic play,Bates,47,196,0.23979591836734693
-Symbolic play,Benigni,23,196,0.11734693877551021
-Symbolic play,Bolton,1,196,0.00510204081632653
-Symbolic play,Bornstein,23,196,0.11734693877551021
-Symbolic play,Boucher,4,196,0.02040816326530612
-Symbolic play,Bretherton,47,196,0.23979591836734693
-Symbolic play,Callaghan,6,196,0.030612244897959183
-Symbolic play,Camaioni,23,196,0.11734693877551021
-Symbolic play,Casby,2,196,0.01020408163265306
-Symbolic play,Corte,2,196,0.01020408163265306
-Symbolic play,Cox,4,196,0.02040816326530612
-Symbolic play,Cyphers,1,196,0.00510204081632653
-Symbolic play,Dissanayake,7,196,0.03571428571428571
-Symbolic play,Dresden,4,196,0.02040816326530612
-Symbolic play,Dunn,2,196,0.01020408163265306
-Symbolic play,Dworzynski,1,196,0.00510204081632653
-Symbolic play,Eklund,7,196,0.03571428571428571
-Symbolic play,Ensor,2,196,0.01020408163265306
-Symbolic play,Fujisawa,2,196,0.01020408163265306
-Symbolic play,Galda,4,196,0.02040816326530612
-Symbolic play,Goodwyn,2,196,0.01020408163265306
-Symbolic play,Hall,6,196,0.030612244897959183
-Symbolic play,Happe,1,196,0.00510204081632653
-Symbolic play,Haynes,2,196,0.01020408163265306
-Symbolic play,Holler,6,196,0.030612244897959183
-Symbolic play,HudspethStevenson,12,196,0.061224489795918366
-Symbolic play,Hughes,2,196,0.01020408163265306
-Symbolic play,Jenkins,3,196,0.015306122448979591
-Symbolic play,Jones,1,196,0.00510204081632653
-Symbolic play,Jurkovic,3,196,0.015306122448979591
-Symbolic play,Katajamaki,9,196,0.04591836734693878
-Symbolic play,Kavanaugh,3,196,0.015306122448979591
-Symbolic play,Kidd,36,196,0.1836734693877551
-Symbolic play,Kirkham,18,196,0.09183673469387756
-Symbolic play,Laakso,29,196,0.14795918367346939
-Symbolic play,Lecce,2,196,0.01020408163265306
-Symbolic play,Lewis,4,196,0.02040816326530612
-Symbolic play,Lillard,3,196,0.015306122448979591
-Symbolic play,Lupton,4,196,0.02040816326530612
-Symbolic play,Lyytinen,41,196,0.20918367346938777
-Symbolic play,Marfleet,2,196,0.01020408163265306
-Symbolic play,McCune,5,196,0.025510204081632654
-Symbolic play,McEwen,1,196,0.00510204081632653
-Symbolic play,Nielsen,13,196,0.0663265306122449
-Symbolic play,O'Reilly,8,196,0.04081632653061224
-Symbolic play,Ogino,1,196,0.00510204081632653
-Symbolic play,Painter,8,196,0.04081632653061224
-Symbolic play,Pellegrini,4,196,0.02040816326530612
-Symbolic play,Plomin,1,196,0.00510204081632653
-Symbolic play,Poikkeus,29,196,0.14795918367346939
-Symbolic play,Rankin,6,196,0.030612244897959183
-Symbolic play,Reynolds,12,196,0.061224489795918366
-Symbolic play,Rijsdijk,1,196,0.00510204081632653
-Symbolic play,Rita,3,196,0.015306122448979591
-Symbolic play,Ronald,1,196,0.00510204081632653
-Symbolic play,Rumney,6,196,0.030612244897959183
-Symbolic play,Shore,29,196,0.14795918367346939
-Symbolic play,Smith,1,196,0.00510204081632653
-Symbolic play,Stagnitti,12,196,0.061224489795918366
-Symbolic play,Stewart,18,196,0.09183673469387756
-Symbolic play,Synder,24,196,0.12244897959183673
-Symbolic play,Tamis-LeMonda,15,196,0.07653061224489796
-Symbolic play,Toda,1,196,0.00510204081632653
-Symbolic play,Volterra,47,196,0.23979591836734693
-Symbolic play,Watson,4,196,0.02040816326530612
-Symbolic play,Youngblade,2,196,0.01020408163265306
 Syntactic bootstrapping,Arunachalam,12,60,0.2
 Syntactic bootstrapping,Chu,2,60,0.03333333333333333
 Syntactic bootstrapping,Dennis,4,60,0.06666666666666667

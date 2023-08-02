@@ -5,6 +5,16 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
+GETTING RAW DATASET
+```{r}
+metalab_data %>% 
+  distinct(dataset)
+
+write_csv(metalab_data, here("data/metalab_data_july2023.csv"))
+```
+
+
+
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(here)
@@ -17,13 +27,25 @@ library(ggthemes)
 # metalab_data <- get_metalab_data(metadata)
 # write_csv(metalab_data, here("data/metalab_data.csv"))
 
-metalab_data <- read_csv(here("data/metalab_data.csv"))
+metalab_data <- read_csv(here("data/metalab_data_july2023.csv"))
+
 ids_data <- read_csv(here("data/rework/ids_clean.csv")) %>% 
   mutate(ds_clean = "Infant directed speech preference")
+
+#@TODO: ADD NEW PROSOCIAL AGENTS
+#https://docs.google.com/spreadsheets/d/1j2Af5jyMjqRC6FBQnqGeTPVJ5nacDVf2cu9a9D3Se4o/edit?pli=1#gid=1269834261
 ```
 
 
+
 # metalab_data trimming procedure 
+
+decision process for cogsci documented here: https://docs.google.com/spreadsheets/d/1_cPEL6Zek6UiyzxzJdBzkzDbor2lrrriDbdyimnWNtQ/edit#gid=23086810
+
+```{r}
+metalab_data %>% distinct(dataset)
+```
+
 
 ## 1. Replace dataset and/or get rid of dataset
 
@@ -38,6 +60,7 @@ trimmed_data <- metalab_data %>%
                          "Pointing and vocabulary (longitudinal)",
                          "Video deficit", 
                          "Word segmentation (neuro)", 
+                         "Symbolic play	",
                          
                          # dataset to be modified 
                          "Statistical sound category learning", 
@@ -71,10 +94,12 @@ trimmed_data <- metalab_data %>%
 ```
 
 
+
+
 ## 2. import method recode 
 
 ```{r}
-m_recode <- read_csv(here("data/rework/ds_clean_rework.csv"))
+m_recode <- read_csv(here("data/rework/ds_method_recode.csv"))
 
 
 trimmed_data <- m_recode %>% 
@@ -86,7 +111,7 @@ trimmed_data <- m_recode %>%
 ## 3. import infant recode 
 
 ```{r}
-it_recode <- read_csv(here("data/rework/infant_type_rework.csv"))
+it_recode <- read_csv(here("data/rework/ds_infant_type_recode.csv"))
 
 
 trimmed_data <- it_recode %>% 
@@ -104,35 +129,122 @@ trimmed_data <- trimmed_data %>%
   filter(infant_type_clincal == "typical")
 ```
 
-## 5. fix issue wrt the author exploration 
+
+## 5. check consistencies in data 
+
+
+### stimuli naturalness 
+
+
+
+### age 
+
+```{r}
+missing_age_data <- trimmed_data %>% 
+  filter(is.na(mean_age_months)) %>% 
+  mutate(mean_age_months = mean_age_1 / 30.4)
+
+trimmed_data <- trimmed_data %>% 
+  filter(!is.na(mean_age_months)) %>% 
+  bind_rows(missing_age_data) %>% 
+  arrange(ds_clean)
+
+```
+
+
+
+### d_calc & d_var vs d_cal_var 
+
+```{r}
+missing_d_calc_data <- trimmed_data %>% 
+  filter(is.na(d_calc)) %>% 
+  mutate(d_calc = d, 
+         d_var_calc = d_var)
+
+trimmed_data <- trimmed_data %>% 
+  filter(!is.na(d_calc)) %>% 
+  bind_rows(missing_d_calc_data) %>% 
+  filter(!(is.na(d_calc) | is.na(d_var_calc))) %>% 
+  select(-d, -d_var)
+  
+```
+
+### random effect structure relevant information 
+
+random = ~ 1 | short_cite/same_infant/unique_row
+
+```{r}
+trimmed_data %>% 
+  filter(is.na(short_cite))
+```
+
+```{r}
+missing_same_infant <- trimmed_data %>% 
+  filter(is.na(same_infant)) 
+
+trimmed_data <- trimmed_data %>% 
+  filter(!is.na(same_infant)) %>% 
+  bind_rows(read_csv(here("data/rework/fix_res_same_infant.csv")) %>% mutate(same_infant = as.character(same_infant))) 
+```
+
+```{r}
+missing_unique_row <- trimmed_data %>% 
+  filter(is.na(unique_row)) %>% 
+  group_by(ds_clean) %>% 
+  mutate(unique_row = row_number()) %>% 
+  ungroup()
+
+trimmed_data <- trimmed_data %>% 
+  filter(!is.na(unique_row)) %>% 
+  bind_rows(missing_unique_row)
+
+
+```
+
+
+## 6. Clean up messy columns 
+
+### Throw out columns just not gonna be used anymore
+
+random = ~ 1 | short_cite/same_infant/unique_row
+
+```{r}
+pruned_data <- trimmed_data %>% 
+  select(
+    # universally unhelpful information 
+    -`...12`, -coder, -group_name_1, -group_name_2, -stimuli_link, -data_link, 
+    -sampa_comments, -g_calc, -g_var_calc, -r_calc, -r_var_calc, -z_calc, -z_var_calc, -log_odds_calc, -log_odds_var_calc, 
+    -es_method, -mean_age, -same_infant_calc, -doi, -`2nd coder`, -`Coder 1 Comments`, -`Coder 1 Comments`
+  ) 
+
+
+# check if any column has 0 information 
+pruned_data <- pruned_data %>% 
+  select(!any_of(pruned_data %>% keep(~all(is.na(.x))) %>% names))
+```
+
+
+
+
+
+
+
+## 7. fix issue wrt the author exploration 
 
 ```{r}
 
-pre_trimmed_data <- trimmed_data %>% 
-  filter(!ds_clean %in% c("Infant directed speech preference",
-                          "Prosocial Agents"
-                          ))
 
-# fix one by one 
-ids_clean <- trimmed_data %>% 
-  filter(ds_clean == "Infant directed speech preference") %>% 
-  mutate(mean_age_months = mean_age_1 / 30.44, 
-         d_calc = d, 
-         d_var_calc = d_var)
-
-pa_clean <- trimmed_data %>% 
+pa_clean <- pruned_data %>% 
   filter(ds_clean == "Prosocial Agents") %>% 
   mutate(by_major_author = ifelse(Hamlin_Lab == 1, "yes", "no"), 
          major_author = "hamlin") 
 
-final_trimmed_data <- pre_trimmed_data %>% bind_rows(ids_clean) %>% 
+final_trimmed_data <- pruned_data %>%  filter(ds_clean != "Prosocial Agents") %>% 
   bind_rows(pa_clean)
 
-write_csv(final_trimmed_data, here("data/clean_data.csv"))
+#write_csv(final_trimmed_data, here("data/clean_data.csv"))
 ```
 
-
-## 6. supplementary dataset on author 
 
 ```{r}
 author_list_draft <- (final_trimmed_data %>% 
@@ -196,6 +308,48 @@ clean_ds_author_percent <- ds_author_percent %>%
 
 write_csv(clean_ds_author_percent, here("data/clean_author.csv"))
 ```
+
+## 8. fix stimuli naturalness
+
+```{r}
+pruned_data <- pruned_data %>% 
+  mutate(
+    stimuli_naturalness = case_when(
+      ds_clean == "Mutual exclusivity" & object_stimulus %in% c("digital", "paper", "objects/paper") ~ "artificial", 
+      ds_clean == "Mutual exclusivity" & object_stimulus %in% c("objects") ~ "natural", 
+      ds_clean == "Prosocial agents" & stimuli_type %in% c("real") ~ "natural", 
+      ds_clean == "Prosocial agents" & stimuli_type %in% c("cartoon") ~ "artificial", 
+      ds_clean == "Label advantage in concept learning" & object_stimulus %in% c("objects") ~ "natural", 
+      ds_clean == "Label advantage in concept learning" & object_stimulus %in% c("drawings") ~ "artificial", 
+      ds_clean == "Abstract rule learning" & Modality %in% c("Speech")  ~ "natural", 
+      ds_clean == "Abstract rule learning" & Modality %in% c("Nonspeech") ~ "artificial", 
+      ds_clean == "Statistical word segmentation" & stimuli_type %in% c("natural")  ~ "natural", 
+      ds_clean == "Statistical word segmentation" & stimuli_type %in% c("artificial") ~ "artificial", 
+      ds_clean == "Categorization bias" & object_stimulus %in% c("picture", "word") ~ "artificial", 
+      ds_clean == "Categorization bias" & object_stimulus %in% c("object") ~ "natural", 
+      ds_clean == "Vowel discrimination (native)" & stimulus_naturalness %in% c("synthetic") ~ "artificial", 
+      ds_clean == "Vowel discrimination (native)" & stimulus_naturalness %in% c("natural_processed", "natural") ~ "natural", 
+      ds_clean == "Vowel discrimination (non-native)" & stimulus_naturalness %in% c("synthetic") ~ "artificial", 
+      ds_clean == "Vowel discrimination (non-native)" & stimulus_naturalness %in% c("natural_processed", "natural") ~ "natural", 
+    )
+  ) 
+  
+```
+
+
+## 9. make different versions of tidybase 
+
+```{r}
+mini_ds <- pruned_data %>% 
+  select(ds_clean, long_cite,  short_cite, same_infant, study_ID, unique_row, 
+         d_calc, d_var_calc, mean_age_months, behavioral_measure, stimuli_naturalness, exposure_phase) 
+
+write_csv(mini_ds, here("data/metalab_data_mini.csv"))
+write_csv(mini_ds, here("data/metalab_data_kitchensink.csv"))
+
+```
+
+
 
 
 # basic stats 
