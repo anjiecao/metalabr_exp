@@ -232,6 +232,7 @@ get_model_fit_df <- function(all_ds, ds_name, moderators){
                                                 random = ~ 1 | short_cite/unique_row, 
                                                 data = all_ds %>% filter(ds_clean == ds_name))) %>% 
                      mutate(model_spec = m) 
+                   print("~ 1 | short_cite/unique_row")
                    
                  }else if(ds_name %in% (d %>% filter(is.na(unique_row)) %>% distinct(ds_clean) %>% pull())){
                    
@@ -241,6 +242,8 @@ get_model_fit_df <- function(all_ds, ds_name, moderators){
                                                 data = all_ds %>% filter(ds_clean == ds_name))) %>% 
                      mutate(model_spec = m) 
                    
+                   print(" random = ~ 1 | short_cite/same_infant, ")
+                   
                  }else{
                    
                    raw_df <- broom::tidy(rma.mv(as.formula(m), 
@@ -248,6 +251,8 @@ get_model_fit_df <- function(all_ds, ds_name, moderators){
                                                 random = ~ 1 | short_cite/same_infant/unique_row, 
                                                 data = all_ds %>% filter(ds_clean == ds_name))) %>% 
                      mutate(model_spec = m) 
+                   
+                   print("~ 1 | short_cite/same_infant/unique_row")
                    
                  }
                  
@@ -368,6 +373,7 @@ get_compare_IC_df <- function(all_ds , ds_name, moderators){
                  
                  if (ds_name %in% (d %>% filter(is.na(same_infant)) %>% distinct(ds_clean) %>% pull())){
                    
+                   print("~ 1 | short_cite/unique_row")
                    raw_df <- (summary(rma.mv(as.formula(m), 
                                              V = d_var_calc, 
                                              random = ~ 1 | short_cite/unique_row, 
@@ -376,8 +382,12 @@ get_compare_IC_df <- function(all_ds , ds_name, moderators){
                      mutate(model_spec = m) %>% 
                      rownames_to_column("ic") 
                    
+                    
+                   
+                   
                  }else if(ds_name %in% (d %>% filter(is.na(unique_row)) %>% distinct(ds_clean) %>% pull())){
                    
+                   print("~ 1 | short_cite/same_infant")
                    raw_df <- (summary(rma.mv(as.formula(m), 
                                              V = d_var_calc, 
                                              random = ~ 1 | short_cite/same_infant, 
@@ -385,14 +395,19 @@ get_compare_IC_df <- function(all_ds , ds_name, moderators){
                      mutate(model_spec = m) %>% 
                      rownames_to_column("ic") 
                    
+                   
+                   
                  }else{
                    
+                   print("full!")
                    raw_df <- (summary(rma.mv(as.formula(m), 
                                              V = d_var_calc, 
                                              random = ~ 1 | short_cite/same_infant/unique_row, 
                                              data = all_ds %>% filter(ds_clean == ds_name)))$fit.stats) %>% 
                      mutate(model_spec = m) %>% 
                      rownames_to_column("ic") 
+                   
+                   
                    
                  }
                  

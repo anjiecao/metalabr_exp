@@ -12,7 +12,7 @@ library(ggthemes)
 library(metafor)
 library(ggrepel)
 
-d <- read_csv(here("data/clean_data.csv"))
+d <- read_csv(here("data/metalab_data_mini.csv"))
 source(here("helper/model_comparison_help.r"))
 ```
 # Fit Models 
@@ -56,6 +56,47 @@ age_models_df %>%
 ```
 
 
+```{r}
+
+age_df_wide <- age_models_df %>% 
+  filter(ic == "AICc") %>% 
+  rename(Dataset = dataset) %>% 
+  select(REML, model_spec_clean, Dataset) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML)
+
+age_df_wide$min <- apply(age_df_wide[c('Linear','Log', 'Quadratic', 'Const')], 1, min)
+
+# get the delta value 
+age_df_wide <- age_df_wide %>% 
+  mutate(d_linear = Linear - min, 
+         d_log = Log - min, 
+         d_quad = Quadratic - min, 
+         d_const= Const - min) %>% 
+  select(Dataset, d_linear, d_log, d_quad, d_const) %>% 
+  rename(Linear = d_linear, 
+         Log = d_log, 
+         Quadratic = d_quad, 
+         Const = d_const) %>% 
+   mutate(across(where(is.numeric), round, 2)) 
+
+
+age_df_wide %>% 
+  pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const")) %>% 
+  ggplot(aes(x = reorder(Dataset, value), y = value, color = name)) +
+  theme_few() + 
+  geom_hline(yintercept = 4, linetype = 2, color = "gray") + 
+  geom_hline(yintercept = 0, linetype = 3) + 
+  geom_point(position = position_dodge(width = .2), 
+             #color = "white"
+             ) + 
+
+  coord_flip()+ 
+  xlab("") + 
+  labs(color = "Functional form") + 
+  guides(colour = guide_legend(nrow = 2))  + 
+  theme(legend.position = "top")
+```
 
 
 
