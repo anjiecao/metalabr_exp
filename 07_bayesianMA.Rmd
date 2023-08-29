@@ -14,7 +14,7 @@ library(here)
 
 # just try one dataset for now
 
-d <- read_csv(here("data/cogsci_data/clean_data.csv")) %>% 
+d <- read_csv(here("data/metalab_data_mini.csv")) %>% 
   filter(ds_clean == "Label advantage in concept learning")
 
 ```
@@ -44,7 +44,7 @@ priors <- c(prior(normal(0, 2.5), class = Intercept),
 intercept_model <- 
   brm_multiple(
     ma_estimate,
-    #save_pars = save_pars(all = TRUE),
+    save_pars = save_pars(all = TRUE),
     data = list(d), 
     family = student,
     prior = priors,
@@ -68,10 +68,16 @@ pp_check(intercept_model, ndraws = 100)
 summary(intercept_model)
 ```
 
+
+
+
+
 # age model 
 
 ```{r}
 age <- bf(d_calc | se(d_var_calc) ~ mean_age_months + (1 | short_cite/same_infant/unique_row))
+age_sq <- bf(d_calc | se(d_var_calc) ~ I(mean_age_months^2) + (1 | short_cite/same_infant/unique_row))
+age_log <- bf(d_calc | se(d_var_calc) ~ log(mean_age_months) + (1 | short_cite/same_infant/unique_row))
 
 
 priors <- c(prior(normal(0, 2.5), class = Intercept),
@@ -82,7 +88,7 @@ priors <- c(prior(normal(0, 2.5), class = Intercept),
 age_model <- 
   brm_multiple(
     age,
-    #save_pars = save_pars(all = TRUE),
+    save_pars = save_pars(all = TRUE),
     data = list(d), 
     family = student,
     prior = priors,
@@ -97,21 +103,11 @@ age_model <-
       adapt_delta = 0.999,
       max_treedepth = 20 ))
 
-```
-
-```{r}
-age_sq <- bf(d_calc | se(d_var_calc) ~ I(mean_age_months^2) + (1 | short_cite/same_infant/unique_row))
-
-
-priors <- c(prior(normal(0, 2.5), class = Intercept),
-            prior(normal(1, 1), class = sd),
-            prior(gamma(2, 0.1), class = nu))
-
 
 age_sq_model <- 
   brm_multiple(
-    age,
-    #save_pars = save_pars(all = TRUE),
+    age_sq,
+    save_pars = save_pars(all = TRUE),
     data = list(d), 
     family = student,
     prior = priors,
@@ -126,14 +122,13 @@ age_sq_model <-
       adapt_delta = 0.999,
       max_treedepth = 20 ))
 
-age_log <- bf(d_calc | se(d_var_calc) ~ log(mean_age_months) + (1 | short_cite/same_infant/unique_row))
 
 
 
 age_log_model <- 
   brm_multiple(
-    age,
-    #save_pars = save_pars(all = TRUE),
+    age_log,
+    save_pars = save_pars(all = TRUE),
     data = list(d), 
     family = student,
     prior = priors,
@@ -148,27 +143,197 @@ age_log_model <-
       adapt_delta = 0.999,
       max_treedepth = 20 ))
 
+
+```
+
+
+```{r}
+brms::kfold(intercept_model)
+```
+
+
+
+
+```{r}
+#loo(age_model)
+#loo(intercept_model)
+age_model <- add_criterion(age_model, criterion = c("loo", "waic", "kfold"), overwrite = TRUE, moment_match = TRUE)
+intercept_model <- add_criterion(intercept_model, criterion = c("loo", "waic"), overwrite = TRUE,moment_match = TRUE)
+age_log_model <- add_criterion(age_log_model, criterion = c("loo", "waic"), overwrite = TRUE,moment_match = TRUE)
+age_sq_model <- add_criterion(age_sq_model, criterion = c("loo", "waic"), overwrite = TRUE,moment_match = TRUE)
+
+#loo_compare(intercept_model,age_model, age_log_model, age_sq_model)
+```
+
+
+
+```{r}
+moment_match_loo <- loo_moment_match(age_model, loo = age_model$criteria$loo)
+reloo_loo <- loo(age_model, moment_match = TRUE, reloo = TRUE)
+```
+```{r}
+reloo_loo <- loo(age_model, moment_match = TRUE, reloo = TRUE)
+```
+
+
+```{r}
+plot(
+  age_model$criteria$loo,
+  diagnostic = c("k", "n_eff"),
+  label_points = FALSE,
+  main = "PSIS diagnostic plot"
+)
+
 ```
 
 ```{r}
-library(metafor)
-f_age_model <- rma.mv(d_calc ~ mean_age_months, 
-                    V = d_var_calc, 
-                    random = ~ 1 | short_cite/same_infant/unique_row, 
-                    data = d)
+kfold_age_model <- kfold(age_model, K = 10)
+#kfold_intercept<- kfold(intercept_model, K = 10)
+kfold_log_model <- kfold(age_log_model, K = 10)
+kfold_sq_model <- kfold(age_sq_model, K = 10)
+kfold_intercept<- kfold(intercept_model, K = 10)
+```
 
-summary(f_age_model)
+
+
+```{r}
+process_ic <- function(df, name){
+  df$estimates %>% as.data.frame() %>% mutate(model = name) %>% 
+  rownames_to_column("ic") %>% 
+  filter(ic == "kfoldic")
+}
+
+
+process_ic(kfold_intercept, "intercept") %>% 
+  bind_rows(
+    process_ic(kfold_age_model, "linear"), 
+    process_ic(kfold_log_model, "log"), 
+    process_ic(kfold_sq_model, "quad")
+  ) %>% 
+  mutate(
+    low_y = Estimate - SE, 
+    high_y = Estimate + SE
+  ) %>% 
+  ggplot(aes(x = model, y = Estimate)) + 
+  geom_point()+
+  geom_pointrange(aes(ymin = low_y, ymax = high_y))
+```
+
+
+```{r}
+
+kfold_age_model
+kfold_log_model
+```
+
+
+```{r}
+kfold_age_model
 ```
 
 ```{r}
-loo(age_model)
-loo(intercept_model)
-age_model <- add_criterion(age_model, "loo", moment_match = TRUE)
-intercept_model <- add_criterion(intercept_model, "loo", moment_match = TRUE)
-age_log_model <- add_criterion(age_log_model, "loo")
-age_sq_model <- add_criterion(age_sq_model, "loo")
+loo_compare(intercept_model,age_model, age_log_model, age_sq_model, criterion = "loo")
 
-loo_compare(intercept_model,age_model, age_log_model, age_sq_model)
+#model_weights(intercept_model,age_model, age_log_model, age_sq_model)
+```
+```{r}
+loo_compare(intercept_model,age_model, age_log_model, age_sq_model, criterion = "loo")
 ```
 
+# checkout cluster run model 
+
+```{r}
+#arl_quad <- readRDS(here("bayesian_metalab/abstract_rule_learning/Abstract rule learning_quad.rds"))
+#arl_linear <- readRDS(here("bayesian_metalab/abstract_rule_learning/Abstract rule learning_linear.rds"))
+#arl_log <- readRDS(here("bayesian_metalab/abstract_rule_learning/Abstract rule learning_log.rds"))
+#arl_const <- readRDS(here("bayesian_metalab/abstract_rule_learning/Abstract rule learning_const.rds"))
+
+
+sb_quad <- readRDS(here("bayesian_metalab/third/Syntactic bootstrapping_quad.rds"))
+sb_linear <- readRDS(here("bayesian_metalab/synboot/Syntactic bootstrapping_linear.rds"))
+sb_log <- readRDS(here("bayesian_metalab/synboot/Syntactic bootstrapping_log.rds"))
+sb_const <- readRDS(here("bayesian_metalab/synboot/Syntactic bootstrapping_const.rds"))
+
+narrow_sb_quad <- readRDS(here("bayesian_metalab/third/Syntactic bootstrapping_quad.rds"))
+narrow_sb_linear <- readRDS(here("bayesian_metalab/third_try/Syntactic bootstrapping_linear.rds"))
+narrow_sb_log <- readRDS(here("bayesian_metalab/third_try/Syntactic bootstrapping_log.rds"))
+narrow_sb_const <- readRDS(here("bayesian_metalab/third_try/Syntactic bootstrapping_const.rds"))
+```
+
+```{r}
+loo_compare(narrow_sb_quad, narrow_sb_linear, narrow_sb_log, narrow_sb_const)
+```
+
+
+```{r}
+loo_compare(loo(sb_quad), loo(sb_linear), loo(sb_log), loo(sb_const))
+model_weights(sb_quad, sb_linear, sb_log, sb_const)
+```
+
+
+```{r}
+pp_check(sb_const
+         )
+```
+
+```{r}
+plot(sb_const)
+```
+
+
+```{r}
+rethinking::WAIC(sb_const)
+```
+
+
+```{r}
+(test <- compare(sb_quad, sb_linear, sb_log, sb_const))
+```
+
+
+```{r}
+reloo <- loo(arl_quad, reloo = TRUE)
+```
+
+```{r}
+loo_compare(loo(arl_quad), loo(arl_linear), loo(arl_log), loo(arl_const))
+```
+```{r}
+#add_criterion(arl_quad, criterion = "loo", moment_match = TRUE)
+kfold(arl_quad)
+```
+```{r}
+sapply(
+  file_names, 
+  function(x){
+    paste0(here("bayesian_metalab/lol/cache_model/"), "Mispronunciation sensitivity_quad.rds")
+  }  
+)
+
+```
+
+
+```{r}
+file_names <- list.files(here("bayesian_metalab/lol/cache_model")) 
+
+res <- sapply(
+  file_names, 
+  function(x){
+    print(x)
+     proportion_bad <- sum(loo(readRDS(paste0(here("bayesian_metalab/lol/cache_model/"), x)))$diagnostics$pareto_k > 0.7) /   length(loo(readRDS(paste0(here("bayesian_metalab/lol/cache_model/"), x)))$diagnostics$pareto_k)
+  }
+)
+```
+
+```{r}
+res %>% 
+  as.data.frame() %>% 
+  rownames_to_column("model_name") %>% 
+  rename(bad_proportion = ".") %>% 
+separate(model_name, into = c("ds", "model_type"), sep = "_") %>% 
+  ggplot(aes(x = model_type, y = bad_proportion)) + 
+  geom_point() + 
+  facet_wrap(~ds) + 
+  ggthemes::theme_few()
+```
 

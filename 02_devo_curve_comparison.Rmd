@@ -14,6 +14,7 @@ library(ggrepel)
 
 d <- read_csv(here("data/metalab_data_mini.csv"))
 source(here("helper/model_comparison_help.r"))
+age_models_df <- readRDS(here("cached_data/age_models_df.Rds"))
 ```
 # Fit Models 
 
@@ -99,6 +100,139 @@ age_df_wide %>%
 ```
 
 
+4 different results: 
+
+Categorization bias: fixed random effect structure (add same_infant)
+Statistical sound category learning (habituation): changed random effect structure (add same_infant)
+Infant directed speech preference: added unique_row 
+Mispronunciation sensitivity: fixed two missing infants age 
 
 
+
+## cf const 
+
+```{r}
+age_df_wide %>% 
+  filter(Const == 0) %>% 
+  pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const")) %>% 
+  ggplot(aes(x = reorder(Dataset, value), y = value, color = name)) +
+  theme_few() + 
+  geom_hline(yintercept = 4, linetype = 2, color = "gray") + 
+  geom_hline(yintercept = 0, linetype = 3) + 
+  geom_point(position = position_dodge(width = .2), 
+             #color = "white"
+             ) + 
+
+  coord_flip()+ 
+  xlab("") + 
+  labs(color = "Functional form") + 
+  guides(colour = guide_legend(nrow = 2))  + 
+  theme(legend.position = "top")
+```
+
+linear_model_formula <-"d_calc ~ mean_age_months"
+log_model_formula <- "d_calc ~ log(mean_age_months)"
+qua_model_formula <- "d_calc ~ I(mean_age_months^2)"
+const_model_formula <- "d_calc ~ 1"
+    
+    
+```{r}
+ds_name =
+
+linear_model_formula <-"d_calc ~ mean_age_months"
+log_model_formula <- "d_calc ~ log(mean_age_months)"
+qua_model_formula <- "d_calc ~ I(mean_age_months^2)"
+const_model_formula <- "d_calc ~ 1"
+
+m1 <- rma.mv(as.formula(linear_model_formula), 
+                                       V = d_var_calc, 
+                                             random = ~ 1 | short_cite/unique_row, 
+                                             data = d %>% filter(ds_clean == "Abstract rule learning"), 
+             method="ML")
+
+m2 <- rma.mv(as.formula(const_model_formula), 
+                                       V = d_var_calc, 
+                                             random = ~ 1 | short_cite/unique_row, 
+                                             data = d %>% filter(ds_clean == "Abstract rule learning"), 
+             method="ML")
+
+
+anova(m1, m2)$pval
+```
+
+```{r}
+
+get_model_type <- function(s){
+  if (grepl("log", s)){
+    return ("log")
+  }else if (grepl("2", s)){
+    return ("quad")
+  }else{
+    return ("linear")
+  }
+}
+
+get_const_comparion <- function(all_ds, ds_name){
+  
+  const_m <- rma.mv(d_calc ~ 1, 
+                  V = d_var_calc, 
+                  random = ~ 1 | short_cite/same_infant/unique_row, 
+                  data = all_ds %>% filter(ds_clean == ds_name), 
+                  method = "ML")
+  
+  linear_model_formula <-"d_calc ~ mean_age_months"
+  log_model_formula <- "d_calc ~ log(mean_age_months)"
+  qua_model_formula <- "d_calc ~ I(mean_age_months^2)"
+  
+  res = lapply(c(linear_model_formula, 
+                 log_model_formula, 
+                 qua_model_formula), 
+               function(f){
+                 
+                 m <- rma.mv(as.formula(f), 
+                             V = d_var_calc, 
+                             random = ~ 1 | short_cite/same_infant/unique_row, 
+                              data = all_ds %>% filter(ds_clean == ds_name), 
+                             method = "ML")
+                 
+                m_type <- get_model_type(f)
+                
+                res <- anova(m, const_m)
+                return (tibble(
+                  "m_type" = m_type, 
+                  "pval" = res$pval
+                ))
+                 
+                 
+                 
+                 
+               }) %>% bind_rows()
+  
+  return(res %>% mutate(ds_name = ds_name))
+  
+  
+}
+
+
+compare_const_df <- lapply(unique(d$ds_clean), 
+       function(name){
+         print(name)
+         get_const_comparion(d, name)
+       }) %>% 
+  bind_rows()
+
+saveRDS(compare_const_df, here("cached_data/compare_const_df.Rds"))
+
+```
+
+    
+```{r}
+compare_const_df <- readRDS( here("cached_data/compare_const_df.Rds"))
+compare_const_df %>% 
+  ggplot(aes(x = ds_name, y = pval, color = m_type)) + 
+  geom_point() + 
+  theme_few() +
+  geom_hline(yintercept = 0.05) +  
+  coord_flip()
+```
 

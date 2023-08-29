@@ -226,25 +226,28 @@ get_model_fit_df <- function(all_ds, ds_name, moderators){
                  # check if has same_infant
                  
                  if (ds_name %in% (d %>% filter(is.na(same_infant)) %>% distinct(ds_clean) %>% pull())){
-                   
+                   print("~ 1 | short_cite/unique_row")
                    raw_df <- broom::tidy(rma.mv(as.formula(m), 
                                                 V = d_var_calc, 
                                                 random = ~ 1 | short_cite/unique_row, 
                                                 data = all_ds %>% filter(ds_clean == ds_name))) %>% 
                      mutate(model_spec = m) 
-                   print("~ 1 | short_cite/unique_row")
+                   
                    
                  }else if(ds_name %in% (d %>% filter(is.na(unique_row)) %>% distinct(ds_clean) %>% pull())){
                    
+                   print(" random = ~ 1 | short_cite/same_infant, ")
                    raw_df <- broom::tidy(rma.mv(as.formula(m), 
                                                 V = d_var_calc, 
                                                 random = ~ 1 | short_cite/same_infant, 
                                                 data = all_ds %>% filter(ds_clean == ds_name))) %>% 
                      mutate(model_spec = m) 
                    
-                   print(" random = ~ 1 | short_cite/same_infant, ")
+                   
                    
                  }else{
+                   
+                   print("~ 1 | short_cite/same_infant/unique_row")
                    
                    raw_df <- broom::tidy(rma.mv(as.formula(m), 
                                                 V = d_var_calc, 
@@ -252,7 +255,7 @@ get_model_fit_df <- function(all_ds, ds_name, moderators){
                                                 data = all_ds %>% filter(ds_clean == ds_name))) %>% 
                      mutate(model_spec = m) 
                    
-                   print("~ 1 | short_cite/same_infant/unique_row")
+                  
                    
                  }
                  

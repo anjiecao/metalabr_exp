@@ -64,7 +64,7 @@ Language discrimination and preference,behavior,high-amplitude sucking,number_su
 Language discrimination and preference,behavior,high-amplitude sucking,trials_triggered,no,sucking,,
 Language discrimination and preference,NIRS,passive listening,mean_amplitude,no,other,,
 Language discrimination and preference,eye-tracking,central fixation,looking_time_change_pc,yes,looking,,
-Language discrimination and preference,behavior,forced-choice,target_selection,no,other,,
+Language discrimination and preference,behavior,forced-choice,target_selection,no,manual,,
 Language discrimination and preference,behavior,high-amplitude sucking,sucking_rate,no,sucking,,
 Language discrimination and preference,behavior,high-amplitude sucking,sucking_time,no,sucking,,
 Language discrimination and preference,EEG,passive listening,peak_latency,no,other,,

@@ -111,21 +111,24 @@ get_ma_effect_size_controlled <- function(d, formula){
     model <- rma.mv(as.formula(formula), 
                     V = d_var_calc, 
                     random = ~ 1 | short_cite/unique_row, 
-                    data = d) 
+                    data = d, 
+                    control=list(rel.tol=1e-8)) 
     
   }else if(!nrow(d %>% filter(!is.na(unique_row))) == nrow(d)){
     
     model <- rma.mv(as.formula(formula), 
                     V = d_var_calc, 
                     random = ~ 1 | short_cite/same_infant, 
-                    data = d) 
+                    data = d, 
+                    control=list(rel.tol=1e-8)) 
     
   }else{
     
     model <- rma.mv(as.formula(formula), 
                     V = d_var_calc, 
                     random = ~ 1 | short_cite/same_infant/unique_row, 
-                    data = d)
+                    data = d, 
+                    control=list(rel.tol=1e-8))
     
   }
   

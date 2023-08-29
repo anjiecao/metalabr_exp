@@ -13,7 +13,7 @@ library(metafor)
 library(PublicationBias)
 
 source(here("helper/summary_table_help.r"))
-d <- read_csv(here("data/clean_data.csv"))
+d <- read_csv(here("data/metalab_data_kitchensink.csv"))
 ```
 
 # Get CV for each domain 
@@ -27,6 +27,130 @@ summary_d <- d %>%
   unnest(c(mod, descriptive)) %>% 
   select(-data)
 ```
+
+
+```{r}
+summary_d %>% 
+  arrange(-i2) %>% 
+  select(ds_clean, i2)
+```
+
+
+
+
+
+# Look at individual dataset
+
+```{r}
+sub_d <- d %>% 
+  filter(ds_clean == "Categorization bias")
+cols = c("infant_type", "infant_type_clincal", "infant_type_language", "n_1", "mean_age_1", "x_1", "x_2", "SD_1", "t",  "dataset", "short_name", "domain", "n", "year")
+
+
+level_summary_df <- sub_d %>% 
+  # get rid of the ones with all blank space
+  select(!any_of(sub_d %>% keep(~all(is.na(.x))) %>% names)) %>% 
+  # actually also wanted to get rid of all the ones with ANY blank space (to make sure i2 is comparable)
+  # get rid of the ones with all blank space
+  select(!any_of(sub_d %>% keep(~any(is.na(.x))) %>% names)) %>% 
+  
+# get rid of the irrelevant ones (i.e. extra information)
+  select( -one_of(cols)) %>% 
+  summarise_all(n_distinct) %>% 
+  pivot_longer(cols = everything(), values_to = "n_unique_val", names_to = "name")
+
+level_summary_df %>% 
+  filter(n_unique_val != 1) %>% 
+  arrange(-n_unique_val)
+
+#moderator
+sub_model <- rma.mv(d_calc ~ log(mean_age_months) + mean_production_vocab + native_lang + mean_comprehension_vocab + num_trials + stimuli_naturalness + behavioral_measure +ME_trial_type,
+                    V = d_var_calc, 
+                    random = ~ 1 | short_cite/same_infant/unique_row, 
+                    data = sub_d, 
+                    control=list(rel.tol=1e-8)) 
+
+
+
+W <- diag(1/sub_model$vi)
+X <- model.matrix(sub_model)
+P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+i2 <- sum(sub_model$sigma2) / (sum(sub_model$sigma2) + (sub_model$k-sub_model$p)/sum(diag(P)))
+i2
+
+# percentage of change in i2 & the number of moderators added?
+```
+
+# Storing additional moderator 
+
+```{r}
+age_model_summary <- readRDS(here("cached_data/age_models_df.Rds"))
+clean_age_model_summary <- age_model_summary %>% 
+  filter(ic == "AICc") %>% 
+  group_by(dataset) %>% 
+  filter(
+    REML == min(REML)
+  ) %>% 
+  select(dataset, model_spec)
+```
+
+
+```{r}
+mod_df <- tibble("ds_name" = "Categorization bias", 
+       "moderators_no_age" = "test_lang + num_trials + label_present + instruction_code + taxonomic_type + stimuli_naturalness") %>% 
+bind_rows(
+  tibble("ds_name" = "Online word recognition", 
+         "moderators_no_age" = " num_trials + native_lang")
+) %>% 
+  bind_rows(
+    tibble("ds_name" = "Mutual exclusivity", 
+           "moderators_no_age" = "mean_production_vocab + native_lang + mean_comprehension_vocab + num_trials + stimuli_naturalness + behavioral_measure +ME_trial_type")
+  ) %>% 
+  bind_rows(
+    tibble("ds_name" = "Mispronunciation sensitivity", 
+           "moderators_no_age" = "native_lang + n_feature + mispron_location + type_feature+ dependent_measure + infant_type_language + exposure_phase + CorrectPronunciation + Mispronunciation + is_correct")
+  ) %>% 
+   bind_rows(
+    tibble("ds_name" = "Neonatal Imitation", 
+           "moderators_no_age" = "exposure_phase")
+  ) %>%  
+  bind_rows(
+    tibble("ds_name" = "Vowel discrimination (non-native)", 
+           "moderators_no_age" = "duration_word_2 + x_dif + F1_2  + F2_1 + F1_2 + F1_1 + duration_word_1 + duration_vowel_2 + duration_vowel_1 + behavioral_measure + response_mode + exposure_phase + counterbalanced + height + nasality + roundness + tenseness + length + peripherality + stimuli_naturalness")
+  ) %>% 
+   bind_rows(
+    tibble("ds_name" = "Neonatal Imitation", 
+           "moderators_no_age" = "exposure_phase")
+  ) %>% 
+  left_join(clean_age_model_summary %>% rename(ds_name = dataset), by = "ds_name") %>% 
+  mutate(formula = paste0(model_spec, " + ", moderators_no_age)) %>% 
+  select(ds_name, formula)
+
+
+lapply(seq(nrow(mod_df)), 
+       function(x){
+         get_ma_effect_size_controlled(d %>% filter(ds_clean == mod_df$ds_name[[x]]), 
+                              mod_df$formula[[x]]) %>% 
+           mutate(ds_clean = mod_df$ds_name[[x]], 
+                  i2_kitchensink = i2) %>% 
+           select(ds_clean, i2_kitchensink)
+       }) %>% 
+  bind_rows() %>% 
+  left_join(
+    summary_d %>% select(i2), 
+    by = "ds_clean"
+  )
+
+
+
+```
+
+
+```{r}
+get_ma_effect_size_controlled(d %>% filter(ds_clean == mod_df$ds_name[[3]]), 
+                               mod_df$formula[[3]])
+```
+
 
 # Overall 
 

@@ -11,6 +11,12 @@ output:
     toc_float: yes
 ---
 
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+
 ```{r}
 library(tidyverse)
 library(here)
@@ -19,7 +25,7 @@ library(metafor)
 library(kableExtra)
 library(ggrepel)
 
-d <- read_csv(here("data/clean_data.csv"))
+d <- read_csv(here("data/metalab_data_mini.csv"))
 author_d <- read_csv(here("data/clean_author.csv"))
 
 source(here("helper/model_comparison_help.r"))
@@ -29,9 +35,8 @@ source(here("helper/author_help.r"))
 
 
 best_fit_bmeasure_model_df <- readRDS(here("cached_data/best_fit_behavioral_measure_df.Rds"))
-best_fit_exposure_phase_df <- readRDS(here("cached_data/best_fit_exposure_phase.Rds"))
-best_fit_real_visual_df <- readRDS(here("cached_data/best_fit_real_visual_df.Rds"))
-best_fit_real_aud_df <- readRDS(here("cached_data/best_fit_real_aud_df.Rds"))
+best_fit_ep_model_df <- readRDS(here("cached_data/best_fit_exposure_phase.Rds"))
+best_fit_sn_model_df <- readRDS(here("cached_data/best_fit_stimuli_naturalness.Rds"))
 best_fit_major_author_df <- readRDS(here("cached_data/best_fit_major_author_df.Rds"))
 
 age_modesl_df <- readRDS(here("cached_data/age_models_df.Rds"))
@@ -52,6 +57,8 @@ major_author_fit_df <- readRDS(here("cached_data/major_author_model_ds.Rds"))
 
 ```{r eval=FALSE, include=FALSE}
 
+
+
 # getting the subset of data
 bmeasure_ds <- d %>% 
   filter(!response_mode %in% c("NIRS", "EEG")) %>% 
@@ -61,11 +68,15 @@ bmeasure_ds <- d %>%
   filter(!n == 1) %>% 
   pull(ds_clean)
 
+
+
 # for model fits
 bmeasure_models_df <- lapply(bmeasure_ds, 
        function(name){
          print(name)
-         get_compare_IC_df(d, name, c("behavioral_measure"))
+         get_compare_IC_df( d %>% 
+  filter(!response_mode %in% c("NIRS", "EEG")) , 
+  name, c("behavioral_measure"))
        }) %>% 
   bind_rows() %>% 
   mutate(model_type = "bmeasure")
@@ -81,7 +92,8 @@ min_AICc_bmeasure_df <- bmeasure_models_df %>%
 bmeasure_models_fits_df <- lapply(bmeasure_ds, 
        function(name){
          print(name)
-         get_model_fit_df(d, name, c("behavioral_measure"))
+         get_model_fit_df( d %>% 
+  filter(!response_mode %in% c("NIRS", "EEG")), name, c("behavioral_measure"))
        }) %>% 
   bind_rows()
 
@@ -95,13 +107,14 @@ best_fit_bmeasure_model_df <- bmeasure_models_fits_df %>%
 saveRDS(best_fit_bmeasure_model_df, here("cached_data/best_fit_behavioral_measure_df.Rds"))
 ```
 
-## w/ interaction
+
 
 ```{r eval=FALSE, include=FALSE}
+## w/ interaction
+#CURRENTLY NOT RUNNING, RAN INTO CONVERGENCE ISSUE
 
 # getting the subset of data
 bmeasure_ds <- d %>% 
-  filter(!response_mode %in% c("NIRS", "EEG")) %>% 
   distinct(ds_clean, behavioral_measure) %>% 
   group_by(ds_clean) %>% 
   count() %>% 
@@ -143,7 +156,7 @@ saveRDS(best_fit_bmeasure_interaction_model_df, here("cached_data/best_fit_behav
 ```
 
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 best_fit_bmeasure_interaction_model_df %>% 
   filter(grepl("mean_age_months", term) & grepl("behavioral_measure", term))
 ```
@@ -155,8 +168,8 @@ best_fit_bmeasure_interaction_model_df %>%
 best_fit_bmeasure_model_df %>% 
   filter(grepl("behavioral_measure", term)) %>% 
   filter(p.value < .05) %>% 
-  kableExtra::kable(digits = .2) %>%  
-  kable_styling() %>%
+  kableExtra::kable(digits = .5) %>%  
+  kableExtra::kable_styling() %>%
   kableExtra::scroll_box(width = "100%", height = "500px")
 ```
 
@@ -193,7 +206,8 @@ ep_d <-d %>%
 ep_models_df <- lapply(ep_d, 
        function(name){
          print(name)
-         get_compare_IC_df(d, name, c("exposure_phase"))
+         get_compare_IC_df( d %>% 
+  filter(!response_mode %in% c("NIRS", "EEG")), name, c("exposure_phase"))
        }) %>% 
   bind_rows() %>% 
   mutate(model_type = "ep")
@@ -208,7 +222,8 @@ min_AICc_ep_models_df <- ep_models_df %>%
 ep_models_fits_df <- lapply(ep_d, 
        function(name){
          print(name)
-         get_model_fit_df(d, name, c("exposure_phase"))
+         get_model_fit_df( d %>% 
+  filter(!response_mode %in% c("NIRS", "EEG")), name, c("exposure_phase"))
        }) %>% 
   bind_rows()
 
@@ -224,7 +239,7 @@ saveRDS(best_fit_ep_model_df, here("cached_data/best_fit_exposure_phase.Rds"))
 ## model stats for significant values
 
 ```{r}
-best_fit_exposure_phase_df %>% 
+best_fit_ep_model_df %>% 
   filter(grepl("exposure_phase", term)) %>% 
   filter(p.value < .05) %>% 
   kableExtra::kable(digits = .2) %>%  
@@ -237,7 +252,7 @@ best_fit_exposure_phase_df %>%
 ```{r}
 d %>% 
   filter(mean_age_months < 36) %>% 
-  filter(ds_clean %in% unique(best_fit_exposure_phase_df$dataset)) %>% 
+  filter(ds_clean %in% unique(best_fit_ep_model_df$dataset)) %>% 
   ggplot(aes(x = mean_age_months, y = d_calc, color = exposure_phase)) + 
   geom_point(alpha = .5) + 
   geom_smooth(method = "lm") + 
@@ -247,122 +262,61 @@ d %>%
 
 
 
-# 3. Realistic Stimuli 
-
-
-## visual 
-
-### getting subset 
+# 3. Stimuli naturalness 
 
 ```{r}
-visual_stimulus_d <- bind_rows((d %>% 
-  filter(!is.na(object_stimulus)) %>% 
-  #select(ds_clean, object_stimulus) %>% 
-  mutate(
-    visual_stimulus_type = case_when(
-      object_stimulus %in% c("drawings", "digital", "paper",
-                             "picture", "word") ~ "schematic_rep", 
-      TRUE ~ "real"
-    )
-  )), (d %>% 
-  filter(!is.na(stimuli_type), ds_clean == "Prosocial agents") %>% 
-  mutate(visual_stimulus_type = case_when(
-    stimuli_type == "cartoon" ~ "schematic_rep",
-    TRUE ~ "real"
-  ))))
+## get subset of data
+sn_d <- d %>% 
+  distinct(ds_clean, stimuli_naturalness) %>% 
+  filter(!is.na(stimuli_naturalness)) %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  filter(!n == 1) %>% 
+  pull(ds_clean)
 
+## get model comparison stats
+sn_models_df <- lapply(sn_d, 
+       function(name){
+         print(name)
+         get_compare_IC_df(d %>% filter(!is.na(stimuli_naturalness)), name, c("stimuli_naturalness"))
+       }) %>% 
+  bind_rows() %>% 
+  mutate(model_type = "sn")
 
+## find best fitting models 
+min_AICc_sn_models_df <- sn_models_df %>% 
+  filter(ic == "AICc") %>% 
+  group_by(dataset) %>% 
+  filter(REML == min(REML)) 
+
+## finding the stats of the models 
+sn_models_fits_df <- lapply(sn_d, 
+       function(name){
+         print(name)
+         get_model_fit_df(d %>% filter(!is.na(stimuli_naturalness)), name, c("stimuli_naturalness"))
+       }) %>% 
+  bind_rows()
+
+## find the best fit model's stats
+best_fit_sn_model_df <- sn_models_fits_df %>% 
+  left_join(min_AICc_sn_models_df, 
+            by =  c("model_spec", "dataset", "model_spec_clean")) %>% 
+  filter(!is.na(REML)) 
+
+saveRDS(best_fit_sn_model_df, here("cached_data/best_fit_stimuli_naturalness.Rds"))
 ```
 
-
-
-### running models 
-
-```{r eval=FALSE, include=FALSE}
-
-
-best_fit_visual_stimuli_df <- get_best_fit_model_with_mod(visual_stimulus_d, "visual_stimulus_type")
-saveRDS(best_fit_visual_stimuli_df, here("cached_data/best_fit_real_visual_df.Rds"))
-
-```
 
 
 ### significant models  
 
 ```{r}
-best_fit_real_visual_df %>% 
-  filter(grepl("visual_stimulus", term)) %>% 
+best_fit_sn_model_df %>% 
+  filter(grepl("naturalness", term)) %>% 
   filter(p.value < 0.05) %>% 
   kableExtra::kable(digits = .2) %>%  
   kable_styling() %>%
   kableExtra::scroll_box(width = "100%", height = "500px")
-```
-
-
-###  visualization
-
-```{r}
-visual_stimulus_d %>% 
-  filter(mean_age_months < 36) %>% 
-  ggplot(aes(x = mean_age_months, y = d_calc, color = visual_stimulus_type)) + 
-  geom_point(alpha = .5) + 
-  geom_smooth(method = "lm") + 
-  facet_wrap(~ds_clean)+ 
-  theme_few()
-```
-
-## auditory 
-
-### getting subset 
-
-```{r}
-auditory_stimulus_d <- bind_rows(
-  d %>% 
-  filter(!is.na(stimuli_type)) %>% 
-  filter(ds_clean == "Statistical word segmentation") %>% 
-  mutate(auditory_stimulus_type = stimuli_type), 
-  
-  d %>% 
-  filter(!is.na(Modality)) %>% 
-  mutate(auditory_stimulus_type = case_when(
-    Modality == "Speech" ~ "natural", 
-    TRUE ~ "artificial"
-  ))
-)
-```
-
-
-
-### running models 
-
-```{r eval=FALSE, include=FALSE}
-
-
-best_fit_auditory_stimuli_df <- get_best_fit_model_with_mod(auditory_stimulus_d, "auditory_stimulus_type")
-saveRDS(best_fit_auditory_stimuli_df, here("cached_data/best_fit_real_aud_df.Rds"))
-
-```
-
-### significant models 
-
-```{r}
-best_fit_real_aud_df %>% 
-  filter(grepl("auditory_stimulus_typenatural", term)) %>% 
-  filter(p.value < 0.05) %>% 
-  kableExtra::kable(digits = .2) %>%  
-  kable_styling() %>%
-  kableExtra::scroll_box(width = "100%", height = "500px")
-```
-### visualization
-
-```{r}
-auditory_stimulus_d %>% 
-   filter(mean_age_months < 36) %>% 
-  ggplot(aes(x = mean_age_months, y = d_calc, color = auditory_stimulus_type)) + 
-  geom_point(alpha = .5) + 
-  geom_smooth(method = "lm") + 
-  facet_wrap(~ds_clean)+ 
-  theme_few()
 ```
 
 
@@ -377,7 +331,7 @@ all_nested_d <-lapply(distinct(d, ds_clean) %>% pull(),
   bind_rows() %>% 
   group_by(ds_clean, major_author) %>% 
   nest() %>% 
-  filter(!major_author %in% c("…SweigWilson", "deVilliers", "Fernald","GrafEstes"
+  filter(!major_author %in% c("…SweigWilson", "deVilliers", "Fernald","GrafEstes", "HillairetdeBoisferon"
                               )) %>% 
   filter(!is.na(major_author) & ds_clean != "Prosocial Agents")
 
@@ -387,6 +341,7 @@ all_nested_d <-lapply(distinct(d, ds_clean) %>% pull(),
 major_author_model_ds <- lapply(seq(1, nrow(all_nested_d)), 
             function(x){
               print(x)
+              print( all_nested_d$ds_clean[[x]])
               get_author_model_comparison(all_nested_d, all_nested_d$ds_clean[[x]], 
                                           all_nested_d$major_author[[x]])
             }) %>% 
@@ -436,29 +391,34 @@ saveRDS(best_fit_major_author_model, here("cached_data/best_fit_major_author_df.
 ## get the significant value 
 
 ```{r}
-best_fit_major_author_df %>% 
+best_fit_major_author_model <- readRDS(here("cached_data/best_fit_major_author_df.Rds"))
+
+best_fit_major_author_model %>% 
   filter(grepl("by_major_author", term), 
          p.value < 0.05) 
 ```
 
 ```{r}
-best_fit_major_author_df %>% 
+best_fit_major_author_model %>% 
   filter(grepl("by_major_author", term), 
          p.value < 0.05) %>% 
   kableExtra::kable(digits = .2) %>%  
   kable_styling() %>%
-  kableExtra::scroll_box(width = "100%", height = "500px")
+  kableExtra::scroll_box(width = "100%", height = "500px") 
 ```
 
 ## visualization: not sure what's the best way to do it
 
 
 
+
+```{r eval=FALSE, include=FALSE}
+
+
 # 5. Conflict between best fit models 
 
 ## AICc vs BIC
 
-```{r}
 aic_winner_df <- age_modesl_df %>% 
   filter(ic == "AICc") %>% 
   group_by(dataset) %>% 
@@ -483,15 +443,18 @@ aic_winner_df %>%
   kableExtra::scroll_box(width = "100%", height = "500px")
 ```
 
+
+
+
+
+```{r eval=FALSE, include=FALSE}
+
 ## AICc: age vs age + moderators
 
 
-some discrepancies but not a lot 
-some have improvements and others do not 
+#some discrepancies but not a lot 
+#some have improvements and others do not 
 
-
-
-```{r}
 bind_rows(best_fit_bmeasure_model_df %>% mutate(add_mod = "bmeasure"), 
           best_fit_exposure_phase_df %>% mutate(add_mod = "exp_phase"), 
           best_fit_real_visual_df %>% mutate(add_mod = "visual_stimulus"),

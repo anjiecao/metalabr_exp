@@ -342,10 +342,10 @@ pruned_data <- pruned_data %>%
 ```{r}
 mini_ds <- pruned_data %>% 
   select(ds_clean, long_cite,  short_cite, same_infant, study_ID, unique_row, 
-         d_calc, d_var_calc, mean_age_months, behavioral_measure, stimuli_naturalness, exposure_phase) 
+         d_calc, d_var_calc, mean_age_months, response_mode, behavioral_measure, stimuli_naturalness, exposure_phase) 
 
 write_csv(mini_ds, here("data/metalab_data_mini.csv"))
-write_csv(mini_ds, here("data/metalab_data_kitchensink.csv"))
+write_csv(pruned_data, here("data/metalab_data_kitchensink.csv"))
 
 ```
 
