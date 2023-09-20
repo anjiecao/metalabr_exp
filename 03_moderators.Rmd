@@ -56,8 +56,8 @@ major_author_fit_df <- readRDS(here("cached_data/major_author_model_ds.Rds"))
 ## running  models for comparison
 
 ```{r eval=FALSE, include=FALSE}
-
-
+d <- d %>% mutate(behavioral_measure = as.factor(behavioral_measure))
+d$behavioral_measure <-  relevel(d$behavioral_measure, ref="looking")
 
 # getting the subset of data
 bmeasure_ds <- d %>% 
@@ -152,7 +152,7 @@ best_fit_bmeasure_interaction_model_df <- bmeasure_models_interaction_fits_df %>
             by =  c("model_spec", "dataset", "model_spec_clean")) %>% 
   filter(!is.na(REML)) 
 
-saveRDS(best_fit_bmeasure_interaction_model_df, here("cached_data/best_fit_behavioral_measure_interaction_df.Rds"))
+saveRDS(best_fit_bmeasure_interaction_model_df,here("cached_data/best_fit_behavioral_measure_interaction_df.Rds"))
 ```
 
 
@@ -164,16 +164,24 @@ best_fit_bmeasure_interaction_model_df %>%
 
 ## model stats for significant values
 
+
+
+
 ```{r}
 best_fit_bmeasure_model_df %>% 
   filter(grepl("behavioral_measure", term)) %>% 
-  filter(p.value < .05) %>% 
+  #filter(p.value < .05) %>% 
   kableExtra::kable(digits = .5) %>%  
   kableExtra::kable_styling() %>%
   kableExtra::scroll_box(width = "100%", height = "500px")
 ```
 
 ## visualization 
+
+```{r}
+best_fit_bmeasure_model_df 
+```
+
 
 ```{r}
 d %>% 
@@ -193,13 +201,19 @@ d %>%
 ## running models for comparison
 
 ```{r eval=FALSE, include=FALSE}
+d <- d %>% mutate(exposure_phase = as.factor(exposure_phase))
+d$exposure_phase <-  relevel(d$exposure_phase, ref="familiarization")
+
+
 ## get subset of data
 ep_d <-d %>% 
   filter(!response_mode %in% c("NIRS", "EEG")) %>% 
   distinct(ds_clean, exposure_phase) %>% 
+  filter(!exposure_phase %in% c("test_only", "not_applicable")) %>% 
   group_by(ds_clean) %>% 
   count() %>% 
   filter(!n == 1) %>% 
+  filter(!ds_clean %in% c("Natural speech preference")) %>% 
   pull(ds_clean)
 
 ## get model comparison stats
@@ -207,7 +221,7 @@ ep_models_df <- lapply(ep_d,
        function(name){
          print(name)
          get_compare_IC_df( d %>% 
-  filter(!response_mode %in% c("NIRS", "EEG")), name, c("exposure_phase"))
+  filter(!response_mode %in% c("NIRS", "EEG")) %>%  filter(!exposure_phase %in% c("test_only", "not_applicable")) , name, c("exposure_phase"))
        }) %>% 
   bind_rows() %>% 
   mutate(model_type = "ep")
@@ -223,7 +237,7 @@ ep_models_fits_df <- lapply(ep_d,
        function(name){
          print(name)
          get_model_fit_df( d %>% 
-  filter(!response_mode %in% c("NIRS", "EEG")), name, c("exposure_phase"))
+  filter(!response_mode %in% c("NIRS", "EEG")) %>%  filter(!exposure_phase %in% c("test_only", "not_applicable")) , name, c("exposure_phase"))
        }) %>% 
   bind_rows()
 
@@ -318,6 +332,29 @@ best_fit_sn_model_df %>%
   kable_styling() %>%
   kableExtra::scroll_box(width = "100%", height = "500px")
 ```
+
+
+# Collective 
+
+```{r}
+source(here("helper/plot_moderator_help.r"))
+
+vis_df <- bind_rows(best_fit_bmeasure_model_df, 
+          best_fit_ep_model_df, 
+          best_fit_sn_model_df) %>% 
+  mutate(lb = estimate - 1.96 * std.error, 
+         ub = estimate + 1.96 * std.error) %>% 
+  select(model_type, dataset, term, estimate, lb, ub)
+
+
+vis_df %>% 
+  filter(grepl("behavioral_measure", term) | grepl("exposure_phase", term)| grepl("stimuli_naturalness", term)) %>% 
+  ggplot(aes(x = dataset, y = estimate, group = term)) + 
+  geom_pointrange(aes(ymin = lb, ymax = ub)) + 
+  facet_wrap(~model_type, scales = "free") + 
+  theme_few()
+```
+
 
 
 

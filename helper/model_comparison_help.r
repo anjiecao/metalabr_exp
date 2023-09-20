@@ -403,6 +403,9 @@ get_compare_IC_df <- function(all_ds , ds_name, moderators){
                  }else{
                    
                    print("full!")
+                   
+                   dat.long$group <- relevel(dat.long$group, ref="con")
+                   
                    raw_df <- (summary(rma.mv(as.formula(m), 
                                              V = d_var_calc, 
                                              random = ~ 1 | short_cite/same_infant/unique_row, 
