@@ -43,8 +43,8 @@ summary_d %>%
 
 ```{r}
 sub_d <- d %>% 
-  filter(ds_clean == "Categorization bias")
-cols = c("infant_type", "infant_type_clincal", "infant_type_language", "n_1", "mean_age_1", "x_1", "x_2", "SD_1", "t",  "dataset", "short_name", "domain", "n", "year")
+  filter(ds_clean == "Switch task")
+cols = c("infant_type", "infant_type_clincal", "infant_type_language", "n_1", "mean_age_1", "x_1", "x_2", "SD_1", "t",  "dataset", "short_name", "domain", "n", "year", "study_ID", "long_cite", "native_lang", "participant_design", "peer_reviewed")
 
 
 level_summary_df <- sub_d %>% 
@@ -81,6 +81,9 @@ i2
 # percentage of change in i2 & the number of moderators added?
 ```
 
+
+
+
 # Storing additional moderator 
 
 ```{r}
@@ -92,46 +95,38 @@ clean_age_model_summary <- age_model_summary %>%
     REML == min(REML)
   ) %>% 
   select(dataset, model_spec)
+
+ks_mod <- read_csv(here("data/ks_info.csv"))
 ```
 
 
+
+
 ```{r}
-mod_df <- tibble("ds_name" = "Categorization bias", 
-       "moderators_no_age" = "test_lang + num_trials + label_present + instruction_code + taxonomic_type + stimuli_naturalness") %>% 
-bind_rows(
-  tibble("ds_name" = "Online word recognition", 
-         "moderators_no_age" = " num_trials + native_lang")
-) %>% 
-  bind_rows(
-    tibble("ds_name" = "Mutual exclusivity", 
-           "moderators_no_age" = "mean_production_vocab + native_lang + mean_comprehension_vocab + num_trials + stimuli_naturalness + behavioral_measure +ME_trial_type")
+mod_df <- ks_mod %>% 
+  left_join(clean_age_model_summary %>% rename(ds_clean = dataset), by = "ds_clean") %>% 
+  mutate(
+    var = case_when(
+      is.na(var) ~ "",
+      TRUE ~ var
+    )
   ) %>% 
-  bind_rows(
-    tibble("ds_name" = "Mispronunciation sensitivity", 
-           "moderators_no_age" = "native_lang + n_feature + mispron_location + type_feature+ dependent_measure + infant_type_language + exposure_phase + CorrectPronunciation + Mispronunciation + is_correct")
-  ) %>% 
-   bind_rows(
-    tibble("ds_name" = "Neonatal Imitation", 
-           "moderators_no_age" = "exposure_phase")
-  ) %>%  
-  bind_rows(
-    tibble("ds_name" = "Vowel discrimination (non-native)", 
-           "moderators_no_age" = "duration_word_2 + x_dif + F1_2  + F2_1 + F1_2 + F1_1 + duration_word_1 + duration_vowel_2 + duration_vowel_1 + behavioral_measure + response_mode + exposure_phase + counterbalanced + height + nasality + roundness + tenseness + length + peripherality + stimuli_naturalness")
-  ) %>% 
-   bind_rows(
-    tibble("ds_name" = "Neonatal Imitation", 
-           "moderators_no_age" = "exposure_phase")
-  ) %>% 
-  left_join(clean_age_model_summary %>% rename(ds_name = dataset), by = "ds_name") %>% 
-  mutate(formula = paste0(model_spec, " + ", moderators_no_age)) %>% 
-  select(ds_name, formula)
+  mutate(formula = case_when(
+    var == "" ~ model_spec, 
+    TRUE ~ paste0(model_spec, " + ", var))) %>% 
+  select(ds_clean, formula)
+
+mod_count <- mod_df %>% 
+  mutate(
+    mod_n = str_count(formula, "\\+") + 1
+  )
 
 
-lapply(seq(nrow(mod_df)), 
+ks_model_df <- lapply(seq(nrow(mod_df)), 
        function(x){
-         get_ma_effect_size_controlled(d %>% filter(ds_clean == mod_df$ds_name[[x]]), 
+         get_ma_effect_size_controlled(d %>% filter(ds_clean == mod_df$ds_clean[[x]]), 
                               mod_df$formula[[x]]) %>% 
-           mutate(ds_clean = mod_df$ds_name[[x]], 
+           mutate(ds_clean = mod_df$ds_clean[[x]], 
                   i2_kitchensink = i2) %>% 
            select(ds_clean, i2_kitchensink)
        }) %>% 
@@ -143,6 +138,34 @@ lapply(seq(nrow(mod_df)),
 
 
 
+```
+
+```{r}
+ks_d <-ks_model_df %>% 
+  left_join(mod_count, by = c("ds_clean")) %>% 
+  mutate(diff = i2 - i2_kitchensink, 
+         diff_by_mod = diff / mod_n) 
+
+ks_d %>% 
+ ggplot(aes(x = reorder(ds_clean, -diff), y = diff)) + 
+  geom_point() + 
+  theme_few() + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+
+ks_d %>% 
+ ggplot(aes(x = reorder(ds_clean, -diff_by_mod), y = diff_by_mod)) + 
+  geom_point() + 
+  theme_few() + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+
+
+ks_d %>% 
+  pivot_longer(cols = c("i2_kitchensink", "i2")) %>% 
+  ggplot(aes(x = reorder(ds_clean, -value), y = value, color = name)) + 
+  geom_point() + theme_few() + 
+  coord_flip()
 ```
 
 

@@ -1,0 +1,25 @@
+ds_clean,var
+Abstract rule learning,stimuli_naturalness + Semantics + Modality + exposure_phase + method 
+Audio-Visual Congruence,dependent_measure + exposure_phase + test_lang
+Categorization bias,object_stimulus + label_present + test_lang + taxonomic_type + num_trials + instruction_code
+Cross-situational word learning,num_trials + exposure_phase + dependent_measure 
+Familiar word recognition,tokens_per_trial + word_types_per_cond + num_trials + response_mode + method + exposure_phase
+Gaze following (combined),
+Label advantage in concept learning,
+Language discrimination and preference,response_mode + method + dependent_measure + exposure_phase
+Mispronunciation sensitivity,num_trials + type_feature + dependent_measure + exposure_phase + is_correct 
+Mutual exclusivity,num_trials +  behavioral_measure + ME_trial_type
+Natural speech preference,test_lang + method + exposure_phase 
+Neonatal Imitation,exposure_phase
+Online word recognition,num_trials
+Prosocial agents,scenarios + stimuli_naturalness + method
+Simple arithmetic competences,exposure_phase
+Sound symbolism,response_mode + method + exposure_phase
+Statistical sound category learning (habituation),response_mode 
+Statistical word segmentation,stimuli_naturalness + replication + test_lang + method 
+Switch task,test_lang +minimal_pairs+ cues_present + word_typicality        
+Syntactic bootstrapping,response_mode
+Vowel discrimination (native),method + dependent_measure + exposure_phase + test_lang
+Vowel discrimination (non-native),method + dependent_measure + exposure_phase + stimulus_naturalness
+Word Segmentation (combined),method + exposure_phase + test_lang + Linguistic
+Infant directed speech preference,method + dependent_measure + exposure_phase + test_lang + speaker + speech_type +main_question_IDS_preference + trial_control + speaker_fam + speaker_experience + presentation

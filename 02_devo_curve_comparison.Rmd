@@ -230,7 +230,7 @@ saveRDS(compare_const_df, here("cached_data/compare_const_df.Rds"))
 compare_const_df <- readRDS( here("cached_data/compare_const_df.Rds"))
 compare_const_df %>% 
   ggplot(aes(x = ds_name, y = pval, color = m_type)) + 
-  geom_point() + 
+  geom_point(position = position_dodge(width = .2), alpha = .3) + 
   theme_few() +
   geom_hline(yintercept = 0.05) +  
   coord_flip()
