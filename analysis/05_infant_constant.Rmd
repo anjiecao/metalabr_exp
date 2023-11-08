@@ -1,19 +1,15 @@
 ```{r}
 library(tidyverse)
 library(here)
+library(metafor)
 
-source(here("helper/model_comparison_help.r"))
+source(here("analysis/helper/model_comparison_help.r"))
 
 d <- read_csv(here("data/metalab_data_mini.csv"))
-
-
+full_comparison <- readRDS(here("cached_data/age_models_df.Rds"))
 ```
 
-```{r}
-toddler_d %>% 
-  group_by(ds_clean) %>% count()
-```
-
+# Caching results 
 
 ```{r}
 # first take out mostly younger infants
@@ -48,18 +44,10 @@ toddler_comparison <- lapply(
   bind_rows() %>% 
   mutate(ds_type = "toddler")
 
-full_comparison <- lapply(
-  unique(full_d$ds_clean), 
-  function(ds_name){
-    get_compare_IC_df(full_d, ds_name, NULL)
-  }
-) %>% 
-  bind_rows() %>% 
-  mutate(ds_type = "full")
-  
+write_rds(toddler_comparison, here("cached_data/above_12_month_models_df.Rds"))
 ```
 
-# compare the two comparison 
+# Visualization 
 
 ```{r}
 wide_toddler <- toddler_comparison %>% 
@@ -86,11 +74,6 @@ wide_toddler <- wide_toddler %>%
    mutate(across(where(is.numeric), round, 2)) %>% 
   mutate(ds_type = "12mon+")
 
-wide_toddler
-```
-
-
-```{r}
 
 wide_full <- full_comparison %>% 
   filter(ic == "AICc") %>% 
@@ -117,9 +100,6 @@ wide_full <- wide_full %>%
   mutate(ds_type = "full")
 
 
-```
-
-```{r}
 bind_rows(wide_toddler, wide_full) %>% 
   pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const"), 
                names_to = "model_type", 
