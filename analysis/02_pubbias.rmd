@@ -1,5 +1,5 @@
 ---
-title: "06_pubbias.rmd"
+title: "02_pubbias.rmd"
 author: "Anjie Cao, Molly Lewis, and Michael Frank"
 date: "`r Sys.Date()`"
 output: html_document
@@ -13,18 +13,13 @@ library(metafor)
 library(PublicationBias)
 
 
-#source(here("helper/summary_table_help.r"))
-#source(here("helper/mod_pubbias.R"))
 d <- read_csv(here("data/metalab_data_mini.csv"))
 ```
 
-# younger more selection bias??
+# Caching results 
+
 
 ```{r}
-test_d <- d %>% 
-  filter(ds_clean == "Abstract rule learning"	)
-
-
 
 get_tidy_regtest <- function(regtest_res){
   tibble(
@@ -35,8 +30,6 @@ get_tidy_regtest <- function(regtest_res){
     "ub" = regtest_res$ci.ub
   )
 }
-
-
 
 age_summary <- d %>% 
   group_by(ds_clean) %>% 
@@ -57,11 +50,15 @@ egger_test_df <- d %>%
   ) %>% 
   unnest(reg_fit)
 
+saveRDS(egger_test_df, here("cached_data/h1_egger_test.rds"))
+
 
 
 
 ```
 
+
+# Visualization
 
 ```{r}
 egger_test_df %>% 
@@ -76,23 +73,14 @@ egger_test_df %>%
 
 ```
 
-```{r}
-
-egger_test_df %>% 
-  ggplot(aes(x = age_group, y = limit_est)) + 
-  geom_pointrange(aes(ymin = lb, ymax = ub)) + 
-  geom_hline(yintercept = 0) + 
-  #ylim(-1, 1) + 
-  theme_few() + 
-  facet_wrap(~ds_clean)
-```
 
 
 
 
 
 
-# whatever i did before 
+
+# Misc
 
 
 ```{r}
