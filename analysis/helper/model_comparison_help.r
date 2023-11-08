@@ -224,12 +224,14 @@ get_model_fit_df <- function(all_ds, ds_name, moderators, age_type = "mean_age_m
   
   
   
+  if (age_type == "mean_age_months"){
+    formulas = c(linear_model_formula, log_model_formula, qua_model_formula, const_model_formula)
+  }else{
+    formulas = c(linear_model_formula)
+  }
   
-  res = lapply(c(linear_model_formula,
-                 log_model_formula, 
-                 qua_model_formula, 
-                 const_model_formula
-                 ), 
+  
+  res = lapply(formulas, 
                function(m){
                  
                  print(m)
