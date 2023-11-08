@@ -1,0 +1,31 @@
+
+```{r}
+library(tidyverse)
+library(here)
+library(googlesheets4)
+
+main_ma <- read_sheet("https://docs.google.com/spreadsheets/d/1JFMC5KLQgddAGavGOUb2D3hFWJXeuc00jlF60tUww_k/edit?pli=1#gid=0" )
+```
+
+```{r}
+ma <- main_ma %>% 
+  mutate(row_id = row_number()) %>% 
+  sample_n(floor(nrow(main_ma) * .2)) %>% 
+  arrange(row_id) %>% 
+  select(ID, Title, Author, short_cite,  part_group, part_num, d, d_var, d_se, extraction, exp_num) 
+  
+
+exp_num_list <- ma$exp_num
+exp_num_list[sapply(exp_num_list, is.null)] <- NA
+
+
+ma$exp_num <- unlist(exp_num_list)  
+
+ma %>% 
+  select(ID, Title, Author, short_cite,  exp_num, part_group, part_num, d, d_var, d_se, extraction) %>% 
+  write_csv("anjie_double_code.csv")
+```
+unlist(main_ma$exp_num)
+
+```
+

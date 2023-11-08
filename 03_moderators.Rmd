@@ -436,6 +436,20 @@ best_fit_major_author_model %>%
 ```
 
 ```{r}
+source(here("helper/author_help.r"))
+ma_df <- best_fit_major_author_model %>% 
+  mutate(lb = estimate - 1.96 * std.error, 
+         ub = estimate + 1.96 * std.error) %>% 
+  filter(grepl("by_major", term)) 
+
+plot_major_author(ma_df) 
+  
+```
+
+
+```{r}
+
+
 best_fit_major_author_model %>% 
   filter(grepl("by_major_author", term), 
          p.value < 0.05) %>% 

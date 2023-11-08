@@ -1,0 +1,149 @@
+```{r}
+library(tidyverse)
+library(here)
+
+source(here("helper/model_comparison_help.r"))
+
+d <- read_csv(here("data/metalab_data_mini.csv"))
+
+
+```
+
+```{r}
+toddler_d %>% 
+  group_by(ds_clean) %>% count()
+```
+
+
+```{r}
+# first take out mostly younger infants
+
+too_young_domain <- d %>% 
+  group_by(ds_clean) %>% 
+  summarise(max_age = max(mean_age_months)) %>% 
+  filter(max_age < 12)
+
+# looking at only 12 month and above
+toddler_d_with_enough_data <- d %>% 
+  filter(!ds_clean %in% too_young_domain$ds_clean) %>% 
+  filter(mean_age_months > 12) %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  filter(n > 10)
+
+toddler_d <- d %>% 
+  filter(ds_clean %in% toddler_d_with_enough_data$ds_clean) %>% 
+  filter(mean_age_months > 12) 
+  
+full_d <- d %>% 
+  filter(!ds_clean %in% too_young_domain$ds_clean) 
+
+toddler_comparison <- lapply(
+  unique(toddler_d$ds_clean), 
+  function(ds_name){
+    print(ds_name)
+    get_compare_IC_df(toddler_d, ds_name, NULL)
+  }
+) %>% 
+  bind_rows() %>% 
+  mutate(ds_type = "toddler")
+
+full_comparison <- lapply(
+  unique(full_d$ds_clean), 
+  function(ds_name){
+    get_compare_IC_df(full_d, ds_name, NULL)
+  }
+) %>% 
+  bind_rows() %>% 
+  mutate(ds_type = "full")
+  
+```
+
+# compare the two comparison 
+
+```{r}
+wide_toddler <- toddler_comparison %>% 
+  filter(ic == "AICc") %>% 
+  filter(ic == "AICc") %>% 
+  rename(Dataset = dataset) %>% 
+  select(REML, model_spec_clean, Dataset) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML)
+
+wide_toddler$min <- apply(wide_toddler[c('Linear','Log', 'Quadratic', 'Const')], 1, min)
+
+# get the delta value 
+wide_toddler <- wide_toddler %>% 
+  mutate(d_linear = Linear - min, 
+         d_log = Log - min, 
+         d_quad = Quadratic - min, 
+         d_const= Const - min) %>% 
+  select(Dataset, d_linear, d_log, d_quad, d_const) %>% 
+  rename(Linear = d_linear, 
+         Log = d_log, 
+         Quadratic = d_quad, 
+         Const = d_const) %>% 
+   mutate(across(where(is.numeric), round, 2)) %>% 
+  mutate(ds_type = "12mon+")
+
+wide_toddler
+```
+
+
+```{r}
+
+wide_full <- full_comparison %>% 
+  filter(ic == "AICc") %>% 
+  filter(ic == "AICc") %>% 
+  rename(Dataset = dataset) %>% 
+  select(REML, model_spec_clean, Dataset) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML)
+
+wide_full$min <- apply(wide_full[c('Linear','Log', 'Quadratic', 'Const')], 1, min)
+
+# get the delta value 
+wide_full <- wide_full %>% 
+  mutate(d_linear = Linear - min, 
+         d_log = Log - min, 
+         d_quad = Quadratic - min, 
+         d_const= Const - min) %>% 
+  select(Dataset, d_linear, d_log, d_quad, d_const) %>% 
+  rename(Linear = d_linear, 
+         Log = d_log, 
+         Quadratic = d_quad, 
+         Const = d_const) %>% 
+   mutate(across(where(is.numeric), round, 2)) %>% 
+  mutate(ds_type = "full")
+
+
+```
+
+```{r}
+bind_rows(wide_toddler, wide_full) %>% 
+  pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const"), 
+               names_to = "model_type", 
+               values_to = "AICc") %>% 
+  ggplot(aes(x = Dataset, y = AICc, color = model_type, shape = ds_type, group = ds_type)) + 
+  geom_point(position = position_dodge(width = .8))+ 
+  geom_hline(yintercept = 4, linetype = "dashed", alpha = .4, color = "gray")+
+  theme_few() + 
+  coord_flip()
+```
+
+
+```{r}
+bind_rows(wide_toddler, wide_full) %>% 
+  pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const"), 
+               names_to = "model_type", 
+               values_to = "AICc") %>% 
+  ggplot(aes(x = ds_type, y = AICc)) + 
+  geom_point()+
+  geom_line(aes(group = Dataset), alpha = .3) + 
+  geom_hline(yintercept = 4, linetype = "dashed", alpha = .4, color = "gray")+
+  theme_few() +
+  stat_summary(col = "red") + 
+  facet_wrap(~model_type) +
+  ylab("Delta AIC")
+```
+

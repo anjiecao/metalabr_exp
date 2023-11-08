@@ -1,0 +1,1117 @@
+
+```{r}
+library(tidyverse)
+library(here)
+library(metafor)
+library(ggthemes)
+
+
+source(here("helper/model_comparison_help.r"))
+
+d <- read_csv(here("data/metalab_data_kitchensink.csv"))
+```
+
+# start with one dataset 
+
+
+
+```{r}
+
+test_d <- d %>% 
+  filter(ds_clean == "Abstract rule learning") %>% 
+  select(ds_clean, long_cite, short_cite, expt_num, expt_condition, same_infant, d_calc, d_var_calc, unique_row, mean_age_months, n_1, stimuli_naturalness, Semantics, Modality, exposure_phase, method)
+
+
+  
+```
+
+## Within one study 
+
+q0: for study with multiple age group, do we actually see age related trends??
+
+first - do we really see age group differneces at all? 
+
+q0_1: how many studies actually contanin multiple age groups? 
+
+```{r}
+# figure out how many studies have multiple age groups (e.g interval between max mean age and min mean age is greater than 1)
+
+multiple_age_group_df <- d %>% 
+  group_by(ds_clean, short_cite) %>%
+  filter(mean_age_months < 48) %>% 
+  summarise(
+    max_mean_age_months = max(mean_age_months), 
+    min_mean_age_months = min(mean_age_months)
+  ) %>% 
+  mutate(diff = max_mean_age_months - min_mean_age_months) %>% 
+  filter(diff > 1) %>% 
+  distinct(ds_clean, short_cite) %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  rename(n_multiple_age_group_study = n)
+
+# figure out the proportion of all studies within 
+
+proportion_study_with_multiple_age_groups_df <- d %>% 
+  distinct(ds_clean, short_cite) %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  left_join(multiple_age_group_df, by = c("ds_clean")) %>% 
+  mutate(
+    proportion = n_multiple_age_group_study / n
+  ) %>% 
+  arrange(-proportion)
+
+# only a minority of the study has multiple age groups
+
+proportion_study_with_multiple_age_groups_df %>% 
+  ungroup() %>% 
+  summarise(m = mean(proportion, na.rm = TRUE), 
+            sd = sd(proportion, na.rm = TRUE))
+```
+
+
+a0: many studies don't include multiple age group, and for those that do the trend is not very clear 
+
+q1: what about within study methodological variation? what kinds of methodological manipultation do people do 
+
+
+
+
+
+
+```{r}
+method_d <- (read_csv(here("data/ks_info.csv"))) %>% 
+  filter(!is.na(var)) 
+
+var_selection <- method_d %>%
+  filter(!is.na(var)) %>% 
+  # Split the column values and unnest to keep them in a list-column
+  mutate(cols = str_split(`var`, " \\+ ")) %>% 
+  mutate(cols =  lapply(cols, function(x) gsub("\\s+", "", x)))
+
+# figure out study method 
+study_with_multiple_method_d <- lapply(
+  seq(1, nrow(method_d)), 
+  function(id){
+    d %>%
+    filter(ds_clean == var_selection$ds_clean[[id]]) %>% 
+    select(
+      ds_clean,
+      short_cite, 
+      all_of(var_selection$cols[[id]])) %>% 
+    mutate_if(is.numeric, as.character) %>% 
+    rowwise() %>%
+    mutate(meta_method = paste(c_across(-c(ds_clean, short_cite)), collapse = ";")) %>% 
+    distinct(ds_clean, short_cite, meta_method) %>% 
+    group_by(ds_clean, short_cite) %>% 
+    count()
+  }
+) %>% 
+  bind_rows() %>% 
+  filter(n > 1) %>% 
+  rename(n_method_group = n)
+
+
+
+study_with_multiple_age_group_d <- d %>% 
+  group_by(ds_clean, short_cite) %>%
+  filter(mean_age_months < 48) %>% 
+  summarise(
+    max_mean_age_months = max(mean_age_months), 
+    min_mean_age_months = min(mean_age_months)
+  ) %>% 
+  mutate(diff = max_mean_age_months - min_mean_age_months) %>% 
+  filter(diff > 1) %>% 
+  distinct(ds_clean, short_cite) %>% 
+  ungroup()
+
+# figuring out paper with both multiple age groups AND multiple methods
+
+multiple_d <- study_with_multiple_age_group_d %>% 
+  left_join(study_with_multiple_method_d, by = c("ds_clean", "short_cite")) %>% 
+  filter(!is.na(n_method_group))
+
+multiple_d
+```
+
+# single method cases
+
+
+```{r}
+study_with_multiple_age_group_d <- d %>% 
+  group_by(ds_clean, short_cite) %>%
+  filter(mean_age_months < 48) %>% 
+  summarise(
+    max_mean_age_months = max(mean_age_months), 
+    min_mean_age_months = min(mean_age_months)
+  ) %>% 
+  mutate(diff = max_mean_age_months - min_mean_age_months) %>% 
+  filter(diff > 1) %>% 
+  distinct(ds_clean, short_cite) %>% 
+  ungroup()
+
+method_d <- (read_csv(here("data/ks_info.csv"))) %>% 
+  filter(!is.na(var)) 
+
+var_selection <- method_d %>%
+  filter(!is.na(var)) %>% 
+  # Split the column values and unnest to keep them in a list-column
+  mutate(cols = str_split(`var`, " \\+ ")) %>% 
+  mutate(cols =  lapply(cols, function(x) gsub("\\s+", "", x)))
+
+
+study_with_single_method_d <- lapply(
+  seq(1, nrow(method_d)), 
+  function(id){
+    d %>%
+    filter(ds_clean == var_selection$ds_clean[[id]]) %>% 
+    select(
+      ds_clean,
+      short_cite, 
+      all_of(var_selection$cols[[id]])) %>% 
+    mutate_if(is.numeric, as.character) %>% 
+    rowwise() %>%
+    mutate(meta_method = paste(c_across(-c(ds_clean, short_cite)), collapse = ";")) %>% 
+    distinct(ds_clean, meta_method, short_cite) %>% 
+    group_by(ds_clean, short_cite) %>% 
+    count()
+  }
+) %>% 
+  bind_rows() %>% 
+  filter(n == 1) %>% 
+  rename(n_method_group = n)
+
+single_method_multiple_age <- study_with_single_method_d %>% 
+  filter(short_cite %in% study_with_multiple_age_group_d$short_cite)
+```
+
+
+```{r}
+d %>% 
+  filter(ds_clean %in% single_method_multiple_age$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc)) + 
+  geom_point(alpha = .3) + 
+  geom_line(aes(group = short_cite), alpha = .3)   + 
+  facet_wrap(~ds_clean)
+
+```
+
+```{r}
+singular_fit_ds <- c("Abstract rule learning", 
+                      "Cross-situational word learning", 
+                      "Language discrimination and preference",
+                      "Mutual exclusivity", 
+                      "Online word recognition",
+                      "Prosocial agents", 
+                      "Sound symbolism", 
+                     "Statistical word segmentation", 
+                     "Familiar word recognition", 
+                     "Statistical word segmentation",
+                     "Switch task",
+                     "Syntactic bootstrapping",
+                     "Vowel discrimination (native)",
+                     "Vowel discrimination (non-native)",
+                     "Word Segmentation (combined)",
+                     "Audio-Visual Congruence")
+
+singular_fit_for_simplified_ds <- c("Abstract rule learning", "Language discrimination and preference","Sound symbolism")
+
+too_little_data_ds <- c("Natural speech preference", "Statistical sound category learning (habituation)", 
+                        "Infant directed speech preference")
+
+pruned_df <- d %>% 
+  filter(ds_clean %in% single_method_multiple_age$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  group_by(ds_clean) %>% 
+  count() 
+
+nested_d <- d %>% 
+  #filter(!ds_clean %in% singular_fit_for_simplified_ds) %>% 
+  #filter(!ds_clean %in% too_little_data_ds) %>% 
+  #filter(!ds_clean %in% singular_fit_ds) %>% 
+  filter(ds_clean %in% pruned_df$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  #filter(!ds_clean %in% c("Abstract rule learning", "Language discrimination and preference", "Sound symbolism")) %>% 
+  group_by(ds_clean) %>%
+ nest() %>% 
+  mutate(
+    n_row = map(data, ~ count(.) %>% pull(n)), 
+    n_group = map(data, ~ distinct(., short_cite) %>% count() %>% pull(n))
+  ) %>% 
+  unnest(n_row, n_group) %>% 
+  filter(n_row > 20) 
+
+pruned_more_nested <- d %>% 
+  filter(ds_clean %in% singular_fit_for_simplified_ds) %>% 
+  group_by(ds_clean) %>%
+ nest() 
+
+
+
+pruned_model <- lapply(seq(1, nrow(nested_d)), 
+       function(id){
+         print(nested_d$ds_clean[[id]])
+         data = nested_d$data[[id]]
+         model = lmerTest::lmer(d_calc ~ mean_age_months + (mean_age_months | short_cite), data = data, 
+                                control = lme4::lmerControl(optimizer="bobyqa"))
+         res = broom.mixed::tidy(model) %>% mutate(ds_clean = nested_d$ds_clean[[id]]) %>% 
+           mutate(isSingular = lme4::isSingular(model))
+         return(res)
+      }) %>% 
+  bind_rows()
+
+
+general_coef <- pruned_model %>% 
+  filter(isSingular == FALSE) %>% 
+  filter(term == "mean_age_months") %>% 
+  select(ds_clean, estimate, std.error) %>% 
+  mutate(estimate_lb  = estimate - 1.96 * std.error, 
+         estimate_ub = estimate + 1.96 * std.error)
+
+coef_data <- nested_d %>% 
+  filter(ds_clean %in% general_coef$ds_clean) 
+  
+group_specific_estimate <- lapply(seq(1, nrow(coef_data)), 
+       function(id){
+         print(coef_data$ds_clean[[id]])
+         data = coef_data$data[[id]]
+         model = lmerTest::lmer(d_calc ~ mean_age_months + (mean_age_months | short_cite), data = data, 
+                                control = lme4::lmerControl(optimizer="bobyqa"))
+         res = lme4::ranef(model)[[1]] %>% as.data.frame() %>% 
+           mutate(ds_clean = coef_data$ds_clean[[id]])
+         return(res)
+      }) %>% 
+  bind_rows() %>% 
+  left_join(general_coef, by = c("ds_clean")) %>% 
+  mutate(group_specific_estimate = mean_age_months + estimate)
+
+group_specific_estimate
+
+```
+
+# bootstrapping interval 
+
+
+
+```{r}
+
+bootstrap_function_stratified <- function(data, indices) {
+
+  data_resampled <- data.frame()
+
+  # For each unique group, sample with replacement and bind to the resampled data
+  for (grp in unique(data$short_cite)) {
+    group_data <- data[data$short_cite == grp, ]
+    group_sample <- group_data[sample(nrow(group_data), nrow(group_data), replace = TRUE), ]
+    data_resampled <- rbind(data_resampled, group_sample)
+  }
+
+  # Now fit the mixed model on the stratified resampled data
+  model_resampled <- lmer(d_calc ~ mean_age_months + (mean_age_months | short_cite), 
+                                control = lme4::lmerControl(optimizer="bobyqa"), data = data_resampled)
+  
+  fixed_slope <- fixef(model_resampled)["mean_age_months"]
+  random_slopes <- ranef(model_resampled)$short_cite[, "mean_age_months"]
+  
+  group_slopes <- fixed_slope + random_slopes
+
+  return(group_slopes)
+}
+
+
+
+get_ci_for_random_slope <- function(ds_name, data, run = 5000){
+  
+  #Fit the mixed-effects model
+  model <- lmerTest::lmer(d_calc ~ mean_age_months + (mean_age_months | short_cite), data = data, 
+                                control = lme4::lmerControl(optimizer="bobyqa"))
+  
+  results <- boot(data = data, statistic = bootstrap_function_stratified, R = run)
+  ci_lower <- apply(results$t, 2, function(x) quantile(x, 0.025))
+  ci_upper <- apply(results$t, 2, function(x) quantile(x, 0.975))
+  
+  df = tibble(
+    ds_name = ds_name,
+    group_id = seq(1, length(ci_lower)), 
+    ci_lower = ci_lower, 
+    ci_upper = ci_upper
+  )
+  
+  return (df)
+
+}
+
+all_ci_estimate_data <- lapply(seq(1, nrow(coef_data)), 
+       function(id){
+         data = coef_data$data[[id]]
+         name = coef_data$ds_clean[[id]]
+         estimates = get_ci_for_random_slope(name, data, 5000)
+         return (estimates)
+       }) %>% bind_rows()
+
+
+
+
+
+
+```
+
+# visualizing slope estimate 
+
+```{r}
+write_rds(all_info_d, here("group_specific_estimate.Rds"))
+all_info_d <- readRDS(here("group_specific_estimate.Rds"))
+ 
+all_info_d <- group_specific_estimate %>% 
+  group_by(ds_clean) %>% 
+  mutate(group_id = row_number()) %>% 
+  left_join(all_ci_estimate_data %>% rename(ds_clean = ds_name), by = c("ds_clean", "group_id")) %>% 
+  left_join(coef_data %>% unnest(data) %>% distinct(ds_clean, short_cite) %>% group_by(ds_clean) %>% mutate(group_id = row_number()), 
+            by = c("ds_clean", "group_id"))  
+  
+
+tidy_all_info_d <- all_info_d %>% distinct(ds_clean, estimate, estimate_ub, estimate_lb) %>% 
+  mutate(short_cite = "General", 
+         estimate_type = "general_estimate") %>%
+  rename(ci_lower = estimate_lb, 
+         ci_upper = estimate_ub) %>% 
+  bind_rows(
+    all_info_d %>% distinct(ds_clean, group_specific_estimate, ci_lower, ci_upper, group_id, short_cite) %>% 
+      rename(estimate = group_specific_estimate) %>% 
+      mutate(estimate_type = "group_specific_estimate")
+  ) 
+
+# Extract the group you want at the top
+top_group <- data[data$group == "D",]
+
+# Remove the top group from the original data
+data <- data[data$group != "D",]
+
+# Sort the remaining data by the y-values (value column)
+data <- data[order(-data$value), ]
+
+# Add back the top group to the top of the sorted data
+data <- rbind(top_group, data)
+
+# Convert the 'group' column to a factor with levels based on the order in the data
+data$group <- factor(data$group, levels = unique(data$group))
+
+top_group <- tidy_all_info_d[tidy_all_info_d$short_cite == "General", ]
+tidy_all_info_d <- tidy_all_info_d[tidy_all_info_d$short_cite != "General", ]
+tidy_all_info_d <- tidy_all_info_d[order(-tidy_all_info_d$estimate), ]
+tidy_all_info_d <- rbind(top_group, tidy_all_info_d)
+tidy_all_info_d$short_cite <- factor(tidy_all_info_d$short_cite , levels = unique(tidy_all_info_d$short_cite))
+
+
+tidy_all_info_d %>% 
+  ggplot(aes(x = short_cite, y = estimate, ymin = ci_lower, ymax = ci_upper, color = estimate_type)) + 
+  geom_pointrange() + 
+   geom_hline(aes(yintercept = 0), alpha = .3, color = "red", linetype = "dashed") + 
+  facet_wrap(~ds_clean, scales = "free", nrow = 2) + 
+  theme_few()+ 
+  theme(legend.position = "bottom") +
+  coord_flip() + 
+  xlab("") + 
+  ylab("Estimate for Mean age months")
+  
+```
+
+
+# using delta to get at this 
+
+```{r}
+all_info_d %>% distinct(ds_clean)
+```
+
+
+```{r}
+d %>% 
+  filter(ds_clean %in% (all_info_d %>% distinct(ds_clean) %>% pull())) %>% 
+  group_by(ds_clean, short_cite) %>% 
+  summarise(min_age = min(mean_age_1)) %>% 
+  left_join(d %>% 
+  filter(ds_clean %in% (all_info_d %>% distinct(ds_clean) %>% pull())), 
+  by = c("ds_clean", "short_cite")) %>% 
+  select(ds_clean, short_cite, mean_age_1, min_age, d_calc, d_var_calc) %>% 
+  mutate(delta_age = mean_age_1 - min_age) %>% 
+  ggplot(aes(x = delta_age, y = d_calc)) + 
+  geom_point() + 
+  facet_wrap(~ds_clean) + 
+  theme_few() + 
+  geom_smooth(method = "lm")
+```
+
+mike suggested to look at everything
+
+
+```{r}
+
+d %>% 
+  filter(ds_clean %in% (single_method_multiple_age %>% ungroup() %>%  distinct(ds_clean) %>% pull()), 
+         short_cite %in% (single_method_multiple_age %>% ungroup() %>%  distinct(short_cite) %>% pull())) %>% 
+  group_by(ds_clean, short_cite) %>% 
+  summarise(min_age = min(mean_age_months)) %>% 
+  left_join(d %>% 
+  filter(ds_clean %in% (single_method_multiple_age %>% ungroup() %>%  distinct(ds_clean) %>% pull()), 
+         short_cite %in% (single_method_multiple_age %>% ungroup() %>%  distinct(short_cite) %>% pull())), 
+  by = c("ds_clean", "short_cite")) %>% 
+  select(ds_clean, short_cite, mean_age_months, min_age, d_calc, d_var_calc) %>% 
+  mutate(delta_age = mean_age_months - min_age) %>% 
+  ggplot(aes(x = delta_age, y = d_calc)) + 
+  geom_point() + 
+  facet_wrap(~ds_clean, scales = "free") + 
+  theme_few() + 
+  geom_smooth(method = "lm") + 
+  theme(strip.text.x = element_text(size = 5))
+
+
+```
+
+
+
+## test the model with delta age 
+
+```{r}
+delta_age <-  d %>% 
+  filter(ds_clean %in% (single_method_multiple_age %>% ungroup() %>%  distinct(ds_clean) %>% pull()), 
+         short_cite %in% (single_method_multiple_age %>% ungroup() %>%  distinct(short_cite) %>% pull())) %>% 
+  group_by(ds_clean, short_cite) %>% 
+  summarise(min_age = min(mean_age_months)) %>% 
+  left_join(d %>% 
+  filter(ds_clean %in% (single_method_multiple_age %>% ungroup() %>%  distinct(ds_clean) %>% pull()), 
+         short_cite %in% (single_method_multiple_age %>% ungroup() %>%  distinct(short_cite) %>% pull())), 
+  by = c("ds_clean", "short_cite")) %>% 
+  select(ds_clean, short_cite, mean_age_months, same_infant, unique_row, min_age, d_calc, d_var_calc) %>% 
+  mutate(delta_age = mean_age_months - min_age)
+
+
+
+delta_age_model <- lapply(
+  seq(1, nrow(delta_age %>% distinct(ds_clean))), 
+  function(x){
+    get_model_fit_df(delta_age, ds_name = (delta_age %>% distinct(ds_clean) %>% pull())[[x]], NULL, 
+                     age_type = "delta_age")
+  }
+) %>% 
+  bind_rows()
+```
+
+
+
+
+```{r }
+pruned_more_model <- lapply(seq(1, nrow(pruned_more_nested)), 
+       function(id){
+         print(pruned_more_nested$ds_clean[[id]])
+         data = pruned_more_nested$data[[id]]
+         model = lm(d_calc ~ mean_age_months, data = data)
+         res = broom::tidy(model) %>% mutate(ds_clean = pruned_more_nested$ds_clean[[id]])
+         return(res)
+      }) %>% 
+  bind_rows() %>% 
+  mutate(model_spec = "d_calc ~ mean_age_months")
+  
+bind_rows(pruned_model, pruned_more_model) %>% 
+  filter(term == "mean_age_months") %>% 
+  mutate(
+    lb = estimate - std.error * 1.96, 
+    ub = estimate + std.error * 1.96
+  ) %>% 
+  select(ds_clean, estimate, lb, ub, p.value) %>% 
+  mutate(sig = if_else(p.value < .05, "sig", "non_sig")) %>% 
+  ggplot(aes(x = reorder(ds_clean, estimate), y = estimate, ymin = lb, ymax = ub, color = sig)) + 
+  geom_hline(yintercept = 0, color = "gray", alpha = .5, linetype = "dashed") + 
+  geom_pointrange() + 
+  theme_few() + 
+  coord_flip() + 
+  xlab("") + 
+  ylab("Estimate (mean age in months)") 
+
+  
+```
+
+
+
+```{r}
+d %>% 
+  filter(ds_clean %in% single_method_multiple_age$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  filter(ds_clean == "Natural speech preference")
+```
+
+
+
+# multiple methods case
+
+```{r}
+# all of the studies with both multiple age groups and multiple methods!
+multimulti_df <- lapply(
+  seq(1, nrow(method_d)), 
+  function(id){
+    d %>%
+    filter(ds_clean == var_selection$ds_clean[[id]]) %>% 
+    mutate(method_name = paste(var_selection$cols[[id]], collapse = ";")) %>% 
+    select(
+      ds_clean,
+      short_cite, 
+      method_name, 
+      all_of(var_selection$cols[[id]])) %>% 
+    mutate_if(is.numeric, as.character) %>% 
+    rowwise() %>%
+    mutate(meta_method = paste(c_across(-c(ds_clean, method_name, short_cite)), collapse = ";")) %>% 
+      select(ds_clean, short_cite, method_name, meta_method)
+  }
+) %>% bind_rows() %>% 
+  distinct(ds_clean, short_cite, method_name, meta_method) %>% 
+  filter(ds_clean %in% multiple_d$ds_clean, 
+         short_cite %in% multiple_d$short_cite) %>% 
+  arrange(ds_clean, short_cite)
+```
+
+
+```{r}
+changed_methods_df <- multimulti_df %>% 
+  group_by(ds_clean, short_cite, method_name) %>%
+  # Split each string into words and capture their position
+  mutate(methods = str_split(meta_method, ";"),
+         method_name = str_split(method_name, ";"),
+         position = map(meta_method, ~seq_along(.x))) %>%
+  unnest(c(methods, method_name, position)) %>%
+  select(-meta_method) %>% 
+  # Tally words for each position
+  count(position, methods, name = "n") %>%
+  # Filter for positions with more than one unique word
+  group_by(position, ds_clean, short_cite) %>%
+  filter(n_distinct(words) > 1) %>%
+  arrange(position, desc(n)) %>% 
+  filter(n ==1) 
+
+
+grouping_df <- changed_methods_df %>% distinct(ds_clean, short_cite, method_name) %>% 
+  group_by(ds_clean, short_cite) %>%
+  summarise(method_list = list(method_name))
+
+grouping_df
+
+nested_df <- d %>% 
+  filter(ds_clean %in% grouping_df$ds_clean, 
+         short_cite %in% grouping_df$short_cite) %>% 
+  group_by(ds_clean, short_cite) %>% 
+  nest() 
+
+
+calculate_one_group <- function(ds, ds_name, short_cite_name, method_name_list){
+  sub_df <- ds %>% filter(ds_clean == ds_name, short_cite == short_cite_name)
+  method_age_res <- lapply(method_name_list, 
+                           function(name){
+                             
+                             group_ <- syms(name)
+                      
+                             sub_df %>% 
+                               #select(!!name)
+                               group_by(!!!group_) %>% 
+                               summarise(
+                                 mean_age_method_group = mean(mean_age_months, na.rm = TRUE), 
+                                 sd_age_method_group = sd(mean_age_months, na.rm = TRUE)
+                               ) %>% 
+                               mutate(method_name = as.character(name), 
+                                      method = !!group_)
+            
+                 }) %>% 
+    bind_rows() %>% 
+    mutate(ds_clean = ds_name, short_cite = short_cite_name)
+  
+  return (method_age_res)
+ 
+}
+
+main_df <- lapply(
+  seq(1, nrow(grouping_df)), 
+      function(id){
+        calculate_one_group(d, grouping_df$ds_clean[[id]], grouping_df$short_cite[[id]], 
+                    grouping_df$method_list[[id]])
+      }) %>% bind_rows()
+
+main_df %>% 
+  select(ds_clean, short_cite, method_name, mean_age_method_group, sd_age_method_group) %>% 
+  ggplot(aes(x = method_name, y = mean_age_method_group, color = method_name)) + 
+  geom_point() + 
+  facet_wrap(short_cite~ds_clean, scales = "free")  + 
+  theme(legend.position = "none")
+  
+```
+
+
+
+
+
+
+
+```{r}
+# first figure out study with actual methodological changes between condition  
+
+method_change_d <- test_d %>% 
+  mutate(mega_method = paste(stimuli_naturalness, Semantics, Modality, exposure_phase, method, sep = "_")) %>% 
+  group_by(short_cite, mega_method) %>% 
+  count() %>% 
+  group_by(short_cite) %>% 
+  count() %>% 
+  filter(n > 1) %>% 
+  pull(short_cite)
+
+test_d %>% 
+  filter(short_cite %in% method_change_d) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, color = stimuli_naturalness)) + 
+  geom_point() + 
+  facet_wrap(~short_cite)
+
+test_d %>% 
+  filter(short_cite %in% method_change_d) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, color = Semantics)) + 
+  geom_point() + 
+  facet_wrap(~short_cite)
+
+test_d %>% 
+  filter(short_cite %in% method_change_d) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, color = Modality)) + 
+  geom_point() + 
+  facet_wrap(~short_cite)
+
+test_d %>% 
+  filter(short_cite %in% method_change_d) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, color = exposure_phase)) + 
+  geom_point() + 
+  facet_wrap(~short_cite)
+
+test_d %>% 
+  filter(short_cite %in% method_change_d) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc, color = method)) + 
+  geom_point() + 
+  facet_wrap(~short_cite)
+```
+
+a1: we don't see much evidence for condition change within a study, not as a function of age. 
+
+
+some sort of ad hoc binning of age 
+
+what's the best way to summarise this information quantitatively??? or do we need to? 
+
+
+## Across study 
+
+
+q0: what does it look like? 
+a0: 
+```{r}
+
+
+test_d %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc)) + 
+  geom_point(aes(size = n_1 / 10)) + 
+  geom_smooth(method = "lm") + 
+  facet_wrap(~stimuli_naturalness)
+
+test_d %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc)) + 
+  geom_point(aes(size = n_1 / 10)) + 
+  geom_smooth(method = "lm") + 
+  facet_wrap(~Semantics)
+
+test_d %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc)) + 
+  geom_point(aes(size = n_1 / 10)) + 
+  geom_smooth(method = "lm") + 
+  facet_wrap(~Modality)
+
+test_d %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc)) + 
+  geom_point(aes(size = n_1 / 10)) + 
+  geom_smooth(method = "lm") + 
+  facet_wrap(~exposure_phase)
+  
+
+test_d %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc)) + 
+  geom_point(aes(size = n_1 / 10)) + 
+  geom_smooth(method = "lm") + 
+  facet_wrap(~method)
+  
+```
+
+q1: so how do these influence the fit of the model?!?!?
+
+```{r}
+test_d_natural <- test_d %>% filter(stimuli_naturalness == "natural")
+test_d_artifical <- test_d %>% filter(stimuli_naturalness == "artificial")
+
+res_artificial <- get_compare_IC_df(test_d_artifical, ds_name = "Abstract rule learning", NULL) %>% 
+  filter(ic == "AICc") %>% 
+  mutate(data = "artificial")
+
+res_natural <- get_compare_IC_df(test_d_natural, ds_name = "Abstract rule learning", NULL) %>% 
+  filter(ic == "AICc") %>% 
+  mutate(data = "natural")
+  
+
+res_wide <- bind_rows(res_artificial, res_natural) %>% 
+  ungroup() %>% 
+  select(REML, model_spec_clean, data) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML)
+
+
+res_wide$min <- apply(res_wide[c('Linear','Log', 'Quadratic', 'Const')], 1, min)
+
+res_wide <- res_wide %>% 
+  mutate(d_linear = Linear - min, 
+         d_log = Log - min, 
+         d_quad = Quadratic - min, 
+         d_const= Const - min) %>% 
+  select(data, d_linear, d_log, d_quad, d_const) %>% 
+  rename(Linear = d_linear, 
+         Log = d_log, 
+         Quadratic = d_quad, 
+         Const = d_const) %>% 
+   mutate(across(where(is.numeric), round, 2)) 
+
+```
+
+
+
+
+```{r}
+get_moderator_comparison <- function(d, ds_name, moderator){
+  # figure out how many levels included in this d
+  d <- d %>% filter(ds_clean == ds_name)
+  name = deparse(substitute(moderator))
+  levels = d %>% select(!!sym(moderator)) %>% distinct() %>% filter(!is.na(!!sym(moderator))) %>% pull()
+  
+  
+  
+  raw_res <- lapply(levels, function(x){
+    sub_d = d %>% filter(!!sym(moderator) == x)
+    if (nrow(sub_d) > 1){
+      res_d <- get_compare_IC_df(sub_d, ds_name = ds_name, NULL) %>% 
+      filter(ic == "AICc") %>% 
+      mutate(data = x)
+    }
+  }) %>% 
+    bind_rows()
+  
+  res_wide <- raw_res %>% 
+  select(REML, model_spec_clean, data) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML)
+
+
+  res_wide$min <- apply(res_wide[c('Linear','Log', 'Quadratic', 'Const')], 1, min)
+
+  res_wide <- res_wide %>% 
+  mutate(d_linear = Linear - min, 
+         d_log = Log - min, 
+         d_quad = Quadratic - min, 
+         d_const= Const - min) %>% 
+  select(data, d_linear, d_log, d_quad, d_const) %>% 
+  rename(Linear = d_linear, 
+         Log = d_log, 
+         Quadratic = d_quad, 
+         Const = d_const) %>% 
+   mutate(across(where(is.numeric), round, 2)) %>% 
+    mutate(ds_name = ds_name, 
+           comparison = moderator)
+  
+
+  return (res_wide)
+}
+
+all_comparison <- lapply(
+  c("stimuli_naturalness", "Semantics", "Modality", "method", "exposure_phase"), 
+  function(mod){
+    get_moderator_comparison(d, "Abstract rule learning", mod)
+  }
+) %>% bind_rows()
+
+
+
+all_comparison
+```
+
+```{r}
+
+var_selection <- method_d %>%
+  filter(!is.na(var)) %>% 
+  # Split the column values and unnest to keep them in a list-column
+  mutate(cols = str_split(`var`, " \\+ ")) %>% 
+  mutate(cols =  lapply(cols, function(x) gsub("\\s+", "", x)))
+
+
+all_res <- lapply(
+  seq(1, nrow(var_selection)), 
+    function(id){
+      ds_name = var_selection$ds_clean[[id]]
+      moderators = var_selection$cols[[id]]
+      lapply(moderators, 
+             function(m){
+               print(ds_name)
+               print(m)
+               tryCatch(
+                 get_moderator_comparison(d, ds_name, m) %>% mutate(data = as.character(data)), 
+                 error = function(e){
+                   df = tibble("ds_name" = ds_name, 
+                          "m" = m,
+                          "status" = "error")
+                   return(df)
+                 }
+               )
+             }) %>% bind_rows()
+    }
+  ) %>% 
+  bind_rows()
+  
+
+```
+
+
+## slope distribution estimate 
+
+```{r}
+get_slope_estimate_raw <- function(d, ds_name, moderator){
+  # figure out how many levels included in this d
+  d <- d %>% filter(ds_clean == ds_name)
+  name = deparse(substitute(moderator))
+  levels = d %>% select(!!sym(moderator)) %>% distinct() %>% filter(!is.na(!!sym(moderator))) %>% pull()
+  
+  
+  
+  raw_res <- lapply(levels, function(x){
+    sub_d = d %>% filter(!!sym(moderator) == x)
+    if (nrow(sub_d) > 1){
+      res_d <- get_model_fit_df(sub_d, ds_name, NULL) %>% 
+            mutate(modelrator = name, level = x) %>% 
+            mutate(level = as.character(level))
+    }
+  }) %>% 
+    bind_rows() 
+  
+
+  
+
+  return (raw_res)
+}
+
+
+slope_estimate <- lapply(
+  seq(1, nrow(var_selection)), 
+    function(id){
+      ds_name = var_selection$ds_clean[[id]]
+      moderators = var_selection$cols[[id]]
+      lapply(moderators, 
+             function(m){
+               print(ds_name)
+               print(m)
+               tryCatch(
+                 get_slope_estimate_raw(d, ds_name, m), 
+                 error = function(e){
+                   df = tibble("ds_name" = ds_name, 
+                          "m" = m,
+                          "status" = "error")
+                   return(df)
+                 }
+               )
+             }) %>% bind_rows()
+    }
+  ) %>% 
+  bind_rows()
+
+og_estimate <- lapply(
+  seq(1, nrow(var_selection)), 
+    function(id){
+      ds_name = var_selection$ds_clean[[id]]
+      
+      get_model_fit_df(d, ds_name, NULL) 
+    }
+  ) %>% 
+  bind_rows()
+
+```
+
+```{r}
+slope_estimate %>% 
+  filter(grepl("Natural", dataset)) %>% 
+   filter(term == "mean_age_months")
+
+
+d %>% 
+  filter(ds_clean == "Natural speech preference") %>% 
+  filter(behavioral_measure == "sucking") %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc))+ 
+  geom_point()
+
+rma.mv(d_calc ~ mean_age_months, 
+       V = d_var_calc, 
+       random = ~ 1 | short_cite/same_infant/unique_row, 
+       data = d %>% filter(ds_clean == "Natural speech preference") %>% 
+              filter(behavioral_measure == "sucking") )
+```
+
+
+```{r}
+
+og_estimate %>% 
+  filter(term == "mean_age_months") %>% 
+  mutate(lb = estimate - std.error, 
+         ub = estimate + std.error) %>% 
+  mutate(estimate_type = "full_dataset") %>% 
+  bind_rows(
+    slope_estimate %>% 
+       filter(term == "mean_age_months") %>% 
+        mutate(lb = estimate - std.error, ub = estimate + std.error) %>% 
+        filter(is.na(status)) %>% 
+        filter(estimate < 1) %>% 
+        mutate(
+    estimate_type = if_else(p.value < .05, "method_sig", "method_non_sig")
+      ) 
+  ) %>%
+  filter(estimate_type != "method_non_sig") %>% 
+
+  ggplot(aes(x = dataset, y = estimate, ymin = lb, ymax = ub, color = estimate_type)) + 
+  scale_color_manual(values = c("black", "red"))+
+  geom_pointrange(position = position_jitter(width = .2), alpha = .5) +
+  geom_hline(yintercept = 0, alpha = .5, linetype = "dashed") + 
+  coord_flip() + 
+  theme_few()
+  #facet_wrap(~dataset, scales = "free")
+```
+
+
+```{r}
+temp_df <- og_estimate %>% 
+  filter(term == "mean_age_months") %>% 
+  rename(
+    og_estimate = estimate
+  ) %>% 
+  select(dataset, og_estimate) %>% 
+  left_join(
+    slope_estimate %>% 
+       filter(term == "mean_age_months") %>% 
+        mutate(lb = estimate - std.error, ub = estimate + std.error) %>% 
+        filter(is.na(status)) %>% 
+        filter(estimate < 1) %>% 
+        mutate(
+    estimate_type = if_else(p.value < .05, "method_sig", "method_non_sig")
+      ), 
+    by = c("dataset")
+  ) 
+
+temp_df%>%
+  ggplot(aes(x = dataset, y = estimate, ymin = lb, ymax = ub, color = estimate_type)) + 
+  #scale_color_manual(values = c("blue", "gray", "pink"))+
+  geom_pointrange(position = position_jitter(width = .2), alpha = .5) +
+  geom_hline(data = temp_df, yintercept = og_estimate, alpha = .5, linetype = "dashed") + 
+  coord_flip() + 
+  theme_few() + 
+  facet_wrap(~dataset)
+```
+
+
+## look at change direction 
+
+
+```{r}
+saveRDS(all_res, "method_comparison.RDS")
+
+all_res <- readRDS(here("method_comparison.RDS"))
+
+all_res %>% filter(is.na(status)) %>% 
+  select(-m, -status) %>% 
+  filter(
+    Linear > 4 | Log > 4 | Quadratic > 4 | Const > 4
+  ) %>% 
+  rename("method_level" = data, 
+          "method" = comparison) %>% 
+  pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const")) %>% 
+  ggplot(aes(x = method_level, y = value, color = name)) + 
+  geom_point()+ 
+  #coord_flip() + 
+  theme_few() + 
+  facet_wrap(method~ds_name, scales = "free")
+  
+```
+
+```{r}
+
+full_ds_comparison <- readRDS(here("cached_data/age_models_df.Rds"))
+
+
+vanilla_comparison <- full_ds_comparison %>% 
+  filter(ic == "AICc") %>% 
+  group_by(dataset) %>% 
+  summarise(REML = min(REML), .groups = "keep") %>% 
+  left_join(full_ds_comparison %>% filter(ic == "AICc"), by = c("dataset", "REML")) %>% 
+  select(dataset, model_spec_clean, REML) %>% 
+  rename(original_best_fitting = model_spec_clean, 
+         ds_name = dataset)
+
+all_res %>% 
+  group_by(ds_name) %>% 
+  mutate(
+    best_fitting = case_when(
+      Linear == 0 ~ "Linear", 
+      Log == 0 ~ "Log", 
+      Quadratic == 0 ~ "Quadratic", 
+      TRUE ~ "Const"
+    )
+  ) %>% 
+  select(ds_name, comparison, data, best_fitting) %>% 
+  left_join(vanilla_comparison, by = c('ds_name')) %>% 
+  mutate(change = paste(original_best_fitting, best_fitting, sep = "->")) %>% 
+ group_by(change) %>% 
+  count() %>% 
+  ggplot(aes(x = reorder(change, n), y = n)) + 
+  geom_point() + 
+  coord_flip() +
+  theme_few()
+```
+
+
+```{r}
+all_comparison %>% 
+  pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const")) %>% 
+  ggplot(aes(x = name, y = value, color = name))+ 
+  geom_point() +
+  facet_wrap(comparison~data) +
+  geom_hline(yintercept = 4) + 
+  geom_hline(yintercept = 0) + 
+  coord_flip() 
+
+```
+
+
+
+
+
+
+```{r}
+age_df_wide$min <- apply(age_df_wide[c('Linear','Log', 'Quadratic', 'Const')], 1, min)
+
+# get the delta value 
+age_df_wide <- age_df_wide %>% 
+  mutate(d_linear = Linear - min, 
+         d_log = Log - min, 
+         d_quad = Quadratic - min, 
+         d_const= Const - min) %>% 
+  select(Dataset, d_linear, d_log, d_quad, d_const) %>% 
+  rename(Linear = d_linear, 
+         Log = d_log, 
+         Quadratic = d_quad, 
+         Const = d_const) %>% 
+   mutate(across(where(is.numeric), round, 2)) 
+```
+
+
+
+
+

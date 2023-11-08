@@ -17,9 +17,9 @@ Simple arithmetic competences,exposure_phase
 Sound symbolism,response_mode + method + exposure_phase
 Statistical sound category learning (habituation),response_mode 
 Statistical word segmentation,stimuli_naturalness + replication + test_lang + method 
-Switch task,test_lang +minimal_pairs+ cues_present + word_typicality        
+Switch task,test_lang + minimal_pairs + cues_present + word_typicality        
 Syntactic bootstrapping,response_mode
 Vowel discrimination (native),method + dependent_measure + exposure_phase + test_lang
 Vowel discrimination (non-native),method + dependent_measure + exposure_phase + stimulus_naturalness
 Word Segmentation (combined),method + exposure_phase + test_lang + Linguistic
-Infant directed speech preference,method + dependent_measure + exposure_phase + test_lang + speaker + speech_type +main_question_IDS_preference + trial_control + speaker_fam + speaker_experience + presentation
+Infant directed speech preference,method + dependent_measure + exposure_phase + test_lang + speaker + speech_type + main_question_IDS_preference + trial_control + speaker_fam + speaker_experience + presentation

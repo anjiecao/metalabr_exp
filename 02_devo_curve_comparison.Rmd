@@ -236,3 +236,88 @@ compare_const_df %>%
   coord_flip()
 ```
 
+# Get predictions 
+
+```{r}
+
+get_age_model_prediction <- function(ds_name, min_age_df, all_ds){
+  
+  current_df = all_ds %>% filter(ds_clean == ds_name)
+  formula = (min_age_df %>% filter(dataset == ds_name))$model_spec
+  model_type = (min_age_df %>% filter(dataset == ds_name))$model_spec_clean
+  model <- rma.mv(as.formula(formula), 
+                    V = d_var_calc, 
+                    random = ~ 1 | short_cite/same_infant/unique_row, 
+                    data = current_df)
+    
+ 
+  
+  if (model_type == "Log"){
+    age = log(seq(1, 36, .5))
+  }else if(model_type == "Quadratic"){
+    age = (seq(1, 36, .5)) ** 2
+  }else{
+    age = seq(1, 36, .5)
+  }
+  
+  if (model_type != "Const"){
+    prediction =  predict(model, newmods = age, addx =TRUE) %>% 
+      as.data.frame() %>% 
+      mutate(ds_name = ds_name)
+    
+  }else{
+    
+    prediction = predict(model) %>% 
+      as.data.frame() 
+    
+    prediction = map_dfr(seq(length(age)), ~prediction)
+    
+    prediction$X.const.mean_age_months = age
+    
+    
+    prediction$ds_name = ds_name
+    
+  }
+
+  
+  return (prediction)
+}
+
+age_range_df <- d %>% 
+  group_by(ds_clean) %>% 
+  summarise(min_age = min(mean_age_months, na.rm = TRUE), 
+            max_age = max(mean_age_months, na.rm = TRUE)) %>% 
+  rename(ds_name = ds_clean)
+
+ds_names = unique(d$ds_clean)
+model_type = c("Log", "Quadratic", "Const", "Linear")
+age_models_df <- readRDS(here("cached_data/age_models_df.RDS")) %>% 
+  filter(ic == "AICc") %>% 
+  group_by(dataset) %>% 
+  filter(REML == min(REML))
+
+pred_res <- lapply(ds_names, function(name){
+  
+  get_age_model_prediction(name, age_models_df, d)
+}) %>% 
+  bind_rows()
+```
+
+
+```{r}
+
+
+
+ids_pred <- ids_all_model_df %>% 
+  select(pred, ds_name, model_type, ci.lb, ci.ub) %>% 
+  group_by(ds_name,model_type) %>% 
+  mutate(mean_age_months = (row_number() + 1) / 2) %>% 
+  left_join(age_range_df, by = c("ds_name")) %>% 
+  filter(mean_age_months > min_age, 
+         mean_age_months < min(36, max_age)) %>% 
+
+  select(ds_name,  mean_age_months, pred, ci.lb, ci.ub)
+```
+
+
+

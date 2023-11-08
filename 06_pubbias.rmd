@@ -12,10 +12,87 @@ library(ggthemes)
 library(metafor)
 library(PublicationBias)
 
-source(here("helper/summary_table_help.r"))
-source(here("helper/mod_pubbias.R"))
-d <- read_csv(here("data/clean_data.csv"))
+
+#source(here("helper/summary_table_help.r"))
+#source(here("helper/mod_pubbias.R"))
+d <- read_csv(here("data/metalab_data_mini.csv"))
 ```
+
+# younger more selection bias??
+
+```{r}
+test_d <- d %>% 
+  filter(ds_clean == "Abstract rule learning"	)
+
+
+
+get_tidy_regtest <- function(regtest_res){
+  tibble(
+    "zval" = regtest_res$z_val, 
+    "pval" = regtest_res$pval,
+    "limit_est" = regtest_res$est, 
+    "lb" = regtest_res$ci.lb,
+    "ub" = regtest_res$ci.ub
+  )
+}
+
+
+
+age_summary <- d %>% 
+  group_by(ds_clean) %>% 
+  summarise(mid_point = mean(mean_age_months))
+
+egger_test_df <- d %>% 
+  left_join(age_summary, by = c("ds_clean")) %>% 
+  mutate(
+    age_group = case_when(
+      mean_age_months < mid_point ~ "younger", 
+      TRUE ~ "older"
+    )
+  ) %>%
+  group_by(ds_clean, age_group) %>% 
+  nest() %>% 
+  mutate(
+    reg_fit = map(data, ~ get_tidy_regtest(regtest(x = .x$d_calc, vi = .x$d_var_calc)))
+  ) %>% 
+  unnest(reg_fit)
+
+
+
+
+```
+
+
+```{r}
+egger_test_df %>% 
+  ggplot(aes(x = age_group, y = pval)) + 
+  geom_point() + 
+  geom_line(aes(group = ds_clean), alpha = .3)+
+  stat_summary(col = "red") + 
+  #facet_wrap(~ds_clean) + 
+  geom_hline(yintercept = 0.05, lty = 2) + 
+  theme_few()
+
+
+```
+
+```{r}
+
+egger_test_df %>% 
+  ggplot(aes(x = age_group, y = limit_est)) + 
+  geom_pointrange(aes(ymin = lb, ymax = ub)) + 
+  geom_hline(yintercept = 0) + 
+  #ylim(-1, 1) + 
+  theme_few() + 
+  facet_wrap(~ds_clean)
+```
+
+
+
+
+
+
+# whatever i did before 
 
 
 ```{r}

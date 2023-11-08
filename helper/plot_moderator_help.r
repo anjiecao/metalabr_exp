@@ -191,8 +191,9 @@ plot_major_author <- function(all_mod_df){
   
   
     all_mod_df %>% 
-    filter(grepl("Author", type)) %>% 
+    #filter(grepl("Author", type)) %>% 
     distinct(dataset, dataset_short, estimate, p.value, lb, ub) %>% 
+    filter(!is.na(dataset_short)) %>% 
     mutate(es_type = case_when(p.value < 0.05 ~ "Significant", TRUE ~ "Non-significant")) %>%   
     ggplot(aes(x = reorder(dataset_short,estimate), y = estimate)) + 
     geom_hline(yintercept = 0, linetype = "dashed")+ 

@@ -197,13 +197,21 @@ get_moderators <- function(ds_name){
 
 
 
-get_model_fit_df <- function(all_ds, ds_name, moderators){
+get_model_fit_df <- function(all_ds, ds_name, moderators, age_type = "mean_age_months"){
   
   if (is.null(moderators)){
-    linear_model_formula <-"d_calc ~ mean_age_months"
-    log_model_formula <- "d_calc ~ log(mean_age_months)"
-    qua_model_formula <- "d_calc ~ I(mean_age_months^2)"
-    const_model_formula <- "d_calc ~ 1"
+    if (age_type == "mean_age_months"){
+      linear_model_formula <-"d_calc ~ mean_age_months"
+      log_model_formula <- "d_calc ~ log(mean_age_months)"
+      qua_model_formula <- "d_calc ~ I(mean_age_months^2)"
+      const_model_formula <- "d_calc ~ 1"
+    }else{
+      linear_model_formula <-"d_calc ~ delta_age"
+      log_model_formula <- "d_calc ~ log(delta_age)"
+      qua_model_formula <- "d_calc ~ I(delta_age^2)"
+      const_model_formula <- "d_calc ~ 1"
+    }
+    
     
   }else{
     
@@ -217,12 +225,14 @@ get_model_fit_df <- function(all_ds, ds_name, moderators){
   
   
   
-  res = lapply(c(linear_model_formula, 
+  res = lapply(c(linear_model_formula,
                  log_model_formula, 
                  qua_model_formula, 
-                 const_model_formula), 
+                 const_model_formula
+                 ), 
                function(m){
-                 #print(m)
+                 
+                 print(m)
                  # check if has same_infant
                  
                  if (ds_name %in% (d %>% filter(is.na(same_infant)) %>% distinct(ds_clean) %>% pull())){
@@ -402,14 +412,16 @@ get_compare_IC_df <- function(all_ds , ds_name, moderators){
                    
                  }else{
                    
-                   print("full!")
+                   #print("full!")
+                   #print(m)
                    
-                   dat.long$group <- relevel(dat.long$group, ref="con")
+
                    
                    raw_df <- (summary(rma.mv(as.formula(m), 
                                              V = d_var_calc, 
                                              random = ~ 1 | short_cite/same_infant/unique_row, 
-                                             data = all_ds %>% filter(ds_clean == ds_name)))$fit.stats) %>% 
+                                             data = all_ds %>% filter(ds_clean == ds_name)), 
+                                      control =list(msMaxIter = 1000, msMaxEval = 1000))$fit.stats) %>% 
                      mutate(model_spec = m) %>% 
                      rownames_to_column("ic") 
                    
@@ -506,3 +518,6 @@ get_compare_IC_interaction_df <- function(all_ds , ds_name, moderators){
   
   return (res)
 }
+
+
+
