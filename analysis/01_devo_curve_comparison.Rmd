@@ -1,5 +1,5 @@
 ---
-title: "02_devo_curve_comparison.Rmd"
+title: "01_devo_curve_comparison.Rmd"
 author: "anjie"
 date: "`r Sys.Date()`"
 output: html_document
@@ -13,10 +13,14 @@ library(metafor)
 library(ggrepel)
 
 d <- read_csv(here("data/metalab_data_mini.csv"))
-source(here("helper/model_comparison_help.r"))
-age_models_df <- readRDS(here("cached_data/age_models_df.Rds"))
+source(here("analysis/helper/model_comparison_help.r"))
 ```
-# Fit Models 
+
+
+# Cacheing results   
+
+
+## AIC comparison 
 
 ```{r}
 age_models_df <- lapply(unique(d$ds_clean), 
@@ -28,23 +32,37 @@ age_models_df <- lapply(unique(d$ds_clean),
 
 saveRDS(age_models_df, here("cached_data/age_models_df.Rds"))
 ```
-
-# visualization 
+## Model Predictions 
 
 ```{r}
-age_models_df %>% 
+
+min_age_df <- age_models_df %>% 
   filter(ic == "AICc") %>% 
-  select(REML, model_spec_clean, dataset) %>% 
   group_by(dataset) %>% 
-  mutate(
-    min_REML = (REML == min(REML))
-  ) %>% 
-  ggplot(aes(x = model_spec_clean, y = REML, color = min_REML)) + 
-  geom_point() + 
-  facet_wrap(~dataset, scales = "free") + 
-  theme(legend.position = "none") + 
-  theme_few()
+  filter(REML == min(REML)) 
+
+all_age_pred <- lapply(seq(1, nrow(min_age_df)), 
+       function(x){
+         get_age_model_prediction(min_age_df$dataset[[x]], min_age_df, d)
+       }) %>% 
+  bind_rows() 
+
+saveRDS(all_age_pred, here("cached_data/min_age_pred_df.RDS"))
 ```
+
+
+
+
+# Visualization 
+
+```{r}
+age_models_df <- readRDS(here("cached_data/age_models_df.Rds"))
+all_age_pred <- readRDS(here("cached_data/min_age_pred_df.RDS")) 
+```
+
+
+
+## AICc Table 
 
 ```{r}
 age_models_df %>% 
@@ -56,6 +74,8 @@ age_models_df %>%
   kableExtra::kable(digits = 2)
 ```
 
+
+## AICc Table Visualization
 
 ```{r}
 
@@ -108,6 +128,161 @@ Infant directed speech preference: added unique_row
 Mispronunciation sensitivity: fixed two missing infants age 
 
 
+
+## Devo Curve 
+
+
+```{r}
+
+
+age_range_df <- d %>% 
+  group_by(ds_clean) %>% 
+  summarise(min_age = min(mean_age_months, na.rm = TRUE), 
+            max_age = max(mean_age_months, na.rm = TRUE)) %>% 
+  rename(ds_name = ds_clean)
+
+
+sig_ds <- c("Mutual exclusivity", "Audio-Visual Congruence", "Mispronunciation sensitivity",
+           "Statistical sound category learning (habituation)", "Simple arithmetic competences")
+
+categorized_age_pred_df <- all_age_pred %>% 
+  select(pred, ds_name, ci.ub, ci.lb) %>% 
+  group_by(ds_name) %>% 
+  mutate(mean_age_months = (row_number() + 1) / 2) %>% 
+  left_join(age_range_df, by = c("ds_name")) %>% 
+  filter(mean_age_months > min_age, 
+         mean_age_months < min(36, max_age)) %>% 
+  mutate(
+    ds_type = case_when(
+      ds_name %in% c( "Language discrimination and preference", 
+                     "Mispronunciation sensitivity", 
+                     "Natural speech preference", "Sound symbolism", "Statistical sound category learning (habituation)", 
+                     "Vowel discrimination (native)",
+                     "Vowel discrimination (non-native)" ,"Word Segmentation (combined)",
+                     "Statistical word segmentation", "Audio-Visual Congruence") ~ "Sounds", 
+      
+      ds_name %in% c("Familiar word recognition", 
+                     "Cross-situational word learning", 
+                      "Label advantage in concept learning",
+                     "Mutual exclusivity",
+                     "Online word recognition",
+                     "Syntactic bootstrapping",
+                     "Switch task") ~ "Words",
+      
+      ds_name %in% c("Gaze following (combined)",
+                     "Neonatal Imitation",
+                     "Prosocial agents",
+                     #"Symbolic play", 
+                     "Infant directed speech preference") ~ "Communication", 
+      
+      ds_name %in% c("Abstract rule learning",  
+                     "Categorization bias", 
+                     "Simple arithmetic competences") ~ "Cognitive"
+     )
+  ) %>% 
+  mutate(pred = case_when(
+    ds_name == "Abstract rule learning" ~ -pred, 
+    ds_name == "Switch task" ~ -pred,
+    TRUE ~ pred
+  )) %>% 
+  select(ds_name, ds_type, mean_age_months, pred, ci.ub, ci.lb) %>% 
+  mutate(
+    ds_name = case_when(
+      ds_name %in% sig_ds ~ paste0(ds_name, "*"), 
+      TRUE ~ ds_name
+    ), 
+    sig_alpha = case_when(
+      ds_name %in% sig_ds  ~ 1, 
+      TRUE ~ .3
+    )
+  )
+
+
+
+label_df <- categorized_age_pred_df %>% 
+  filter(mean_age_months == max(mean_age_months)) 
+
+label_df$x = c(
+    13 + 4,#Abstract rule learning
+    0 + 8, # audio visual
+    35.5 + 5 , # Categorization bias
+    35.5 + 3, # "Cross-situational word learning"
+    15 + 3,#Familiar word recognition
+    23.5 + 4, #"Gaze following (combined)",,
+    15 - 3, # Label advantage
+    11.5 + 8, # "Language discrimination and preference"
+    35.5 + 4,#"Mispronunciation sensitivity"
+    35.5 + 4, #Mutual exclusivity , 
+    12.5 , #"Natural speech preference"
+    0 + 4, #neonatal imitation 
+    30 + 2, #"Online word recognition"
+    31.5 + 8, #Prosocial Agents
+    9 + 4, #"Simple arithmetic competences"
+    35.5 + 8, #Sound symbolism, 
+    11 + 5, #"Statistical sound category learning (habituation)"
+    18.5, #"Statistical word segmentation"
+    24.5+ 3, #Switch task,
+    35.5 + 5, # "Syntactic bootstrapping"
+    17.5 - 5, #"Vowel discrimination (non-native)"
+    29.5 + 11, #"Vowel discrimination (native)"
+    24.5 + 14, #"Word Segmentation (combined)"
+    18.5# "Infant directed speech preference"
+)
+label_df$y = c(
+  0.05 - 0.5,#Abstract rule learning
+  0 + 1.5, # audio visual
+  0.275 + .4, # Categorization bias
+  0.545 + .3, # "Cross-situational word learning"
+  0.805 + 0.3,#Familiar word recognition
+  2.99 + 0.3, #"Gaze following (combined)"
+  0.05004268 - 0.5, # label advantage
+  0.265 - 1, # "Language discrimination and preference"
+  1.62 + 0.5,#"Mispronunciation sensitivity"
+  1.44 + 0.3,#Mutual exclusivity
+  0.811 + 1.3, #"Natural speech preference"
+  0 + 1.5, # neonatal imitation 
+  2.964331 + 0.5, #"Online word recognition"
+  0.405, #Prosocial agents
+  0.249 + 0.6,#"Simple arithmetic competences"
+  0.383, #Sound symbolism, 
+  0.557 + 0.5, #"Statistical sound category learning (habituation)"
+  -0.07808538 - 0.2, #"Statistical word segmentation"
+  0.156 - 0.3,#Switch task
+  0.103 - 0.5, # "Syntactic bootstrapping"
+  0.5901183 + 0.2, #"Vowel discrimination (native)"
+  0.6457766 + 1, #"Vowel discrimination (non-native)"
+  0.2 + 1.2, #"Word Segmentation (combined)"
+ 0.467 - 0.6# "Infant directed speech preference", 
+ #0.627 + 0.5, #Symbolic play
+)
+
+p <- categorized_age_pred_df %>% 
+  ggplot(aes(x = mean_age_months, y = pred, group = ds_name, color = ds_name)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = .5) + 
+  geom_line(aes(alpha = sig_alpha), width = 2)+ 
+  geom_ribbon(
+              aes(x = mean_age_months, y = pred, ymin = ci.lb, ymax = ci.ub, fill = ds_name), alpha = 0.1, colour = NA)+ 
+  geom_text(data = label_df, aes(x = x, y = y, label = ds_name), 
+                   size = 2.2,
+                  segment.color = NA) + 
+  xlim(0, 48) + 
+  ylim(-2, 4) + 
+  facet_wrap(~ds_type, scales = "free") + 
+  theme_few()+
+  theme(legend.position = "none") + 
+  xlab("Age (months)") + 
+  ylab("Predicted Value")
+  
+
+p
+```
+
+
+
+
+
+
+# Misc
 
 ## cf const 
 
@@ -236,7 +411,7 @@ compare_const_df %>%
   coord_flip()
 ```
 
-# Get predictions 
+## Get predictions 
 
 ```{r}
 
