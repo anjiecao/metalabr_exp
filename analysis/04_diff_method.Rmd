@@ -1,0 +1,165 @@
+
+
+```{r}
+library(tidyverse)
+library(here)
+library(ggthemes)
+
+d <- read_csv(here("data/metalab_data_kitchensink.csv"))
+method_d <- (read_csv(here("data/ks_info.csv"))) %>% 
+  filter(!is.na(var)) 
+og_estimate <- readRDS(here("cached_data/age_model_estimate.Rds"))
+full_ds_comparison <- readRDS(here("cached_data/age_models_df.Rds"))
+
+source(here("analysis/helper/compare_mod_data.R"))
+```
+
+
+
+# Cached data
+
+## Run models 
+
+```{r}
+var_selection <- method_d %>%
+  filter(!is.na(var)) %>% 
+  # Split the column values and unnest to keep them in a list-column
+  mutate(cols = str_split(`var`, " \\+ ")) %>% 
+  mutate(cols =  lapply(cols, function(x) gsub("\\s+", "", x)))
+# figure out study method 
+
+
+
+# Calculate the AICc 
+all_res <- lapply(
+  seq(1, nrow(var_selection)), 
+    function(id){
+      ds_name = var_selection$ds_clean[[id]]
+      moderators = var_selection$cols[[id]]
+      lapply(moderators, 
+             function(m){
+               print(ds_name)
+               print(m)
+               tryCatch(
+                 get_moderator_comparison(d, ds_name, m) %>% mutate(data = as.character(data)), 
+                 error = function(e){
+                   df = tibble("ds_name" = ds_name, 
+                          "m" = m,
+                          "status" = "error")
+                   return(df)
+                 }
+               )
+             }) %>% bind_rows()
+    }
+  ) %>% 
+  bind_rows()
+
+# Calculate the slope estimate 
+
+
+slope_estimate <- lapply(
+  seq(1, nrow(var_selection)), 
+    function(id){
+      ds_name = var_selection$ds_clean[[id]]
+      moderators = var_selection$cols[[id]]
+      lapply(moderators, 
+             function(m){
+               print(ds_name)
+               print(m)
+               tryCatch(
+                 get_slope_estimate_raw(d, ds_name, m), 
+                 error = function(e){
+                   df = tibble("ds_name" = ds_name, 
+                          "m" = m,
+                          "status" = "error")
+                   return(df)
+                 }
+               )
+             }) %>% bind_rows()
+    }
+  ) %>% 
+  bind_rows()
+
+
+  
+write_rds(all_res, here("cached_data/by_method_aic.Rds"))
+write_rds(slope_estimate, here("cached_data/by_method_slope_estimate.Rds"))
+
+```
+
+
+
+
+
+# Visualization
+
+```{r}
+slope_estimate <- readRDS(here("cached_data/by_method_slope_estimate.Rds"))
+all_res <- readRDS( here("cached_data/by_method_aic.Rds"))
+```
+
+
+## Distribution of slopes
+
+```{r}
+
+og_estimate %>% 
+  filter(term == "mean_age_months") %>% 
+  mutate(lb = estimate - std.error, 
+         ub = estimate + std.error) %>% 
+  mutate(estimate_type = "full_dataset") %>% 
+  bind_rows(
+    slope_estimate %>% 
+       filter(term == "mean_age_months") %>% 
+        mutate(lb = estimate - std.error, ub = estimate + std.error) %>% 
+        filter(is.na(status)) %>% 
+        filter(estimate < 1) %>% 
+        mutate(
+    estimate_type = if_else(p.value < .05, "method_sig", "method_non_sig")
+      ) 
+  ) %>%
+  filter(estimate_type != "method_non_sig") %>% 
+
+  ggplot(aes(x = dataset, y = estimate, ymin = lb, ymax = ub, color = estimate_type)) + 
+  scale_color_manual(values = c("black", "red"))+
+  geom_pointrange(position = position_jitter(width = .2), alpha = .5) +
+  geom_hline(yintercept = 0, alpha = .5, linetype = "dashed") + 
+  coord_flip() + 
+  theme_few()
+```
+
+## Best fitting changes 
+
+```{r}
+
+
+vanilla_comparison <- full_ds_comparison %>% 
+  filter(ic == "AICc") %>% 
+  group_by(dataset) %>% 
+  summarise(REML = min(REML), .groups = "keep") %>% 
+  left_join(full_ds_comparison %>% filter(ic == "AICc"), by = c("dataset", "REML")) %>% 
+  select(dataset, model_spec_clean, REML) %>% 
+  rename(original_best_fitting = model_spec_clean, 
+         ds_name = dataset)
+
+all_res %>% 
+  group_by(ds_name) %>% 
+  mutate(
+    best_fitting = case_when(
+      Linear == 0 ~ "Linear", 
+      Log == 0 ~ "Log", 
+      Quadratic == 0 ~ "Quadratic", 
+      TRUE ~ "Const"
+    )
+  ) %>% 
+  select(ds_name, comparison, data, best_fitting) %>% 
+  left_join(vanilla_comparison, by = c('ds_name')) %>% 
+  mutate(change = paste(original_best_fitting, best_fitting, sep = "->")) %>% 
+ group_by(change) %>% 
+  count() %>% 
+  ggplot(aes(x = reorder(change, n), y = n)) + 
+  geom_point() + 
+  coord_flip() +
+  theme_few()
+```
+
