@@ -32,10 +32,10 @@ age_models_df <- lapply(unique(d$ds_clean),
 
 saveRDS(age_models_df, here("cached_data/age_models_df.Rds"))
 ```
+
 ## Model Predictions 
 
 ```{r}
-
 min_age_df <- age_models_df %>% 
   filter(ic == "AICc") %>% 
   group_by(dataset) %>% 
@@ -130,6 +130,8 @@ Mispronunciation sensitivity: fixed two missing infants age
 
 
 ## Devo Curve 
+
+@TODO: need fixing after redid the curves
 
 
 ```{r}

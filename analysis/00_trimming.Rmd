@@ -31,7 +31,11 @@ library(ggthemes)
 metalab_data <- read_csv(here("data/metalab_data_july2023.csv"))
 
 ids_data <- read_csv(here("data/rework/ids_clean.csv")) %>% 
+  filter(study_type == "MA") %>% 
   mutate(ds_clean = "Infant directed speech preference")
+
+ldp_data <- read_csv(here("data/rawdata/language-discrimination.csv")) %>% 
+  filter(!is.na(study_ID)) %>% filter(!is.na(mean_age_1))
 
 #@TODO: ADD NEW PROSOCIAL AGENTS
 #https://docs.google.com/spreadsheets/d/1j2Af5jyMjqRC6FBQnqGeTPVJ5nacDVf2cu9a9D3Se4o/edit?pli=1#gid=1269834261
@@ -64,7 +68,7 @@ trimmed_data <- metalab_data %>%
                          "Symbolic play	",
                          
                          # dataset to be modified 
-                         "Statistical sound category learning", 
+                         "Language discrimination and preference",
                          "Gaze following (live)",
                          "Gaze following (video)",
                          "Function word segmentation", 
@@ -75,11 +79,18 @@ trimmed_data <- metalab_data %>%
   bind_rows(
     ids_data %>% mutate(expt_num = as.numeric(expt_num)), #IDS replacement 
 
-    # modifying statistical sound category learning 
-    metalab_data %>% 
-    filter(dataset == "Statistical sound category learning", exposure_phase == "habituation") %>% 
-    mutate(ds_clean = "Statistical sound category learning (habituation)"), 
+    # language discrimination data into two
     
+    ldp_data %>% filter(task == "discrim") %>% 
+      mutate(ds_clean = "Language discrimination and preference (discrimination)") %>% 
+      mutate(expt_num = as.numeric(expt_num), 
+             num_trials = as.numeric(num_trials)),
+    
+    ldp_data %>% filter(task == "pref") %>% 
+      mutate(ds_clean = "Language discrimination and preference (preference)") %>% 
+      mutate(expt_num = as.numeric(expt_num), 
+              num_trials = as.numeric(num_trials)), 
+
     #combining gaze following 
     metalab_data %>% 
       filter(dataset %in% c("Gaze following (live)","Gaze following (video)")) %>% 
@@ -103,9 +114,8 @@ trimmed_data <- metalab_data %>%
 m_recode <- read_csv(here("data/rework/ds_method_recode.csv"))
 
 
-trimmed_data <- m_recode %>% 
-  select(-note) %>% 
-  left_join(trimmed_data, by = c("ds_clean", "response_mode", "method", "dependent_measure"))
+trimmed_data <- trimmed_data %>% 
+  left_join(m_recode, by = c("ds_clean", "response_mode", "method", "dependent_measure"))
   
 ```
 
@@ -115,9 +125,8 @@ trimmed_data <- m_recode %>%
 it_recode <- read_csv(here("data/rework/ds_infant_type_recode.csv"))
 
 
-trimmed_data <- it_recode %>% 
-  select(-long_cite) %>% 
-  left_join(trimmed_data, by = c("ds_clean", "native_lang", "infant_type")) %>% 
+trimmed_data <- trimmed_data %>% 
+  left_join(it_recode %>% select(-long_cite), by = c("ds_clean", "native_lang", "infant_type")) %>% 
   rename(infant_type_clincal =  `infant_type_clinical (typical vs nt (preterm / delayed / developmental disorder)`)
 ```
 
@@ -213,9 +222,9 @@ random = ~ 1 | short_cite/same_infant/unique_row
 pruned_data <- trimmed_data %>% 
   select(
     # universally unhelpful information 
-    -`...12`, -coder, -group_name_1, -group_name_2, -stimuli_link, -data_link, 
+     -coder, -group_name_1, -group_name_2, -stimuli_link, -data_link, 
     -sampa_comments, -g_calc, -g_var_calc, -r_calc, -r_var_calc, -z_calc, -z_var_calc, -log_odds_calc, -log_odds_var_calc, 
-    -es_method, -mean_age, -same_infant_calc, -doi, -`2nd coder`, -`Coder 1 Comments`, -`Coder 1 Comments`
+    -es_method, -mean_age, -same_infant_calc, -doi, -`2nd coder`, -`Coder 1 Comments`, -`Coder 2 Comments`
   ) 
 
 
@@ -225,15 +234,9 @@ pruned_data <- pruned_data %>%
 ```
 
 
-
-
-
-
-
 ## 7. fix issue wrt the author exploration 
 
 ```{r}
-
 
 pa_clean <- pruned_data %>% 
   filter(ds_clean == "Prosocial Agents") %>% 

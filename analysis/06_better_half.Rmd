@@ -1,0 +1,213 @@
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+library(here)
+
+d <- read_csv(here("data/metalab_data_kitchensink.csv"))
+supp_d <- read_csv(here("data/rework/ma_paper_supplement.csv"))
+
+source(here("analysis/helper/better_half.R"))
+```
+
+# Filter out all the datasets' better halves 
+
+```{r}
+
+# sort out the tidy d and 
+tidy_supp_d <- supp_d %>% 
+  select(ds_clean, better_half_identified, better_half_code) %>% 
+  filter(!is.na(better_half_code)) %>% 
+  separate(
+    better_half_code, into = c("d1", "d2"), sep = ";"
+  ) %>% 
+  pivot_longer(cols = c("d1", "d2"), 
+               values_to = "code", 
+               names_to = "name") %>% 
+  filter(!is.na(code)) %>% 
+  select(-name) %>% 
+  group_by(ds_clean) %>% 
+  mutate(half_id = row_number())
+
+# get all the better halves 
+
+better_halves <- lapply(
+  seq(1, nrow(tidy_supp_d)), 
+  function(id){
+    print(tidy_supp_d$ds_clean[[id]])
+    print(tidy_supp_d$code[[id]])
+    #string = tidy_supp_d$code[[id]]
+    code_expr = rlang::parse_expr(tidy_supp_d$code[[id]])
+    d %>% 
+      filter(ds_clean == tidy_supp_d$ds_clean[[id]]) %>% 
+      filter(!!code_expr) %>% 
+      mutate(ds_half = paste0(ds_clean, "_", "half", tidy_supp_d$half_id[[id]]))
+  }
+) %>% 
+  bind_rows() %>% 
+  group_by(ds_clean, ds_half) %>% 
+  nest()
+
+# get all the full datasets from the better halves 
+
+better_halves_full <- lapply(
+  seq(1, nrow(tidy_supp_d)), 
+  function(id){
+    d %>% 
+      filter(ds_clean == tidy_supp_d$ds_clean[[id]]) %>% 
+      mutate(ds_half = "full")
+  }
+) %>% 
+  bind_rows() %>% 
+  group_by(ds_clean, ds_half) %>% 
+  nest()
+
+
+better_halves_all <- bind_rows(better_halves, better_halves_full)
+```
+
+# Run models
+
+## Model comparison 
+
+```{r}
+model_comparison <- lapply(
+  seq(1, nrow(better_halves_all)),
+  function(id){
+    get_compare_IC_df(better_halves_all$data[[id]], 
+                      ds_name = better_halves_all$ds_clean[[id]], 
+                      moderators = NULL) %>% 
+      mutate(ds_half = better_halves_all$ds_half[[id]])
+  }
+) %>% 
+  bind_rows()
+
+
+age_model_estimates <- lapply(
+  seq(1, nrow(better_halves_all)),
+  function(id){
+    get_model_estimate_df(better_halves_all$data[[id]], 
+                      ds_name = better_halves_all$ds_clean[[id]], 
+                      moderators = "age") %>% 
+      mutate(ds_half = better_halves_all$ds_half[[id]])
+  }
+) %>% 
+  bind_rows()
+
+ma_estimates <- lapply(
+  seq(1, nrow(better_halves_all)),
+  function(id){
+    get_model_estimate_df(better_halves_all$data[[id]], 
+                      ds_name = better_halves_all$ds_clean[[id]], 
+                      moderators = NULL) %>% 
+      mutate(ds_half = better_halves_all$ds_half[[id]])
+  }
+) %>% 
+  bind_rows()
+```
+
+# Caching results 
+
+```{r}
+saveRDS(model_comparison, here("cached_data/better_half_model_comparison.Rds"))
+saveRDS(age_model_estimates, here("cached_data/better_half_age_model_estimate.Rds"))
+saveRDS(ma_estimates, here("cached_data/better_half_ma_estimate.Rds"))
+
+```
+
+
+# Visualization 
+
+```{r}
+model_comparison <- readRDS(here("cached_data/better_half_model_comparison.Rds"))
+age_model_estimates <- readRDS(here("cached_data/better_half_age_model_estimate.Rds"))
+ma_estimates <- readRDS(here("cached_data/better_half_ma_estimate.Rds"))
+```
+
+## base estimate 
+
+slightly better but limited? 
+flipping the effect size? 
+
+```{r}
+ma_estimates %>% 
+  ggplot(aes(x = dataset, y = estimate, ymin = lb, ymax = ub, color = ds_half)) + 
+  geom_pointrange(position = position_dodge(width = .3)) + 
+  geom_hline(yintercept = 0, color = "gray", linetype = "dashed") + 
+  theme_few() + 
+  coord_flip()
+```
+
+## Model comparison 
+
+looks like some have  more distinction?????  
+
+```{r}
+
+age_df_wide <- model_comparison %>% 
+  filter(ic == "AICc") %>% 
+  rename(Dataset = dataset) %>% 
+  select(REML, model_spec_clean, Dataset, ds_half) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML)
+
+age_df_wide$min <- apply(age_df_wide[c('Linear','Log', 'Quadratic', 'Const')], 1, min)
+
+# get the delta value 
+age_df_wide <- age_df_wide %>% 
+  mutate(d_linear = Linear - min, 
+         d_log = Log - min, 
+         d_quad = Quadratic - min, 
+         d_const= Const - min) %>% 
+  select(Dataset, ds_half, d_linear, d_log, d_quad, d_const) %>% 
+  rename(Linear = d_linear, 
+         Log = d_log, 
+         Quadratic = d_quad, 
+         Const = d_const) %>% 
+   mutate(across(where(is.numeric), round, 2)) 
+
+
+age_df_wide %>% 
+  pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const")) %>% 
+  mutate(
+    ds_type = case_when(
+      ds_half != "full" ~ "better_half", 
+      TRUE ~ ds_half
+    )
+  ) %>% 
+  ggplot(aes(x = reorder(Dataset, value), y = value, color = name, shape = ds_type, group = ds_type)) +
+  theme_few() + 
+  geom_hline(yintercept = 4, linetype = 2, color = "gray") + 
+  geom_hline(yintercept = 0, linetype = 3) + 
+  geom_point(position = position_dodge(width = .2)
+             ) + 
+
+  coord_flip()+ 
+  xlab("") + 
+  labs(color = "Functional form") + 
+  guides(colour = guide_legend(nrow = 2))  + 
+  theme(legend.position = "top")
+
+```
+
+
+## linear model estimate distribution
+
+```{r}
+age_model_estimates %>% 
+  filter(term == "mean_age_months") %>% 
+  mutate(
+    ds_type = case_when(
+      ds_half != "full" ~ "better_half", 
+      TRUE ~ ds_half
+    )
+  ) %>% 
+  ggplot(aes(x = dataset, y = estimate, ymin = lb, ymax = ub, color = ds_type)) + 
+  geom_pointrange(position = position_dodge(width = .3)) + 
+   geom_hline(yintercept = 0, linetype = 2, color = "gray") + 
+  coord_flip() + 
+  theme_few() 
+  
+```
+
+

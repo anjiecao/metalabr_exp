@@ -368,7 +368,6 @@ get_compare_IC_df <- function(all_ds , ds_name, moderators){
     
   }else{
     
-    
     linear_model_formula <- paste0("d_calc ~ mean_age_months + ", paste(moderators, collapse = " + "))
     log_model_formula <- paste0("d_calc ~ log(mean_age_months) + ", paste(moderators, collapse = " + "))
     qua_model_formula <- paste0("d_calc ~ I(mean_age_months^2) + ", paste(moderators, collapse = " + "))

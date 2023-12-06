@@ -256,17 +256,7 @@ Gaze following (combined),Tucker,4,81,0.04938271604938271
 Gaze following (combined),VanHecke,4,81,0.04938271604938271
 Gaze following (combined),Vernetti,2,81,0.024691358024691357
 Gaze following (combined),Yale,11,81,0.13580246913580246
-Infant directed speech preference,Cooper,13,47,0.2765957446808511
-Infant directed speech preference,Goldstein,4,47,0.0851063829787234
-Infant directed speech preference,Huckeby,4,47,0.0851063829787234
-Infant directed speech preference,Kaplan,4,47,0.0851063829787234
-Infant directed speech preference,Newman,4,47,0.0851063829787234
-Infant directed speech preference,Owren,2,47,0.0425531914893617
-Infant directed speech preference,Pegg,2,47,0.0425531914893617
-Infant directed speech preference,Schachner,2,47,0.0425531914893617
-Infant directed speech preference,Singh,8,47,0.1702127659574468
-Infant directed speech preference,Werker,14,47,0.2978723404255319
-Infant directed speech preference,NA,4,47,0.0851063829787234
+Infant directed speech preference,NA,100,100,1
 Label advantage in concept learning,Althaus,3,100,0.03
 Label advantage in concept learning,Balaban,7,100,0.07
 Label advantage in concept learning,Booth,28,100,0.28
@@ -281,88 +271,100 @@ Label advantage in concept learning,Plunkett,3,100,0.03
 Label advantage in concept learning,Robinson,12,100,0.12
 Label advantage in concept learning,Sloutsky,12,100,0.12
 Label advantage in concept learning,Waxman,57,100,0.57
-Language discrimination and preference,Amiel-Tison,14,153,0.0915032679738562
-Language discrimination and preference,Ashida,1,153,0.006535947712418301
-Language discrimination and preference,Bahrick,1,153,0.006535947712418301
-Language discrimination and preference,Bertoncini,16,153,0.10457516339869281
-Language discrimination and preference,Best,8,153,0.05228758169934641
-Language discrimination and preference,Bortfeld,5,153,0.032679738562091505
-Language discrimination and preference,Bosch,14,153,0.0915032679738562
-Language discrimination and preference,Burns,5,153,0.032679738562091505
-Language discrimination and preference,Butler,4,153,0.026143790849673203
-Language discrimination and preference,Byers-Heinlein,9,153,0.058823529411764705
-Language discrimination and preference,Cabrol,2,153,0.013071895424836602
-Language discrimination and preference,Carreiras,12,153,0.0784313725490196
-Language discrimination and preference,Chong,12,153,0.0784313725490196
-Language discrimination and preference,Christophe,5,153,0.032679738562091505
-Language discrimination and preference,Chung,5,153,0.032679738562091505
-Language discrimination and preference,Colomer,12,153,0.0784313725490196
-Language discrimination and preference,Cooper,1,153,0.006535947712418301
-Language discrimination and preference,Cortés,2,153,0.013071895424836602
-Language discrimination and preference,Cristia,2,153,0.013071895424836602
-Language discrimination and preference,Demuth,4,153,0.026143790849673203
-Language discrimination and preference,Diehl,1,153,0.006535947712418301
-Language discrimination and preference,Dupoux,7,153,0.0457516339869281
-Language discrimination and preference,Egorova,2,153,0.013071895424836602
-Language discrimination and preference,Fava,5,153,0.032679738562091505
-Language discrimination and preference,Fifer,1,153,0.006535947712418301
-Language discrimination and preference,Filippin,2,153,0.013071895424836602
-Language discrimination and preference,Floccia,10,153,0.06535947712418301
-Language discrimination and preference,Gervain,12,153,0.0784313725490196
-Language discrimination and preference,Goslin,4,153,0.026143790849673203
-Language discrimination and preference,Guasti,1,153,0.006535947712418301
-Language discrimination and preference,Guerrero-Mosquera,12,153,0.0784313725490196
-Language discrimination and preference,Halsted,14,153,0.0915032679738562
-Language discrimination and preference,Hauser,3,153,0.0196078431372549
-Language discrimination and preference,Hayashi,3,153,0.0196078431372549
-Language discrimination and preference,Hirabayashi,1,153,0.006535947712418301
-Language discrimination and preference,Hull,5,153,0.032679738562091505
-Language discrimination and preference,Jaeger,5,153,0.032679738562091505
-Language discrimination and preference,Johnson,8,153,0.05228758169934641
-Language discrimination and preference,Jusczyk,20,153,0.13071895424836602
-Language discrimination and preference,Kanai,1,153,0.006535947712418301
-Language discrimination and preference,Kinzler,4,153,0.026143790849673203
-Language discrimination and preference,Kiritani,3,153,0.0196078431372549
-Language discrimination and preference,Kitamura,9,153,0.058823529411764705
-Language discrimination and preference,Konishi,2,153,0.013071895424836602
-Language discrimination and preference,Lambertz,14,153,0.0915032679738562
-Language discrimination and preference,Luche,6,153,0.0392156862745098
-Language discrimination and preference,Maki,1,153,0.006535947712418301
-Language discrimination and preference,May,4,153,0.026143790849673203
-Language discrimination and preference,Mazuka,1,153,0.006535947712418301
-Language discrimination and preference,Mehler,19,153,0.12418300653594772
-Language discrimination and preference,Miller,3,153,0.0196078431372549
-Language discrimination and preference,Minagawa-Kawai,3,153,0.0196078431372549
-Language discrimination and preference,Molnar,12,153,0.0784313725490196
-Language discrimination and preference,Moon,1,153,0.006535947712418301
-Language discrimination and preference,Morris,3,153,0.0196078431372549
-Language discrimination and preference,Morton,4,153,0.026143790849673203
-Language discrimination and preference,NacarGarcia,12,153,0.0784313725490196
-Language discrimination and preference,Nazzi,8,153,0.05228758169934641
-Language discrimination and preference,Nespor,1,153,0.006535947712418301
-Language discrimination and preference,Notley,1,153,0.006535947712418301
-Language discrimination and preference,Panneton,12,153,0.0784313725490196
-Language discrimination and preference,Paquette-Smith,2,153,0.013071895424836602
-Language discrimination and preference,Pickens,1,153,0.006535947712418301
-Language discrimination and preference,Ramus,6,153,0.0392156862745098
-Language discrimination and preference,Sato,2,153,0.013071895424836602
-Language discrimination and preference,Sebastian-Galles,26,153,0.16993464052287582
-Language discrimination and preference,Seidl,4,153,0.026143790849673203
-Language discrimination and preference,Shafer,5,153,0.032679738562091505
-Language discrimination and preference,Shucard,5,153,0.032679738562091505
-Language discrimination and preference,Soderstrom,4,153,0.026143790849673203
-Language discrimination and preference,Spelke,4,153,0.026143790849673203
-Language discrimination and preference,Sundara,12,153,0.0784313725490196
-Language discrimination and preference,Tamekawa,3,153,0.0196078431372549
-Language discrimination and preference,Tsubokura,1,153,0.006535947712418301
-Language discrimination and preference,Uchida‐Ota,1,153,0.006535947712418301
-Language discrimination and preference,vanderLely,1,153,0.006535947712418301
-Language discrimination and preference,vanOoijen,1,153,0.006535947712418301
-Language discrimination and preference,Vicenik,19,153,0.12418300653594772
-Language discrimination and preference,Werker,9,153,0.058823529411764705
-Language discrimination and preference,White,7,153,0.0457516339869281
-Language discrimination and preference,XuRattanasone,4,153,0.026143790849673203
-Language discrimination and preference,NA,2,153,0.013071895424836602
+Language discrimination and preference (discrimination),Amiel-Tison,14,104,0.1346153846153846
+Language discrimination and preference (discrimination),Bahrick,1,104,0.009615384615384616
+Language discrimination and preference (discrimination),Bertoncini,16,104,0.15384615384615385
+Language discrimination and preference (discrimination),Best,3,104,0.028846153846153848
+Language discrimination and preference (discrimination),Bosch,4,104,0.038461538461538464
+Language discrimination and preference (discrimination),Burns,2,104,0.019230769230769232
+Language discrimination and preference (discrimination),Butler,4,104,0.038461538461538464
+Language discrimination and preference (discrimination),Byers-Heinlein,2,104,0.019230769230769232
+Language discrimination and preference (discrimination),Cabrol,2,104,0.019230769230769232
+Language discrimination and preference (discrimination),Carreiras,12,104,0.11538461538461539
+Language discrimination and preference (discrimination),Chong,12,104,0.11538461538461539
+Language discrimination and preference (discrimination),Christophe,5,104,0.04807692307692308
+Language discrimination and preference (discrimination),Chung,5,104,0.04807692307692308
+Language discrimination and preference (discrimination),Colomer,12,104,0.11538461538461539
+Language discrimination and preference (discrimination),Cristia,2,104,0.019230769230769232
+Language discrimination and preference (discrimination),Dupoux,2,104,0.019230769230769232
+Language discrimination and preference (discrimination),Egorova,2,104,0.019230769230769232
+Language discrimination and preference (discrimination),Filippin,2,104,0.019230769230769232
+Language discrimination and preference (discrimination),Floccia,10,104,0.09615384615384616
+Language discrimination and preference (discrimination),Gervain,8,104,0.07692307692307693
+Language discrimination and preference (discrimination),Goslin,4,104,0.038461538461538464
+Language discrimination and preference (discrimination),Guasti,1,104,0.009615384615384616
+Language discrimination and preference (discrimination),Guerrero-Mosquera,12,104,0.11538461538461539
+Language discrimination and preference (discrimination),Halsted,14,104,0.1346153846153846
+Language discrimination and preference (discrimination),Hauser,3,104,0.028846153846153848
+Language discrimination and preference (discrimination),Johnson,8,104,0.07692307692307693
+Language discrimination and preference (discrimination),Jusczyk,20,104,0.19230769230769232
+Language discrimination and preference (discrimination),Kitamura,3,104,0.028846153846153848
+Language discrimination and preference (discrimination),Lambertz,14,104,0.1346153846153846
+Language discrimination and preference (discrimination),Luche,6,104,0.057692307692307696
+Language discrimination and preference (discrimination),Mehler,19,104,0.18269230769230768
+Language discrimination and preference (discrimination),Miller,3,104,0.028846153846153848
+Language discrimination and preference (discrimination),Minagawa-Kawai,2,104,0.019230769230769232
+Language discrimination and preference (discrimination),Molnar,12,104,0.11538461538461539
+Language discrimination and preference (discrimination),Morris,3,104,0.028846153846153848
+Language discrimination and preference (discrimination),Morton,4,104,0.038461538461538464
+Language discrimination and preference (discrimination),NacarGarcia,12,104,0.11538461538461539
+Language discrimination and preference (discrimination),Nazzi,8,104,0.07692307692307693
+Language discrimination and preference (discrimination),Nespor,1,104,0.009615384615384616
+Language discrimination and preference (discrimination),Panneton,6,104,0.057692307692307696
+Language discrimination and preference (discrimination),Paquette-Smith,2,104,0.019230769230769232
+Language discrimination and preference (discrimination),Pickens,1,104,0.009615384615384616
+Language discrimination and preference (discrimination),Ramus,5,104,0.04807692307692308
+Language discrimination and preference (discrimination),Sebastián-Gallés,16,104,0.15384615384615385
+Language discrimination and preference (discrimination),Sundara,12,104,0.11538461538461539
+Language discrimination and preference (discrimination),vanOoijen,1,104,0.009615384615384616
+Language discrimination and preference (discrimination),Vicenik,19,104,0.18269230769230768
+Language discrimination and preference (discrimination),Werker,2,104,0.019230769230769232
+Language discrimination and preference (discrimination),White,7,104,0.0673076923076923
+Language discrimination and preference (preference),Ashida,1,49,0.02040816326530612
+Language discrimination and preference (preference),Best,5,49,0.10204081632653061
+Language discrimination and preference (preference),Bortfeld,5,49,0.10204081632653061
+Language discrimination and preference (preference),Bosch,10,49,0.20408163265306123
+Language discrimination and preference (preference),Burns,3,49,0.061224489795918366
+Language discrimination and preference (preference),Byers-Heinlein,7,49,0.14285714285714285
+Language discrimination and preference (preference),Cooper,1,49,0.02040816326530612
+Language discrimination and preference (preference),Cortés,2,49,0.04081632653061224
+Language discrimination and preference (preference),Demuth,4,49,0.08163265306122448
+Language discrimination and preference (preference),Diehl,1,49,0.02040816326530612
+Language discrimination and preference (preference),Dupoux,5,49,0.10204081632653061
+Language discrimination and preference (preference),Fava,5,49,0.10204081632653061
+Language discrimination and preference (preference),Fifer,1,49,0.02040816326530612
+Language discrimination and preference (preference),Gervain,4,49,0.08163265306122448
+Language discrimination and preference (preference),Hayashi,3,49,0.061224489795918366
+Language discrimination and preference (preference),Hirabayashi,1,49,0.02040816326530612
+Language discrimination and preference (preference),Hull,5,49,0.10204081632653061
+Language discrimination and preference (preference),Jaeger,5,49,0.10204081632653061
+Language discrimination and preference (preference),Kanai,1,49,0.02040816326530612
+Language discrimination and preference (preference),Kinzler,4,49,0.08163265306122448
+Language discrimination and preference (preference),Kiritani,3,49,0.061224489795918366
+Language discrimination and preference (preference),Kitamura,6,49,0.12244897959183673
+Language discrimination and preference (preference),Konishi,2,49,0.04081632653061224
+Language discrimination and preference (preference),Maki,1,49,0.02040816326530612
+Language discrimination and preference (preference),May,4,49,0.08163265306122448
+Language discrimination and preference (preference),Mazuka,1,49,0.02040816326530612
+Language discrimination and preference (preference),Minagawa-Kawai,1,49,0.02040816326530612
+Language discrimination and preference (preference),Moon,1,49,0.02040816326530612
+Language discrimination and preference (preference),Notley,1,49,0.02040816326530612
+Language discrimination and preference (preference),Panneton,6,49,0.12244897959183673
+Language discrimination and preference (preference),Ramus,1,49,0.02040816326530612
+Language discrimination and preference (preference),Sato,2,49,0.04081632653061224
+Language discrimination and preference (preference),Sebastián-Gallés,10,49,0.20408163265306123
+Language discrimination and preference (preference),Seidl,4,49,0.08163265306122448
+Language discrimination and preference (preference),Shafer,5,49,0.10204081632653061
+Language discrimination and preference (preference),Shucard,5,49,0.10204081632653061
+Language discrimination and preference (preference),Soderstrom,4,49,0.08163265306122448
+Language discrimination and preference (preference),Spelke,4,49,0.08163265306122448
+Language discrimination and preference (preference),Tamekawa,3,49,0.061224489795918366
+Language discrimination and preference (preference),Tsubokura,1,49,0.02040816326530612
+Language discrimination and preference (preference),Uchida‐Ota,1,49,0.02040816326530612
+Language discrimination and preference (preference),vanderLely,1,49,0.02040816326530612
+Language discrimination and preference (preference),Werker,7,49,0.14285714285714285
+Language discrimination and preference (preference),XuRattanasone,4,49,0.08163265306122448
+Language discrimination and preference (preference),NA,2,49,0.04081632653061224
 Mispronunciation sensitivity,Altvater-Mackensen,13,249,0.05220883534136546
 Mispronunciation sensitivity,Aslin,10,249,0.040160642570281124
 Mispronunciation sensitivity,Ballem,3,249,0.012048192771084338
@@ -626,21 +628,32 @@ Sound symbolism,van,6,44,0.13636363636363635
 Sound symbolism,Weiss,8,44,0.18181818181818182
 Sound symbolism,Yee,4,44,0.09090909090909091
 Sound symbolism,Yeung,1,44,0.022727272727272728
-Statistical sound category learning (habituation),Kager,2,11,0.18181818181818182
-Statistical sound category learning (habituation),van Zuijen,4,11,0.36363636363636365
-Statistical sound category learning (habituation),Wijnen,1,11,0.09090909090909091
-Statistical sound category learning (habituation),Boersma,5,11,0.45454545454545453
-Statistical sound category learning (habituation),Capel,1,11,0.09090909090909091
-Statistical sound category learning (habituation),DeBree,1,11,0.09090909090909091
-Statistical sound category learning (habituation),DeKlerk,1,11,0.09090909090909091
-Statistical sound category learning (habituation),Junge,1,11,0.09090909090909091
-Statistical sound category learning (habituation),Kerkhoff,1,11,0.09090909090909091
-Statistical sound category learning (habituation),Liu,2,11,0.18181818181818182
-Statistical sound category learning (habituation),LiuL,1,11,0.09090909090909091
-Statistical sound category learning (habituation),Maye J,2,11,0.18181818181818182
-Statistical sound category learning (habituation),TerSchure,1,11,0.09090909090909091
-Statistical sound category learning (habituation),Wanrooij,4,11,0.36363636363636365
-Statistical sound category learning (habituation),Weiss DJ,2,11,0.18181818181818182
+Statistical sound category learning,Amano,1,20,0.05
+Statistical sound category learning,Kager,2,20,0.1
+Statistical sound category learning,vanZuijen,4,20,0.2
+Statistical sound category learning,andWerker,5,20,0.25
+Statistical sound category learning,Wijnen,1,20,0.05
+Statistical sound category learning,Boersma,5,20,0.25
+Statistical sound category learning,Cady,1,20,0.05
+Statistical sound category learning,Capel,1,20,0.05
+Statistical sound category learning,DeBree,1,20,0.05
+Statistical sound category learning,DeKlerk,1,20,0.05
+Statistical sound category learning,Fennell,2,20,0.1
+Statistical sound category learning,Hudon,2,20,0.1
+Statistical sound category learning,Junge,1,20,0.05
+Statistical sound category learning,Kerkhoff,1,20,0.05
+Statistical sound category learning,Liu,2,20,0.1
+Statistical sound category learning,LiuL,1,20,0.05
+Statistical sound category learning,Maye,3,20,0.15
+Statistical sound category learning,MayeJ,4,20,0.2
+Statistical sound category learning,Mugitani,1,20,0.05
+Statistical sound category learning,Pons,5,20,0.25
+Statistical sound category learning,Sabourin,1,20,0.05
+Statistical sound category learning,TerSchure,1,20,0.05
+Statistical sound category learning,Wanrooij,4,20,0.2
+Statistical sound category learning,WeissDJ,2,20,0.1
+Statistical sound category learning,WerkerJF,2,20,0.1
+Statistical sound category learning,Yoshida,3,20,0.15
 Statistical word segmentation,Addyman,2,103,0.019417475728155338
 Statistical word segmentation,Aslin,3,103,0.02912621359223301
 Statistical word segmentation,Bastos,3,103,0.02912621359223301
