@@ -48,7 +48,8 @@ get_model_estimate_df <- function(data, ds_name, moderators){
                    raw_df <- broom::tidy(rma.mv(as.formula(m), 
                                                 V = d_var_calc, 
                                                 random = ~ 1 | short_cite/unique_row, 
-                                                data = data)) %>% 
+                                                data = data), 
+                                         effects = "fixed", conf.int=TRUE, conf.level = 0.95) %>% 
                      mutate(model_spec = m) 
                    
                  }else if(ds_name %in% (d %>% filter(is.na(unique_row)) %>% distinct(ds_clean) %>% pull())){
@@ -56,7 +57,8 @@ get_model_estimate_df <- function(data, ds_name, moderators){
                    raw_df <- broom::tidy(rma.mv(as.formula(m), 
                                                 V = d_var_calc, 
                                                 random = ~ 1 | short_cite/same_infant, 
-                                                data = data)) %>% 
+                                                data = data), 
+                                         effects = "fixed", conf.int=TRUE, conf.level = 0.95) %>% 
                      mutate(model_spec = m) 
                    
                  }else{
@@ -64,7 +66,8 @@ get_model_estimate_df <- function(data, ds_name, moderators){
                    raw_df <- broom::tidy(rma.mv(as.formula(m), 
                                                 V = d_var_calc, 
                                                 random = ~ 1 | short_cite/same_infant/unique_row, 
-                                                data = data)) %>% 
+                                                data = data), 
+                                         effects = "fixed", conf.int=TRUE, conf.level = 0.95) %>% 
                      mutate(model_spec = m) 
                    
                  }
@@ -78,8 +81,7 @@ get_model_estimate_df <- function(data, ds_name, moderators){
       grepl("2", model_spec) ~ "Quadratic", 
       grepl("1", model_spec) ~ "Const",
       TRUE ~ "Linear"
-    )) %>% 
-    mutate(lb = estimate - std.error, ub = estimate + std.error)
+    )) 
   
   return (res)
 }

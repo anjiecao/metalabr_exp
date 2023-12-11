@@ -246,6 +246,8 @@ tidy_all_info_d %>%
 
 ```{r}
 
+single_method_multiple_age <- readRDS(here("cached_data/single_method_multiple_age.Rds"))
+
 d %>% 
   filter(ds_clean %in% (single_method_multiple_age %>% ungroup() %>%  distinct(ds_clean) %>% pull()), 
          short_cite %in% (single_method_multiple_age %>% ungroup() %>%  distinct(short_cite) %>% pull())) %>% 
@@ -259,6 +261,7 @@ d %>%
   mutate(delta_age = mean_age_months - min_age) %>% 
   ggplot(aes(x = delta_age, y = d_calc)) + 
   geom_point() + 
+  geom_line(aes(group  = short_cite)) +
   facet_wrap(~ds_clean, scales = "free") + 
   theme_few() + 
   geom_smooth(method = "lm") + 

@@ -37,6 +37,10 @@ ids_data <- read_csv(here("data/rework/ids_clean.csv")) %>%
 ldp_data <- read_csv(here("data/rawdata/language-discrimination.csv")) %>% 
   filter(!is.na(study_ID)) %>% filter(!is.na(mean_age_1))
 
+#xsw_data <- read_csv(here("data/rework/cross_situational_dec2023.csv")) %>% 
+#  mutate(ds_clean = "Cross-situational word learning") %>% 
+#  mutate(mean_age_months = mean_age_1 / 30.4)
+
 #@TODO: ADD NEW PROSOCIAL AGENTS
 #https://docs.google.com/spreadsheets/d/1j2Af5jyMjqRC6FBQnqGeTPVJ5nacDVf2cu9a9D3Se4o/edit?pli=1#gid=1269834261
 ```
@@ -58,6 +62,7 @@ metalab_data %>% distinct(dataset)
 trimmed_data <- metalab_data %>% 
   filter(!dataset %in% c(# dataset to be replaced 
                          "Infant directed speech preference", 
+                         #"Cross-situational word learning",
                          
                          # dataset to be excluded 
                          "Phonotactic learning", 
@@ -78,7 +83,10 @@ trimmed_data <- metalab_data %>%
   mutate(ds_clean = dataset) %>% 
   bind_rows(
     ids_data %>% mutate(expt_num = as.numeric(expt_num)), #IDS replacement 
-
+    # Cross situational word learning replacement 
+    #xsw_data %>% mutate(expt_num = as.numeric(expt_num), 
+    #                    same_infant = as.character(same_infant)),
+    
     # language discrimination data into two
     
     ldp_data %>% filter(task == "discrim") %>% 
@@ -150,6 +158,8 @@ trimmed_data <- trimmed_data %>%
 ### age 
 
 ```{r}
+
+
 missing_age_data <- trimmed_data %>% 
   filter(is.na(mean_age_months)) %>% 
   mutate(mean_age_months = mean_age_1 / 30.4)

@@ -242,7 +242,8 @@ get_model_fit_df <- function(all_ds, ds_name, moderators, age_type = "mean_age_m
                    raw_df <- broom::tidy(rma.mv(as.formula(m), 
                                                 V = d_var_calc, 
                                                 random = ~ 1 | short_cite/unique_row, 
-                                                data = all_ds %>% filter(ds_clean == ds_name))) %>% 
+                                                data = all_ds %>% filter(ds_clean == ds_name)), 
+                                         effects = "fixed", conf.int=TRUE, conf.level = 0.95) %>% 
                      mutate(model_spec = m) 
                    
                    
@@ -252,7 +253,8 @@ get_model_fit_df <- function(all_ds, ds_name, moderators, age_type = "mean_age_m
                    raw_df <- broom::tidy(rma.mv(as.formula(m), 
                                                 V = d_var_calc, 
                                                 random = ~ 1 | short_cite/same_infant, 
-                                                data = all_ds %>% filter(ds_clean == ds_name))) %>% 
+                                                data = all_ds %>% filter(ds_clean == ds_name)), 
+                                         effects = "fixed", conf.int=TRUE, conf.level = 0.95) %>% 
                      mutate(model_spec = m) 
                    
                    
@@ -264,7 +266,8 @@ get_model_fit_df <- function(all_ds, ds_name, moderators, age_type = "mean_age_m
                    raw_df <- broom::tidy(rma.mv(as.formula(m), 
                                                 V = d_var_calc, 
                                                 random = ~ 1 | short_cite/same_infant/unique_row, 
-                                                data = all_ds %>% filter(ds_clean == ds_name))) %>% 
+                                                data = all_ds %>% filter(ds_clean == ds_name)), 
+                                         effects = "fixed", conf.int=TRUE, conf.level = 0.95) %>% 
                      mutate(model_spec = m) 
                    
                   
