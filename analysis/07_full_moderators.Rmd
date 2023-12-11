@@ -1,0 +1,90 @@
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+library(here)
+
+d <- read_csv(here("data/metalab_data_kitchensink.csv"))
+supp_d <- read_csv(here("data/rework/ma_paper_supplement.csv"))
+```
+
+
+# full moderators 
+
+
+what would be the interpretation of a mega interaction model that includes all the moderator? 
+do we control for multiple testing correction? 
+fishing for age effect? 
+
+
+```{r}
+aug_d <- d %>% 
+  mutate(
+    # abstract rule learning: reduplicated 
+    # AAB and ABB (48 entries), than for ABA 
+    reduplicated_or_not = case_when(
+      (TrainingRule == "AAB" | TrainingRule == "ABB") ~ "reduplicated", 
+      TrainingRule == "ABA" ~ "no_reduplicated", 
+      TRUE ~ NA_character_
+    ), 
+    # abstract rule learning: ABB vs AAB
+    ABB_vs_AAB = case_when(
+      TrainingRule == "ABB" ~ "ABB", 
+      TrainingRule == "AAB" ~ "AAB", 
+      TRUE ~ NA_character_
+    ),
+    # Familiar word recognition: Romance language 
+    romance_language = case_when(
+      grepl('French', native_lang) | grepl('Italian', native_lang) | grepl('Spanish', native_lang) ~ "romance_lang", 
+      is.na(native_lang) ~ NA_character_, 
+      TRUE ~ "non_romance_lang"
+    ), 
+    # Mispronunciation sensitivity language group only compares romance vs germanic 
+     ms_language_group = case_when(
+      grepl('French', native_lang) | grepl('Italian', native_lang) | grepl('Spanish', native_lang) | grepl('Catalan', native_lang)  ~ "romance_language", 
+      grepl('English', native_lang) |  grepl('Dutch', native_lang) | grepl('Danish', native_lang) | grepl('German', native_lang) ~ "germanic_language", 
+      TRUE ~ NA_character_
+    ), 
+    # Sound symbolism: psudoword_type, needs to get rid of the NA type
+    psudoword_type = case_when(
+      expt_condition == "round" ~ "round", 
+      expt_condition == "spiky" ~ "spiky", 
+      TRUE ~ NA_character_
+    ),
+    # Word segmentation Analysis: Mandarin (four) and Catalan and Spanish (six) could not be included in this analysis
+    ws_native_lang = case_when(
+      grepl("Mandarin", native_lang)  | grepl("Catalan", native_lang) ~ NA_character_, 
+      TRUE ~ native_lang
+    )
+    
+  )
+
+
+```
+
+n_feature; m_posit; condition; type_feature; lang_family; distractor_overlap; as.factor(object_pair)
+
+#language_familiarity ; stimulus_complexity
+
+
+
+```{r}
+aug_d %>% 
+  filter(ds_clean == "Infant directed speech preference")  %>% 
+  select(!any_of(aug_d %>%  filter(ds_clean == "Infant directed speech preference") %>% keep(~all(is.na(.x))) %>% names)) %>% View()
+```
+
+
+```{r}
+aug_d %>% 
+  filter(ds_clean == "Mispronunciation sensitivity") %>% 
+  mutate(
+    ms_language_group = case_when(
+      grepl('French', native_lang) | grepl('Italian', native_lang) | grepl('Spanish', native_lang) | grepl('Catalan', native_lang)  ~ "romance_language", 
+      grepl('English', native_lang) |  grepl('Dutch', native_lang) | grepl('Danish', native_lang) | grepl('German', native_lang) ~ "germanic_language", 
+      TRUE ~ NA_character_
+    )
+  ) %>% 
+  distinct(native_lang, romance_language, ms_language_group) %>
+```
+
