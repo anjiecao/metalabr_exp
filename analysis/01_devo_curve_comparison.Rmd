@@ -12,9 +12,13 @@ library(ggthemes)
 library(metafor)
 library(ggrepel)
 
-d <- read_csv(here("data/metalab_data_mini.csv"))
+d <- read_csv(here("data/metalab_data_mini.csv")) %>% 
+  filter(mean_age_months <= 36)
 source(here("analysis/helper/model_comparison_help.r"))
 ```
+
+
+
 
 
 # Cacheing results   
@@ -75,6 +79,16 @@ age_models_df %>%
 ```
 
 
+```{r}
+age_models_df %>% 
+  filter(ic == "AICc") %>% 
+  rename(Dataset = dataset) %>% 
+  select(REML, model_spec_clean, Dataset) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML) 
+```
+
+
 ## AICc Table Visualization
 
 ```{r}
@@ -120,6 +134,23 @@ age_df_wide %>%
 ```
 
 
+```{r}
+age_models_df %>% 
+  filter(ic == "AICc") %>% 
+  rename(Dataset = dataset) %>% 
+  select(REML, model_spec_clean, Dataset) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML) %>% 
+  mutate(
+    linear = Linear - Const,
+    log = Log - Const, 
+    quad = Quadratic - Const
+  ) %>% 
+  select(Dataset, log, quad, linear) %>% 
+  filter(log > 4 | quad > 4 | linear > 4)
+```
+
+
 4 different results: 
 
 Categorization bias: fixed random effect structure (add same_infant)
@@ -127,6 +158,25 @@ Statistical sound category learning (habituation): changed random effect structu
 Infant directed speech preference: added unique_row 
 Mispronunciation sensitivity: fixed two missing infants age 
 
+
+
+```{r}
+age_diff_df <- d %>% 
+  select(ds_clean, mean_age_months) %>% 
+  group_by(ds_clean) %>% 
+  arrange(mean_age_months,.by_group = TRUE) %>% 
+  mutate(age_diff = mean_age_months - lag(mean_age_months)) %>% 
+  filter(!is.na(age_diff)) %>% 
+  group_by(ds_clean) %>% 
+  tidyboot::tidyboot_mean(age_diff)
+```
+```{r}
+age_diff_df %>% 
+  ggplot(aes(x = reorder(ds_clean, -mean), y = mean, ymin = ci_lower, ymax = ci_upper)) + 
+  geom_pointrange() + 
+  coord_flip() + 
+  theme_few()
+```
 
 
 ## Devo Curve 
