@@ -14,6 +14,8 @@ library(ggrepel)
 
 d <- read_csv(here("data/metalab_data_mini.csv")) %>% 
   filter(mean_age_months <= 36)
+
+full_d <- read_csv(here("data/metalab_data_mini.csv")) 
 source(here("analysis/helper/model_comparison_help.r"))
 ```
 
@@ -37,6 +39,17 @@ age_models_df <- lapply(unique(d$ds_clean),
 saveRDS(age_models_df, here("cached_data/age_models_df.Rds"))
 ```
 
+
+```{r}
+full_age_models_df <- lapply(unique(full_d$ds_clean), 
+       function(name){
+         print(name)
+         get_compare_IC_df(full_d, name, NULL)
+       }) %>% 
+  bind_rows()
+
+```
+
 ## Model Predictions 
 
 ```{r}
@@ -51,7 +64,22 @@ all_age_pred <- lapply(seq(1, nrow(min_age_df)),
        }) %>% 
   bind_rows() 
 
+
+all_age <- full_age_models_df %>% 
+  filter(ic == "AICc") 
+
+all_age_pred <- lapply(seq(1, nrow(all_age)), 
+       function(x){
+         get_all_age_model_prediction(all_age$dataset[[x]], all_age, all_age$model_spec[[x]], all_age$model_spec_clean[[x]], d)
+       }) %>% 
+  bind_rows() 
+
+
+
+
 saveRDS(all_age_pred, here("cached_data/min_age_pred_df.RDS"))
+saveRDS(all_age_pred, here("cached_data/full_age_pred_df.RDS"))
+
 ```
 
 
@@ -61,7 +89,7 @@ saveRDS(all_age_pred, here("cached_data/min_age_pred_df.RDS"))
 
 ```{r}
 age_models_df <- readRDS(here("cached_data/age_models_df.Rds"))
-all_age_pred <- readRDS(here("cached_data/min_age_pred_df.RDS")) 
+all_age_pred <- readRDS(here("cached_data/full_age_pred_df.RDS")) 
 ```
 
 
@@ -135,6 +163,74 @@ age_df_wide %>%
 
 
 ```{r}
+full_age_df_wide <- full_age_models_df %>% 
+  filter(ic == "AICc") %>% 
+  rename(Dataset = dataset) %>% 
+  select(REML, model_spec_clean, Dataset) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML)
+
+full_age_df_wide$min <- apply(full_age_df_wide[c('Linear','Log', 'Quadratic', 'Const')], 1, min)
+
+# get the delta value 
+full_age_df_wide <- full_age_df_wide %>% 
+  mutate(d_linear = Linear - min, 
+         d_log = Log - min, 
+         d_quad = Quadratic - min, 
+         d_const= Const - min) %>% 
+  select(Dataset, d_linear, d_log, d_quad, d_const) %>% 
+  rename(Linear = d_linear, 
+         Log = d_log, 
+         Quadratic = d_quad, 
+         Const = d_const) %>% 
+   mutate(across(where(is.numeric), round, 2)) 
+
+
+full_age_df_wide %>% 
+  pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const")) %>% 
+  ggplot(aes(x = reorder(Dataset, value), y = value, color = name)) +
+  theme_few() + 
+  geom_hline(yintercept = 4, linetype = 2, color = "gray") + 
+  geom_hline(yintercept = 0, linetype = 3) + 
+  geom_point(position = position_dodge(width = .2), 
+             #color = "white"
+             ) + 
+
+  coord_flip()+ 
+  xlab("") + 
+  labs(color = "Functional form") + 
+  guides(colour = guide_legend(nrow = 2))  + 
+  theme(legend.position = "top")
+```
+
+```{r}
+full_age_df_wide %>% 
+  pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const")) %>% 
+  mutate(type = "Full age range") %>% 
+  bind_rows(
+    age_df_wide %>% 
+    pivot_longer(cols = c("Linear", "Log", "Quadratic", "Const")) %>% 
+    mutate(type = "36MO") 
+  ) %>% 
+  ggplot(aes(x = reorder(Dataset, value), y = value, color = name, shape = type, group = type)) +
+  theme_few() + 
+  geom_hline(yintercept = 4, linetype = 2, color = "gray") + 
+  geom_hline(yintercept = 0, linetype = 3) + 
+  geom_point(position = position_dodge(width = .8), 
+             #color = "white"
+             ) + 
+
+  coord_flip()+ 
+  xlab("") + 
+  labs(color = "Functional form") + 
+  guides(colour = guide_legend(nrow = 2))  
+
+
+```
+
+
+
+```{r}
 age_models_df %>% 
   filter(ic == "AICc") %>% 
   rename(Dataset = dataset) %>% 
@@ -180,6 +276,145 @@ age_diff_df %>%
 
 
 ## Devo Curve 
+
+
+
+```{r}
+categorized_d <- d %>% 
+  mutate(
+    ds_type = case_when(
+      ds_clean %in% c( "Language discrimination and preference", 
+                     "Mispronunciation sensitivity", 
+                     "Natural speech preference", "Sound symbolism", "Statistical sound category learning", 
+                     "Vowel discrimination (native)",
+                     "Vowel discrimination (non-native)" ,"Word Segmentation (combined)",
+                     "Statistical word segmentation", "Audio-Visual Congruence", 
+                     "Language discrimination and preference (discrimination)", 
+                     "Language discrimination and preference (preference)") ~ "Sounds", 
+      
+      ds_clean %in% c("Familiar word recognition", 
+                     "Cross-situational word learning", 
+                      "Label advantage in concept learning",
+                     "Mutual exclusivity",
+                     "Online word recognition",
+                     "Syntactic bootstrapping",
+                     "Switch task") ~ "Words",
+      
+      ds_clean %in% c("Gaze following (combined)",
+                     "Neonatal Imitation",
+                     "Prosocial agents",
+                     #"Symbolic play", 
+                     "Infant directed speech preference") ~ "Communication", 
+      
+      ds_clean %in% c("Abstract rule learning",  
+                     "Categorization bias", 
+                     "Simple arithmetic competences") ~ "Cognitive"
+     )
+  ) 
+  
+```
+
+```{r}
+categorized_age_pred_df <- all_age_pred %>% 
+  mutate(
+    model_type = case_when(
+      !is.na(X.mean_age_months) ~ "linear", 
+      !is.na(X.log.mean_age_months.) ~ "log", 
+      !is.na(X.I.mean_age_months.2.) ~ "quad", 
+      TRUE ~ "constant"
+    )
+  ) %>% 
+  
+  select(pred, ds_name, ci.ub, ci.lb, model_type) %>% 
+  group_by(ds_name, model_type) %>% 
+  mutate(mean_age_months = (row_number() + 1) / 2) %>% 
+  left_join(age_range_df, by = c("ds_name")) %>% 
+  filter(mean_age_months > min_age, 
+         mean_age_months < min(36, max_age)) %>% 
+  mutate(
+    ds_type = case_when(
+      ds_name %in% c( "Language discrimination and preference", 
+                     "Mispronunciation sensitivity", 
+                     "Natural speech preference", "Sound symbolism", "Statistical sound category learning", 
+                     "Vowel discrimination (native)",
+                     "Vowel discrimination (non-native)" ,"Word Segmentation (combined)",
+                     "Statistical word segmentation", "Audio-Visual Congruence", 
+                     "Language discrimination and preference (discrimination)", 
+                     "Language discrimination and preference (preference)") ~ "Sounds", 
+      
+      ds_name %in% c("Familiar word recognition", 
+                     "Cross-situational word learning", 
+                      "Label advantage in concept learning",
+                     "Mutual exclusivity",
+                     "Online word recognition",
+                     "Syntactic bootstrapping",
+                     "Switch task") ~ "Words",
+      
+      ds_name %in% c("Gaze following (combined)",
+                     "Neonatal Imitation",
+                     "Prosocial agents",
+                     #"Symbolic play", 
+                     "Infant directed speech preference") ~ "Communication", 
+      
+      ds_name %in% c("Abstract rule learning",  
+                     "Categorization bias", 
+                     "Simple arithmetic competences") ~ "Cognitive"
+     )
+  ) %>% 
+  mutate(pred = case_when(
+    ds_name == "Abstract rule learning" ~ -pred, 
+    ds_name == "Switch task" ~ -pred,
+    TRUE ~ pred
+  )) %>% 
+  select(ds_name, ds_type, mean_age_months, pred, ci.ub, ci.lb, model_type) %>% 
+  mutate(
+    ds_name = case_when(
+      ds_name %in% sig_ds ~ paste0(ds_name, "*"), 
+      TRUE ~ ds_name
+    ), 
+    sig_alpha = case_when(
+      ds_name %in% sig_ds  ~ 1, 
+      TRUE ~ .3
+    )
+  ) %>% 
+  ungroup()
+
+
+categorized_age_pred_df %>% 
+  ggplot(aes(x = mean_age_months, y = pred, group = model_type, color = ds_name)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = .5) + 
+  geom_line(width = 2)+ 
+  geom_ribbon(
+              aes(x = mean_age_months, y = pred, ymin = ci.lb, ymax = ci.ub, fill = ds_name), alpha = 0.1, colour = NA)+ 
+  xlim(0, 48) + 
+  ylim(-2, 4) + 
+  facet_wrap(~ds_type, scales = "free") + 
+  theme_few()+
+  theme(legend.position = "none") + 
+  xlab("Age (months)") + 
+  ylab("Predicted Value")
+```
+
+
+## current try out w/o label 
+```{r}
+categorized_age_pred_df %>% 
+  mutate(group_var = paste0(ds_name, model_type)) %>% 
+  ggplot(aes(x = mean_age_months, y = pred, group = group_var, color = ds_name)) + 
+  geom_hline(yintercept = 0, linetype ="dashed", alpha = .5) + 
+  geom_smooth(data = categorized_d, 
+              aes(x = mean_age_months, y = d_calc, group = ds_clean, color = ds_clean,), 
+              method = "loess", span = 1)+ 
+  #geom_line() + 
+  geom_ribbon(
+              aes(x = mean_age_months, y = pred, ymin = ci.lb, ymax = ci.ub, fill = ds_name), alpha = 0.1, colour = NA)+
+    theme_few()+
+xlab("Mean age (months)") + 
+  ylab("Predicted ES") + 
+   theme(legend.position = "none") + 
+  facet_wrap(~ds_type)  
+```
+
 
 @TODO: need fixing after redid the curves
 
@@ -466,6 +701,48 @@ compare_const_df %>%
 ## Get predictions 
 
 ```{r}
+
+get_all_age_model_prediction <- function(ds_name, min_age_df, formula, model_type, all_ds){
+  
+  current_df = all_ds %>% filter(ds_clean == ds_name)
+  model <- rma.mv(as.formula(formula), 
+                    V = d_var_calc, 
+                    random = ~ 1 | short_cite/same_infant/unique_row, 
+                    data = current_df)
+    
+ 
+  
+  if (model_type == "Log"){
+    age = log(seq(1, 36, .5))
+  }else if(model_type == "Quadratic"){
+    age = (seq(1, 36, .5)) ** 2
+  }else{
+    age = seq(1, 36, .5)
+  }
+  
+  if (model_type != "Const"){
+    prediction =  predict(model, newmods = age, addx =TRUE) %>% 
+      as.data.frame() %>% 
+      mutate(ds_name = ds_name)
+    
+  }else{
+    
+    prediction = predict(model) %>% 
+      as.data.frame() 
+    
+    prediction = map_dfr(seq(length(age)), ~prediction)
+    
+    prediction$X.const.mean_age_months = age
+    
+    
+    prediction$ds_name = ds_name
+    
+  }
+
+  
+  return (prediction)
+}
+
 
 get_age_model_prediction <- function(ds_name, min_age_df, all_ds){
   

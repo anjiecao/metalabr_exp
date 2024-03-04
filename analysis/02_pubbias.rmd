@@ -27,20 +27,31 @@ d <- read_csv(here("data/metalab_data_kitchensink.csv"))
 bias_lrt <- lapply(
   unique(d$ds_clean), 
   function(name){
-    get_pub_bias_lrt(d, name)
+    tryCatch(get_pub_bias_lrt(d, name), 
+             warning = function(w){
+               tibble("ds_clean" = name, 
+                      "warning" = as.character(w))
+             })
   }
 ) %>% bind_rows()
 
 bias_estimates <- lapply(
   unique(d$ds_clean), 
   function(name){
-    get_pub_bias_estimates(d, name)
+    tryCatch(get_pub_bias_estimates(d, name), 
+             warning = function(w){
+               tibble("ds_clean" = name, 
+                      "warning" = as.character(w))
+             })
   }
 ) %>% bind_rows()
 
-get_pub_bias_estimates(d, "Mutual exclusivity")
 ```
 
+
+```{r}
+bias_lrt %>% 
+```
 
 ```{r}
 bias_estimates %>% 
