@@ -223,7 +223,23 @@ get_tidy_regtest <- function(regtest_res){
 
 age_summary <- d %>% 
   group_by(ds_clean) %>% 
-  summarise(mid_point = mean(mean_age_months))
+  summarise(mid_point = median(mean_age_months))
+
+egger_test_ok <- d %>% 
+  left_join(age_summary, by = c("ds_clean")) %>% 
+  mutate(
+    age_group = case_when(
+      mean_age_months < mid_point ~ "younger", 
+      TRUE ~ "older"
+    )
+  ) %>%
+  group_by(ds_clean, age_group) %>% 
+  count() %>% 
+  filter(n >= 20) %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  filter(n == 2)
+
 
 egger_test_df <- d %>% 
   left_join(age_summary, by = c("ds_clean")) %>% 
@@ -234,6 +250,7 @@ egger_test_df <- d %>%
     )
   ) %>%
   group_by(ds_clean, age_group) %>% 
+  filter(ds_clean %in% egger_test_ok$ds_clean) %>% 
   nest() %>% 
   mutate(
     reg_fit = map(data, ~ get_tidy_regtest(regtest(x = .x$d_calc, vi = .x$d_var_calc)))
@@ -249,6 +266,94 @@ saveRDS(egger_test_df, here("cached_data/h1_egger_test.rds"))
 
 
 ## Visualization
+
+```{r}
+egger_test_df
+```
+
+# Egger vs Bias 
+
+```{r}
+egger_test_df %>%
+  select(ds_clean, age_group, limit_est, pval) %>% 
+  pivot_wider(names_from = age_group, 
+                              values_from = c(limit_est, pval)) %>% 
+  mutate(
+    younger_sig = pval_younger < .05, 
+    older_sig = pval_older < .05
+  ) %>% 
+  mutate(
+    comparison_direction = case_when(
+      (younger_sig == TRUE & older_sig == FALSE) ~ "younger_more_severe", 
+      (younger_sig == FALSE & older_sig == TRUE) ~ "older_more_severe", 
+      (younger_sig == TRUE & older_sig == TRUE) ~ "both_pub_bias", 
+      (younger_sig == FALSE & older_sig == FALSE) ~ "no pub bias"
+    )
+  ) %>% 
+  filter(comparison_direction == "younger_more_severe")
+
+egger_sig <- egger_test_df %>%
+  select(ds_clean, age_group, limit_est, pval) %>% 
+  pivot_wider(names_from = age_group, 
+                              values_from = c(limit_est, pval)) %>% 
+  mutate(
+    younger_sig = pval_younger < .05, 
+    older_sig = pval_older < .05
+  ) %>% 
+  mutate(
+    comparison_direction = case_when(
+      (younger_sig == TRUE & older_sig == FALSE) ~ "younger_more_severe", 
+      (younger_sig == FALSE & older_sig == TRUE) ~ "older_more_severe", 
+      (younger_sig == TRUE & older_sig == TRUE) ~ "both_pub_bias", 
+      (younger_sig == FALSE & older_sig == FALSE) ~ "no pub bias"
+    )
+  ) %>% 
+  filter(comparison_direction == "younger_more_severe")
+
+egger_test_df %>%
+  select(ds_clean, age_group, limit_est, pval) %>% 
+  pivot_wider(names_from = age_group, 
+                              values_from = c(limit_est, pval)) %>% 
+  mutate(
+    younger_sig = pval_younger < .05, 
+    older_sig = pval_older < .05
+  ) %>% 
+  mutate(
+    comparison_direction = case_when(
+      (younger_sig == TRUE & older_sig == FALSE) ~ "younger_more_severe", 
+      (younger_sig == FALSE & older_sig == TRUE) ~ "older_more_severe", 
+      (younger_sig == TRUE & older_sig == TRUE) ~ "both_pub_bias", 
+      (younger_sig == FALSE & older_sig == FALSE) ~ "no pub bias"
+    )
+  ) %>% 
+  #filter(comparison_direction == "younger_more_severe") %>% 
+  filter(ds_clean %in% c("Mutual exclusivity", "Vowel discrimination (non-native)"))
+```
+
+
+
+```{r}
+bias_lrt %>% 
+  filter(is.na(warning)) %>% 
+  select(ds_clean, test_data,  pvalue, lrchisq) %>% 
+  pivot_wider(names_from = test_data, 
+                              values_from = c(pvalue, lrchisq)) %>% 
+  mutate(
+    younger_sig = pvalue_younger < .05, 
+    older_sig = pvalue_older < .05
+  ) %>% 
+  mutate(
+    comparison_direction = case_when(
+      (younger_sig == TRUE & older_sig == FALSE) ~ "younger_more_severe", 
+      (younger_sig == FALSE & older_sig == TRUE) ~ "older_more_severe", 
+      (younger_sig == TRUE & older_sig == TRUE) ~ "both_pub_bias", 
+      (younger_sig == FALSE & older_sig == FALSE) ~ "no pub bias"
+    )
+  ) %>% 
+  #filter(ds_clean %in% egger_sig$ds_clean)
+  #filter(comparison_direction == "younger_more_severe")
+  filter(ds_clean %in% c("Audio-Visual Congruence", "Categorization bias", "Syntactic bootstrapping"))
+```
 
 ```{r}
 egger_test_df %>% 

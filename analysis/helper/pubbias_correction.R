@@ -49,9 +49,9 @@ get_pub_bias_lrt <- function(full_d, ds_name){
   
   d <- full_d %>% filter(ds_clean == ds_name)
   
-  mean_age <- mean(d$mean_age_months)
-  younger_ds <- d %>% filter(mean_age_months >= mean_age)
-  older_ds <- d %>% filter(mean_age_months < mean_age)
+  median_age <- median(d$mean_age_months)
+  younger_ds <- d %>% filter(mean_age_months >= median_age)
+  older_ds <- d %>% filter(mean_age_months < median_age)
   
   # check how many studies are in each half 
   n_younger <- nrow(younger_ds)
@@ -102,9 +102,9 @@ get_pub_bias_estimates <- function(full_d, ds_name){
   
   d <- full_d %>% filter(ds_clean == ds_name)
   
-  mean_age <- mean(d$mean_age_months)
-  younger_ds <- d %>% filter(mean_age_months >= mean_age)
-  older_ds <- d %>% filter(mean_age_months < mean_age)
+  median_age <- median(d$mean_age_months)
+  younger_ds <- d %>% filter(mean_age_months >= median_age)
+  older_ds <- d %>% filter(mean_age_months < median_age)
   
   # check how many studies are in each half 
   n_younger <- nrow(younger_ds)

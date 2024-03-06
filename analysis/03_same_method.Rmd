@@ -109,6 +109,14 @@ pruned_model <- lapply(seq(1, nrow(nested_d)),
          return(res)
       }) %>% 
   bind_rows()
+
+
+rma.mv(as.formula(formula), 
+                    V = d_var_calc, 
+                    random = ~ 1 | short_cite/same_infant/unique_row, 
+                    data = current_df)
+
+
 ```
 
 ### focus on the ones that does not give isSingular warning 
@@ -266,6 +274,35 @@ d %>%
   theme_few() + 
   geom_smooth(method = "lm") + 
   theme(strip.text.x = element_text(size = 5))
+```
+
+
+```{r}
+delta_age_model_df <- d %>% 
+  filter(ds_clean %in% (single_method_multiple_age %>% ungroup() %>%  distinct(ds_clean) %>% pull()), 
+         short_cite %in% (single_method_multiple_age %>% ungroup() %>%  distinct(short_cite) %>% pull())) %>% 
+  group_by(ds_clean, short_cite) %>% 
+  summarise(min_age = min(mean_age_months)) %>% 
+  left_join(d %>% 
+  filter(ds_clean %in% (single_method_multiple_age %>% ungroup() %>%  distinct(ds_clean) %>% pull()), 
+         short_cite %in% (single_method_multiple_age %>% ungroup() %>%  distinct(short_cite) %>% pull())), 
+  by = c("ds_clean", "short_cite")) %>% 
+  select(ds_clean, short_cite, mean_age_months, min_age, d_calc, d_var_calc, short_cite, same_infant, unique_row) %>% 
+  mutate(delta_age = mean_age_months - min_age) %>% 
+  group_by(ds_clean) %>% 
+  nest() %>% 
+  mutate(
+    model = map(data, ~broom::tidy(rma.mv(d_calc ~ delta_age, 
+                             V = d_var_calc, 
+                             random = ~ 1 | short_cite/same_infant/unique_row, 
+                             data = .)))
+  ) %>% 
+  unnest(model) %>% 
+  filter(term == "delta_age") 
+
+
+delta_age_model_df %>% 
+  filter(p.value < .05)
 ```
 
 

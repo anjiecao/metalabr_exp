@@ -26,6 +26,21 @@ source(here("analysis/helper/model_comparison_help.r"))
 # Cacheing results   
 
 
+## Estimates
+
+```{r}
+all_slope_estimates <- lapply(unique(d$ds_clean), 
+       function(name){
+         print(name)
+         get_model_fit_df(d, name, NULL)
+       }) %>% 
+  bind_rows()
+
+all_slope_estimates %>% saveRDS(here("cached_data/all_slope_estimates.Rds"))
+
+```
+
+
 ## AIC comparison 
 
 ```{r}
@@ -88,8 +103,33 @@ saveRDS(all_age_pred, here("cached_data/full_age_pred_df.RDS"))
 # Visualization 
 
 ```{r}
+all_slope_estimates <- readRDS(here("cached_data/all_slope_estimates.Rds"))
 age_models_df <- readRDS(here("cached_data/age_models_df.Rds"))
 all_age_pred <- readRDS(here("cached_data/full_age_pred_df.RDS")) 
+```
+
+## Slope historgram
+
+```{r}
+all_slope_estimates %>% 
+  filter(term != "intercept") %>% 
+  ggplot(aes(x = estimate)) + 
+  geom_histogram(bins = 40) + 
+  #geom_density()+
+  theme_few()
+```
+
+```{r}
+all_slope_estimates %>% 
+  filter(term != "intercept") %>% 
+  mutate(significant = p.value < .05) %>% 
+  ggplot(aes(x = reorder(dataset, estimate), y = estimate, ymin = conf.low, ymax = conf.high, color = significant)) + 
+  scale_color_manual(values = c("black", "red")) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  geom_pointrange() + 
+  coord_flip() + 
+  theme_few() + 
+  xlab("")
 ```
 
 
@@ -315,6 +355,14 @@ categorized_d <- d %>%
 ```
 
 ```{r}
+
+
+age_range_df <- d %>% 
+  group_by(ds_clean) %>% 
+  summarise(min_age = min(mean_age_months, na.rm = TRUE), 
+            max_age = max(mean_age_months, na.rm = TRUE)) %>% 
+  rename(ds_name = ds_clean)
+
 categorized_age_pred_df <- all_age_pred %>% 
   mutate(
     model_type = case_when(
@@ -367,16 +415,6 @@ categorized_age_pred_df <- all_age_pred %>%
     TRUE ~ pred
   )) %>% 
   select(ds_name, ds_type, mean_age_months, pred, ci.ub, ci.lb, model_type) %>% 
-  mutate(
-    ds_name = case_when(
-      ds_name %in% sig_ds ~ paste0(ds_name, "*"), 
-      TRUE ~ ds_name
-    ), 
-    sig_alpha = case_when(
-      ds_name %in% sig_ds  ~ 1, 
-      TRUE ~ .3
-    )
-  ) %>% 
   ungroup()
 
 
@@ -403,16 +441,17 @@ categorized_age_pred_df %>%
   ggplot(aes(x = mean_age_months, y = pred, group = group_var, color = ds_name)) + 
   geom_hline(yintercept = 0, linetype ="dashed", alpha = .5) + 
   geom_smooth(data = categorized_d, 
-              aes(x = mean_age_months, y = d_calc, group = ds_clean, color = ds_clean,), 
-              method = "loess", span = 1)+ 
-  #geom_line() + 
+              aes(x = mean_age_months, y = d_calc, group = ds_clean, color = ds_clean), 
+              method = "loess", span = 2,  se = FALSE)+ 
+  geom_line(alpha = .5, linetype = "dashed") + 
   geom_ribbon(
-              aes(x = mean_age_months, y = pred, ymin = ci.lb, ymax = ci.ub, fill = ds_name), alpha = 0.1, colour = NA)+
+              aes(x = mean_age_months, y = pred, ymin = ci.lb, ymax = ci.ub, fill = ds_name), alpha = 0.2, colour = NA,)+
     theme_few()+
 xlab("Mean age (months)") + 
   ylab("Predicted ES") + 
    theme(legend.position = "none") + 
-  facet_wrap(~ds_type)  
+  facet_wrap(~ds_type, scales = "free_y")  
+
 ```
 
 
@@ -421,12 +460,6 @@ xlab("Mean age (months)") +
 
 ```{r}
 
-
-age_range_df <- d %>% 
-  group_by(ds_clean) %>% 
-  summarise(min_age = min(mean_age_months, na.rm = TRUE), 
-            max_age = max(mean_age_months, na.rm = TRUE)) %>% 
-  rename(ds_name = ds_clean)
 
 
 sig_ds <- c("Mutual exclusivity", "Audio-Visual Congruence", "Mispronunciation sensitivity",
