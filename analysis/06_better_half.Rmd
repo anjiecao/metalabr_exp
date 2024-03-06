@@ -48,6 +48,23 @@ better_halves <- lapply(
   group_by(ds_clean, ds_half) %>% 
   nest()
 
+worse_halves <- lapply(
+  seq(1, nrow(tidy_supp_d)), 
+  function(id){
+    print(tidy_supp_d$ds_clean[[id]])
+    print(tidy_supp_d$code[[id]])
+    #string = tidy_supp_d$code[[id]]
+    code_expr = rlang::parse_expr(tidy_supp_d$code[[id]])
+    d %>% 
+      filter(ds_clean == tidy_supp_d$ds_clean[[id]]) %>% 
+      filter(!(!!code_expr)) %>% 
+      mutate(ds_half = paste0(ds_clean, "_", "half", tidy_supp_d$half_id[[id]], "_worse"))
+  }
+) %>% 
+  bind_rows() %>% 
+  group_by(ds_clean, ds_half) %>% 
+  nest()
+
 # get all the full datasets from the better halves 
 
 better_halves_full <- lapply(
@@ -66,7 +83,47 @@ better_halves_full <- lapply(
 better_halves_all <- bind_rows(better_halves, better_halves_full)
 ```
 
+
+
+
 # Run models
+
+## wald test between better and worse 
+
+```{r}
+lapply(
+  better_halves$ds_half,
+  function(x){
+    better_data = (better_halves %>% filter(ds_half == x))$data
+    worse_data = (worse_halves %>% filter(grepl(x, ds_half)))$data
+    
+    better_res = rma.mv(d_calc ~ 1, 
+                         V = d_var_calc, 
+                          random = ~ 1 | short_cite/same_infant/unique_row, 
+                          data = better_data)
+    
+    worse_res = rma.mv(d_calc ~ 1, 
+                         V = d_var_calc, 
+                          random = ~ 1 | short_cite/same_infant/unique_row, 
+                          data = worse_data)
+    
+    dat.comp <- data.frame(estimate = c(coef(better_res), coef(worse_res)), stderror = c(better_res$se, worse_res$se),
+                       meta = c("better","worse"), tau2 = round(c(better_res$tau2, worse_res$tau2),3))
+    
+    comparison_res = rma(estimate, sei=stderror, mods = ~ meta, method="FE", data=dat.comp, digits=3) %>% 
+      broom::tidy() %>% 
+      mutate(half_name = x)
+  }
+) %>% 
+  bind_rows() %>% 
+  filter(term == "metaworse") %>% 
+  filter(p.value < .05)
+
+
+bind_rows(better_halves, worse_halves) %>% 
+  
+```
+
 
 ## Model comparison 
 
@@ -131,7 +188,8 @@ flipping the effect size?
 
 ```{r}
 ma_estimates %>% 
-  ggplot(aes(x = dataset, y = estimate, ymin = lb, ymax = ub, color = ds_half)) + 
+  filter(ds_half != "full") %>% 
+  ggplot(aes(x = dataset, y = estimate, ymin = conf.low, ymax = conf.high, color = ds_half)) + 
   geom_pointrange(position = position_dodge(width = .3)) + 
   geom_hline(yintercept = 0, color = "gray", linetype = "dashed") + 
   theme_few() + 
@@ -192,6 +250,22 @@ age_df_wide %>%
 
 
 ## linear model estimate distribution
+```{r}
+age_model_estimates %>% 
+  mutate(
+    ds_type = case_when(
+      ds_half != "full" ~ "better_half", 
+      TRUE ~ ds_half
+    )
+  ) %>% 
+   filter(term == "mean_age_months") %>% 
+   ggplot(aes(x = dataset, y = p.value, color = ds_type)) + 
+  geom_point(position = position_dodge(width = .2)) +
+  geom_hline(yintercept = 0.05, linetype = 2, color = "gray") + 
+  coord_flip() + 
+  theme_few() 
+```
+
 
 ```{r}
 age_model_estimates %>% 

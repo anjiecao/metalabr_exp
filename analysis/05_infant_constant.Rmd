@@ -44,8 +44,47 @@ toddler_comparison <- lapply(
   bind_rows() %>% 
   mutate(ds_type = "toddler")
 
+
+
 write_rds(toddler_comparison, here("cached_data/above_12_month_models_df.Rds"))
 ```
+
+
+```{r}
+all_toddler_slope_estimates <- lapply(unique(toddler_d$ds_clean), 
+       function(name){
+         print(name)
+         get_model_fit_df(toddler_d, name, NULL)
+       }) %>% 
+  bind_rows() %>% 
+  mutate(data_type = "all_toddler")
+
+all_slope_estimates <- read_rds(here("cached_data/all_slope_estimates.Rds")) %>% 
+  mutate(data_type = "full") %>% 
+  filter(dataset %in% all_toddler_slope_estimates$dataset)
+
+all_toddler_slope_estimates %>% 
+  bind_rows(all_slope_estimates) %>% 
+  filter(term != "intercept") %>% 
+  ggplot(aes(x = reorder(dataset, estimate), y = estimate, ymin = conf.low, ymax = conf.high, color = data_type, group = data_type)) + 
+  scale_color_manual(values = c("black", "red")) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  geom_pointrange(position = position_dodge(width = .8), alpha = .3) + 
+  geom_line(aes(group = dataset), po)+ 
+  coord_flip() + 
+  theme_few() + 
+  xlab("")
+
+
+all_toddler_slope_estimates %>% 
+  bind_rows(all_slope_estimates) %>% 
+  mutate(is_sig = p.value < 0.05) %>% 
+  filter(term != "intercept") %>% 
+  ggplot(aes(x = data_type, y = estimate, ymin = conf.low, ymax = conf.high, color = is_sig)) + 
+  geom_pointrange() +
+  facet_wrap(~dataset, scales = "free")
+```
+
 
 # Visualization 
 

@@ -1,6 +1,22 @@
 
 
 
+compare_base_model_estimate <- function(data, ds_name){
+  base_model <-"d_calc ~ 1"
+  
+  better_half_df <- rma.mv(as.formula(base_model), 
+                            V = d_var_calc, 
+                            random = ~ 1 | short_cite/same_infant/unique_row, 
+                            data = data)
+                             
+  
+  al
+  
+  
+}
+
+
+
 get_model_estimate_df <- function(data, ds_name, moderators){
   
   if (is.null(moderators)){
