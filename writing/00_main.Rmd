@@ -1,0 +1,113 @@
+---
+title             : "Estimating age-related change in infants’ linguistic and cognitive development using (meta-)meta-analysis"
+shorttitle        : "Estimating change with meta-analysis"
+
+author: 
+  - name          : "Anjie Cao"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "450 Jane Stanford Way, Stanford, CA 94305"
+    email         : "anjiecao@stanford.edu"
+    role:         # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
+      - "Conceptualization"
+      - "Writing - Original Draft Preparation"
+      - "Writing - Review & Editing"
+  - name          : "Michael C. Frank"
+    affiliation   : "1"
+    role:
+      - "Writing - Review & Editing"
+      - "Supervision"
+
+affiliation:
+  - id            : "1"
+    institution   : "Stanford University "
+  - id            : "2"
+    institution   : "Konstanz Business School"
+
+authornote: |
+  Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
+
+  Enter author note here.
+
+abstract: |
+ Developmental psychology focuses on how psychological phenomena emerge with age. In cognitive development research, however, the specifics of this emergence is often underspecified. Researchers often provisionally assume linear growth by including chronological age as a predictor in regression models. In this work, we aim to evaluate this assumption by examining the functional form of age trajectories across 24 phenomena in early linguistic and cognitive development using (meta-)meta-analysis. Surprisingly, for most meta-analyses, the effect size for the phenomenon was relatively constant throughout development. We investigated four possible hypotheses explaining this pattern: (1) age-related selection bias against younger infants; (2) methodological adaptation for older infants; (3) change in only a subset of conditions; and (4) positive growth only after infancy. None of these explained the lack of age-related growth in most datasets. Our work challenges the assumption of linear growth in early cognitive development and suggests the importance of uniform measurement across children of different ages.
+
+  
+keywords          : "keywords"
+wordcount         : "X"
+
+bibliography      : "r-references.bib"
+
+floatsintext      : no
+linenumbers       : yes
+draft             : no
+mask              : no
+
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+
+classoption       : "man"
+output            : 
+    papaja::apa6_pdf:
+      latex_engine: xelatex
+
+---
+
+
+
+
+```{r setup, include = FALSE}
+library("papaja")
+library(here)
+library(tidyverse)
+r_refs("r-references.bib")
+```
+
+```{r analysis-preferences}
+# Seed for random number generation
+set.seed(42)
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
+```
+
+```{r child = "01_introduction.Rmd"}
+```
+
+
+
+```{r child = "02_estimate_change.Rmd"}
+
+```
+
+```{r child = "03_interim_discussion.Rmd"}
+
+```
+
+```{r child = "04_h1.Rmd"}
+
+```
+
+
+```{r child = "05_h2.Rmd"}
+
+```
+
+```{r child = "06_h3.Rmd"}
+
+```
+
+```{r child = "07_h4.Rmd"}
+
+```
+
+```{r child = "08_general_discussion.Rmd"}
+
+```
+
+
+\newpage
+
+# References
+
+::: {#refs custom-style="Bibliography"}
+:::

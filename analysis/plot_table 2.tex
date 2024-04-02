@@ -1,0 +1,570 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
+## v ggplot2 3.5.0     v purrr   1.0.1
+## v tibble  3.2.1     v dplyr   1.1.4
+## v tidyr   1.3.0     v stringr 1.5.0
+## v readr   2.1.3     v forcats 0.5.2
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(here)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## here() starts at /Users/caoanjie/Desktop/projects/metalabr_exp
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(kableExtra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'kableExtra'
+## 
+## The following object is masked from 'package:dplyr':
+## 
+##     group_rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(gt)}
+\NormalTok{all\_slope\_estimates }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"cached\_data/all\_slope\_estimates.Rds"}\NormalTok{))}
+\NormalTok{pub\_bias\_weight\_function }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"cached\_data/pub\_bias\_weight\_function.Rds"}\NormalTok{))}
+\NormalTok{pub\_bias\_egger\_test }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"cached\_data/pub\_bias\_egger\_test.Rds"}\NormalTok{))}
+\NormalTok{delta\_age\_model }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{( }\FunctionTok{here}\NormalTok{(}\StringTok{"cached\_data/delta\_age.Rds"}\NormalTok{))}
+\NormalTok{bh\_model\_estimates }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"cached\_data/better\_half\_age\_model\_estimate.Rds"}\NormalTok{))}
+\NormalTok{toddler\_slope }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{\textquotesingle{}cached\_data/all\_toddler\_slope\_estimates.Rds\textquotesingle{}}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{ds-name-age-trend-in-original}{%
+\section{ds name + age trend in
+original}\label{ds-name-age-trend-in-original}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ds\_name\_with\_og\_age\_trend\_df }\OtherTok{\textless{}{-}}\NormalTok{ all\_slope\_estimates }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{==} \StringTok{"mean\_age\_months"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{age\_trend =}\NormalTok{ p.value }\SpecialCharTok{\textless{}}\NormalTok{ .}\DecValTok{05}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(dataset, age\_trend)}
+
+\NormalTok{ds\_name\_with\_og\_age\_trend\_df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 25 x 2
+##    dataset                                                 age_trend
+##    <chr>                                                   <lgl>    
+##  1 Abstract rule learning                                  FALSE    
+##  2 Audio-Visual Congruence                                 FALSE    
+##  3 Categorization bias                                     TRUE     
+##  4 Cross-situational word learning                         FALSE    
+##  5 Familiar word recognition                               TRUE     
+##  6 Gaze following (combined)                               TRUE     
+##  7 Label advantage in concept learning                     FALSE    
+##  8 Language discrimination and preference (discrimination) FALSE    
+##  9 Language discrimination and preference (preference)     FALSE    
+## 10 Mispronunciation sensitivity                            FALSE    
+## # i 15 more rows
+\end{verbatim}
+
+\hypertarget{h1}{%
+\section{h1}\label{h1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pub\_bias\_wf\_df }\OtherTok{\textless{}{-}}\NormalTok{ pub\_bias\_weight\_function }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(ds\_clean, comparison\_direction) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{rename}\NormalTok{(}\AttributeTok{dataset =}\NormalTok{ ds\_clean, }
+         \AttributeTok{wf\_comparison\_direction =}\NormalTok{ comparison\_direction)}
+
+\NormalTok{pub\_bias\_et\_df }\OtherTok{\textless{}{-}}\NormalTok{ pub\_bias\_egger\_test }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(ds\_clean, comparison\_direction) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{rename}\NormalTok{(}\AttributeTok{dataset=}\NormalTok{ ds\_clean, }
+         \AttributeTok{et\_comparison\_direction =}\NormalTok{ comparison\_direction)}
+
+\NormalTok{ds\_name\_with\_publicaiton\_bias }\OtherTok{\textless{}{-}}\NormalTok{ ds\_name\_with\_og\_age\_trend\_df }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(dataset) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(pub\_bias\_wf\_df, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"dataset"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(pub\_bias\_et\_df, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"dataset"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{pub\_bias\_explain\_wf =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      wf\_comparison\_direction }\SpecialCharTok{==} \StringTok{"younger\_more\_severe"} \SpecialCharTok{\textasciitilde{}} \ConstantTok{TRUE}\NormalTok{, }
+      \FunctionTok{is.na}\NormalTok{(wf\_comparison\_direction) }\SpecialCharTok{\textasciitilde{}} \ConstantTok{NA}\NormalTok{,}
+      \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \ConstantTok{FALSE}
+\NormalTok{    ),}
+    \AttributeTok{pub\_bias\_explain\_et =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      et\_comparison\_direction }\SpecialCharTok{==} \StringTok{"younger\_more\_severe"} \SpecialCharTok{\textasciitilde{}} \ConstantTok{TRUE}\NormalTok{, }
+      \FunctionTok{is.na}\NormalTok{(et\_comparison\_direction) }\SpecialCharTok{\textasciitilde{}} \ConstantTok{NA}\NormalTok{,}
+      \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \ConstantTok{FALSE}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{wf\_comparison\_direction, }\SpecialCharTok{{-}}\NormalTok{et\_comparison\_direction)}
+  
+\NormalTok{ds\_name\_with\_publicaiton\_bias}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 25 x 3
+##    dataset                               pub_bias_explain_wf pub_bias_explain_et
+##    <chr>                                 <lgl>               <lgl>              
+##  1 Abstract rule learning                FALSE               FALSE              
+##  2 Audio-Visual Congruence               FALSE               TRUE               
+##  3 Categorization bias                   FALSE               TRUE               
+##  4 Cross-situational word learning       NA                  FALSE              
+##  5 Familiar word recognition             FALSE               NA                 
+##  6 Gaze following (combined)             FALSE               FALSE              
+##  7 Label advantage in concept learning   FALSE               FALSE              
+##  8 Language discrimination and preferen~ NA                  FALSE              
+##  9 Language discrimination and preferen~ FALSE               FALSE              
+## 10 Mispronunciation sensitivity          FALSE               FALSE              
+## # i 15 more rows
+\end{verbatim}
+
+\#h2
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ds\_name\_with\_method\_adaptation }\OtherTok{\textless{}{-}}\NormalTok{ ds\_name\_with\_og\_age\_trend\_df }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(dataset) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(}
+\NormalTok{    delta\_age\_model }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{==} \StringTok{"delta\_age"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{same\_method\_delta\_age =}\NormalTok{ p.value }\SpecialCharTok{\textless{}}\NormalTok{ .}\DecValTok{05}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(dataset, same\_method\_delta\_age)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Joining with `by = join_by(dataset)`
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ds\_name\_with\_method\_adaptation}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 25 x 2
+##    dataset                                                 same_method_delta_age
+##    <chr>                                                   <lgl>                
+##  1 Abstract rule learning                                  FALSE                
+##  2 Audio-Visual Congruence                                 FALSE                
+##  3 Categorization bias                                     NA                   
+##  4 Cross-situational word learning                         FALSE                
+##  5 Familiar word recognition                               FALSE                
+##  6 Gaze following (combined)                               NA                   
+##  7 Label advantage in concept learning                     NA                   
+##  8 Language discrimination and preference (discrimination) FALSE                
+##  9 Language discrimination and preference (preference)     FALSE                
+## 10 Mispronunciation sensitivity                            NA                   
+## # i 15 more rows
+\end{verbatim}
+
+\hypertarget{h3}{%
+\section{h3}\label{h3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bh\_df }\OtherTok{\textless{}{-}}\NormalTok{ bh\_model\_estimates }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{==} \StringTok{"mean\_age\_months"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(ds\_half }\SpecialCharTok{!=} \StringTok{"full"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{better\_half\_trend =}\NormalTok{ p.value }\SpecialCharTok{\textless{}}\NormalTok{ .}\DecValTok{05}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(dataset, better\_half\_trend)}
+
+\NormalTok{ds\_name\_with\_bh }\OtherTok{\textless{}{-}}\NormalTok{ ds\_name\_with\_og\_age\_trend\_df }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(dataset) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(bh\_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Joining with `by = join_by(dataset)`
+\end{verbatim}
+
+\hypertarget{h4}{%
+\section{h4}\label{h4}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{toddler\_df }\OtherTok{\textless{}{-}}\NormalTok{ toddler\_slope }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{==} \StringTok{"mean\_age\_months"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{toddler\_sig =}\NormalTok{ p.value }\SpecialCharTok{\textless{}}\NormalTok{ .}\DecValTok{05}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(dataset, toddler\_sig)}
+
+\NormalTok{ds\_name\_with\_toddler }\OtherTok{\textless{}{-}}\NormalTok{ ds\_name\_with\_og\_age\_trend\_df }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(dataset) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(toddler\_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Joining with `by = join_by(dataset)`
+\end{verbatim}
+
+\hypertarget{put-everything-together}{%
+\section{put everything together}\label{put-everything-together}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{logical\_to\_symbol }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x)\{}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.na}\NormalTok{(x))\{}
+    \FunctionTok{return}\NormalTok{ (}\StringTok{""}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \ControlFlowTok{if}\NormalTok{ (x }\SpecialCharTok{==} \ConstantTok{TRUE}\NormalTok{)\{}
+    \FunctionTok{return}\NormalTok{ (}\StringTok{"✓"}\NormalTok{)}
+\NormalTok{  \}}\ControlFlowTok{else}\NormalTok{\{}
+    \FunctionTok{return}\NormalTok{ (}\StringTok{"X"}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{\}}
+
+
+\NormalTok{table\_df }\OtherTok{\textless{}{-}}\NormalTok{ ds\_name\_with\_og\_age\_trend\_df }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(ds\_name\_with\_publicaiton\_bias, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"dataset"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(ds\_name\_with\_method\_adaptation, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"dataset"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(ds\_name\_with\_bh, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"dataset"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(ds\_name\_with\_toddler, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"dataset"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{rowwise}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate\_if}\NormalTok{(is\_logical, logical\_to\_symbol) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{summary =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Abstract rule learning"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Audio{-}Visual Congruence"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Not applicable."}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Categorization bias"} \SpecialCharTok{\textasciitilde{}} \StringTok{"More severe publication bias for younger infants."}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Cross{-}situational word learning"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Late emergence of growth."}\NormalTok{,}
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Familiar word recognition"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Not applicable."}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Gaze following (combined)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Not applicable."}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Label advantage in concept learning"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Language discrimination and preference (discrimination)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Language discrimination and preference (preference)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Mispronunciation sensitivity"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Late emergence of growth."}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Mutual exclusivity"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Not applicable"}\NormalTok{,}
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Natural speech preference"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{,}
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Neonatal Imitation"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Not applicable"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Online word recognition"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Not applicable"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Prosocial agents"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Simple arithmetic competences"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Sound symbolism"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Not applicable"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Statistical sound category learning"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Not applicable"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Statistical word segmentation"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{,}
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Switch task"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Syntactic bootstrapping"} \SpecialCharTok{\textasciitilde{}} \StringTok{"More severe publication bias for younger infants."}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Vowel discrimination (native)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Vowel discrimination (non{-}native)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"More severe publication bias for younger infants."}\NormalTok{,}
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Word Segmentation (combined)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}\NormalTok{, }
+\NormalTok{      dataset }\SpecialCharTok{==} \StringTok{"Infant directed speech preference"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Unknown"}
+\NormalTok{    )}
+\NormalTok{  )}
+  
+  
+\FunctionTok{kable}\NormalTok{(table\_df,}
+      \CommentTok{\#"html",}
+      \AttributeTok{booktabs =}\NormalTok{ T,}
+      \AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{),}
+      \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{""}\NormalTok{,}\StringTok{""}\NormalTok{,}\StringTok{"Weight Function"}\NormalTok{,}\StringTok{"Egger\textquotesingle{}s Test"}\NormalTok{, }\StringTok{""}\NormalTok{, }\StringTok{""}\NormalTok{, }\StringTok{""}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable\_styling}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\AttributeTok{full\_width =}\NormalTok{ F,}
+                \AttributeTok{position =} \StringTok{"left"}\NormalTok{, }\AttributeTok{font\_size =} \DecValTok{8}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"Dataset"} \OtherTok{=} \DecValTok{1}\NormalTok{, }\StringTok{"Linear Growth"} \OtherTok{=} \DecValTok{1}\NormalTok{, }\StringTok{"Publication Bias"} \OtherTok{=} \DecValTok{2}\NormalTok{, }
+                   \StringTok{"Methods Adaptation"} \OtherTok{=} \DecValTok{1}\NormalTok{, }\StringTok{"Theoretical Constraints"} \OtherTok{=} \DecValTok{1}\NormalTok{, }\StringTok{"Late emergence of growth"}\OtherTok{=} \DecValTok{1}\NormalTok{, }\StringTok{"Why is there no growth?"}\NormalTok{))  }
+\end{Highlighting}
+\end{Shaded}
+
+\begingroup\fontsize{8}{10}\selectfont
+
+\begin{tabular}{llllllll}
+\toprule
+\multicolumn{1}{c}{Dataset} & \multicolumn{1}{c}{Linear Growth} & \multicolumn{2}{c}{Publication Bias} & \multicolumn{1}{c}{Methods Adaptation} & \multicolumn{1}{c}{Theoretical Constraints} & \multicolumn{1}{c}{Late emergence of growth} & \multicolumn{1}{c}{Why is there no growth?} \\
+\cmidrule(l{3pt}r{3pt}){1-1} \cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6} \cmidrule(l{3pt}r{3pt}){7-7} \cmidrule(l{3pt}r{3pt}){8-8}
+ &  & Weight Function & Egger's Test &  &  &  & \\
+\midrule
+Abstract rule learning & X & X & X & X &  &  & Unknown\\
+Audio-Visual Congruence & X & X & ✓ & X &  & X & Not applicable.\\
+Categorization bias & ✓ & X & ✓ &  &  & X & More severe publication bias for younger infants.\\
+Cross-situational word learning & X &  & X & X &  & ✓ & Late emergence of growth.\\
+Familiar word recognition & ✓ & X &  & X & X &  & Not applicable.\\
+\addlinespace
+Gaze following (combined) & ✓ & X & X &  &  & ✓ & Not applicable.\\
+Label advantage in concept learning & X & X & X &  &  & X & Unknown\\
+Language discrimination and preference (discrimination) & X &  & X & X &  &  & Unknown\\
+Language discrimination and preference (preference) & X & X & X & X &  &  & Unknown\\
+Mispronunciation sensitivity & X & X & X &  &  & ✓ & Late emergence of growth.\\
+\addlinespace
+Mutual exclusivity & ✓ & ✓ & X & X & ✓ & ✓ & Not applicable\\
+Natural speech preference & X & X & X & X &  &  & Unknown\\
+Neonatal Imitation & ✓ & X & X &  &  &  & Not applicable\\
+Online word recognition & ✓ &  &  & ✓ &  & ✓ & Not applicable\\
+Prosocial agents & X &  & X & X & X & X & Unknown\\
+\addlinespace
+Simple arithmetic competences & X &  &  &  &  &  & Unknown\\
+Sound symbolism & ✓ &  & X & X & X & X & Not applicable\\
+Statistical sound category learning & ✓ &  &  & ✓ & ✓ &  & Not applicable\\
+Statistical word segmentation & X & X & X & X & X &  & Unknown\\
+Switch task & X & X & X & X & X & X & Unknown\\
+\addlinespace
+Switch task & X & X & X & X & X & X & Unknown\\
+Syntactic bootstrapping & X & X & ✓ & X & X & X & More severe publication bias for younger infants.\\
+Vowel discrimination (native) & X & X & X & X &  & X & Unknown\\
+Vowel discrimination (non-native) & X & ✓ & X & X &  &  & More severe publication bias for younger infants.\\
+Word Segmentation (combined) & X & X & X & X &  & X & Unknown\\
+\addlinespace
+Infant directed speech preference & X & X & X & X &  & X & Unknown\\
+\bottomrule
+\end{tabular}
+\endgroup{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{apa }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x, }\AttributeTok{title =} \StringTok{" "}\NormalTok{) \{}
+  \FunctionTok{gt}\NormalTok{(x) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.border.top.color =} \StringTok{"white"}\NormalTok{,}
+    \AttributeTok{heading.title.font.size =} \FunctionTok{px}\NormalTok{(}\DecValTok{16}\NormalTok{),}
+    \AttributeTok{column\_labels.border.top.width =} \DecValTok{3}\NormalTok{,}
+    \AttributeTok{column\_labels.border.top.color =} \StringTok{"black"}\NormalTok{,}
+    \AttributeTok{column\_labels.border.bottom.width =} \DecValTok{3}\NormalTok{,}
+    \AttributeTok{column\_labels.border.bottom.color =} \StringTok{"black"}\NormalTok{,}
+    \AttributeTok{table\_body.border.bottom.color =} \StringTok{"black"}\NormalTok{,}
+    \AttributeTok{table.border.bottom.color =} \StringTok{"white"}\NormalTok{,}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{100}\NormalTok{),}
+    \AttributeTok{table.background.color =} \StringTok{"white"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align=}\StringTok{"center"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_style}\NormalTok{(}
+    \AttributeTok{style =} \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{cell\_borders}\NormalTok{(}
+        \AttributeTok{sides =} \FunctionTok{c}\NormalTok{(}\StringTok{"top"}\NormalTok{, }\StringTok{"bottom"}\NormalTok{),}
+        \AttributeTok{color =} \StringTok{"white"}\NormalTok{,}
+        \AttributeTok{weight =} \FunctionTok{px}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{      ),}
+      \FunctionTok{cell\_text}\NormalTok{(}
+        \AttributeTok{align=}\StringTok{"center"}
+\NormalTok{      ),}
+      \FunctionTok{cell\_fill}\NormalTok{(}\AttributeTok{color =} \StringTok{"white"}\NormalTok{, }\AttributeTok{alpha =} \ConstantTok{NULL}\NormalTok{)}
+\NormalTok{      ),}
+    \AttributeTok{locations =} \FunctionTok{cells\_body}\NormalTok{(}
+      \AttributeTok{columns =} \FunctionTok{everything}\NormalTok{(),}
+      \AttributeTok{rows =} \FunctionTok{everything}\NormalTok{()}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+    \CommentTok{\#title setup}
+    \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \FunctionTok{html}\NormalTok{(}\StringTok{"\textless{}i\textgreater{}"}\NormalTok{, title, }\StringTok{"\textless{}/i\textgreater{}"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{opt\_align\_table\_header}\NormalTok{(}\AttributeTok{align =} \StringTok{"left"}\NormalTok{)}
+\NormalTok{\}}
+
+\FunctionTok{library}\NormalTok{(papaja)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: tinylabels
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{apa\_table}\NormalTok{(table\_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:unnamed-chunk-8}}
+
+\begin{tabular}{llllllll}
+\toprule
+dataset & \multicolumn{1}{c}{age\_trend} & \multicolumn{1}{c}{pub\_bias\_explain\_wf} & \multicolumn{1}{c}{pub\_bias\_explain\_et} & \multicolumn{1}{c}{same\_method\_delta\_age} & \multicolumn{1}{c}{better\_half\_trend} & \multicolumn{1}{c}{toddler\_sig} & \multicolumn{1}{c}{summary}\\
+\midrule
+Abstract rule learning & X & X & X & X &  &  & Unknown\\
+Audio-Visual Congruence & X & X & ✓ & X &  & X & Not applicable.\\
+Categorization bias & ✓ & X & ✓ &  &  & X & More severe publication bias for younger infants.\\
+Cross-situational word learning & X &  & X & X &  & ✓ & Late emergence of growth.\\
+Familiar word recognition & ✓ & X &  & X & X &  & Not applicable.\\
+Gaze following (combined) & ✓ & X & X &  &  & ✓ & Not applicable.\\
+Label advantage in concept learning & X & X & X &  &  & X & Unknown\\
+Language discrimination and preference (discrimination) & X &  & X & X &  &  & Unknown\\
+Language discrimination and preference (preference) & X & X & X & X &  &  & Unknown\\
+Mispronunciation sensitivity & X & X & X &  &  & ✓ & Late emergence of growth.\\
+Mutual exclusivity & ✓ & ✓ & X & X & ✓ & ✓ & Not applicable\\
+Natural speech preference & X & X & X & X &  &  & Unknown\\
+Neonatal Imitation & ✓ & X & X &  &  &  & Not applicable\\
+Online word recognition & ✓ &  &  & ✓ &  & ✓ & Not applicable\\
+Prosocial agents & X &  & X & X & X & X & Unknown\\
+Simple arithmetic competences & X &  &  &  &  &  & Unknown\\
+Sound symbolism & ✓ &  & X & X & X & X & Not applicable\\
+Statistical sound category learning & ✓ &  &  & ✓ & ✓ &  & Not applicable\\
+Statistical word segmentation & X & X & X & X & X &  & Unknown\\
+Switch task & X & X & X & X & X & X & Unknown\\
+Switch task & X & X & X & X & X & X & Unknown\\
+Syntactic bootstrapping & X & X & ✓ & X & X & X & More severe publication bias for younger infants.\\
+Vowel discrimination (native) & X & X & X & X &  & X & Unknown\\
+Vowel discrimination (non-native) & X & ✓ & X & X &  &  & More severe publication bias for younger infants.\\
+Word Segmentation (combined) & X & X & X & X &  & X & Unknown\\
+Infant directed speech preference & X & X & X & X &  & X & Unknown\\
+\bottomrule
+\end{tabular}
+
+\end{threeparttable}
+\end{center}
+
+\end{table}
+
+\end{document}

@@ -59,6 +59,8 @@ all_toddler_slope_estimates <- lapply(unique(toddler_d$ds_clean),
   bind_rows() %>% 
   mutate(data_type = "all_toddler")
 
+all_toddler_slope_estimates %>% write_rds(here('cached_data/all_toddler_slope_estimates.Rds'))
+
 all_slope_estimates <- read_rds(here("cached_data/all_slope_estimates.Rds")) %>% 
   mutate(data_type = "full") %>% 
   filter(dataset %in% all_toddler_slope_estimates$dataset)

@@ -1,0 +1,274 @@
+---
+title: Evaluating the functional form of developmental change in infants’ linguistic and cognitive development using (meta-)meta-analysis
+author: Anjie Cao, Molly Lewis, Sho Tsuji, Christina Bergmann, Alejandrina Cristia, Michael C. Frank
+subtitle: Supplementary Information
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    extra_dependencies:
+      caption: labelfont={bf}
+      hyperref:
+      - unicode=true
+      - breaklinks=true
+      lmodern: null
+      amssymb: null
+    latex_engine: xelatex
+    keep_tex: yes
+---
+
+
+
+```{r include = FALSE}
+knitr::opts_chunk$set(echo=FALSE)
+knitr::opts_chunk$set(warning=FALSE)
+knitr::opts_chunk$set(message=FALSE)
+
+```
+
+```{r warning=FALSE}
+library(tidyverse)
+library(here)
+library(kableExtra)
+library(gt)
+all_slope_estimates <- readRDS(here("cached_data/all_slope_estimates.Rds"))
+pub_bias_weight_function <- readRDS(here("cached_data/pub_bias_weight_function.Rds"))
+pub_bias_egger_test <- readRDS(here("cached_data/pub_bias_egger_test.Rds"))
+delta_age_model <- readRDS( here("cached_data/delta_age.Rds"))
+bh_model_estimates <- readRDS(here("cached_data/better_half_age_model_estimate.Rds"))
+toddler_slope <- readRDS(here('cached_data/all_toddler_slope_estimates.Rds'))
+```
+
+
+
+
+```{r}
+# ds name + age trend in original 
+
+ds_name_with_og_age_trend_df <- all_slope_estimates %>% 
+  filter(term == "mean_age_months") %>% 
+  mutate(
+    age_trend = p.value < .05
+  ) %>% 
+  select(dataset, age_trend)
+
+#ds_name_with_og_age_trend_df
+```
+
+
+
+```{r}
+# h1
+pub_bias_wf_df <- pub_bias_weight_function %>% 
+  select(ds_clean, comparison_direction) %>% 
+  ungroup() %>% 
+  rename(dataset = ds_clean, 
+         wf_comparison_direction = comparison_direction)
+
+pub_bias_et_df <- pub_bias_egger_test %>% 
+  select(ds_clean, comparison_direction) %>% 
+  ungroup() %>% 
+  rename(dataset= ds_clean, 
+         et_comparison_direction = comparison_direction)
+
+ds_name_with_publicaiton_bias <- ds_name_with_og_age_trend_df %>% 
+  select(dataset) %>% 
+  left_join(pub_bias_wf_df, by = c("dataset")) %>% 
+  left_join(pub_bias_et_df, by = c("dataset")) %>% 
+  mutate(
+    pub_bias_explain_wf = case_when(
+      wf_comparison_direction == "younger_more_severe" ~ TRUE, 
+      is.na(wf_comparison_direction) ~ NA,
+      TRUE ~ FALSE
+    ),
+    pub_bias_explain_et = case_when(
+      et_comparison_direction == "younger_more_severe" ~ TRUE, 
+      is.na(et_comparison_direction) ~ NA,
+      TRUE ~ FALSE
+    )
+  ) %>% 
+  select(-wf_comparison_direction, -et_comparison_direction)
+  
+#ds_name_with_publicaiton_bias
+```
+
+
+
+```{r}
+#h2
+ds_name_with_method_adaptation <- ds_name_with_og_age_trend_df %>% 
+  select(dataset) %>% 
+  left_join(
+    delta_age_model %>% 
+  filter(term == "delta_age") %>% 
+  mutate(
+    same_method_delta_age = p.value < .05
+  ) %>% 
+  select(dataset, same_method_delta_age)
+  )
+
+#ds_name_with_method_adaptation
+
+```
+
+
+```{r}
+# h3
+
+bh_df <- bh_model_estimates %>% 
+  filter(term == "mean_age_months") %>% 
+  filter(ds_half != "full") %>% 
+  mutate(
+    better_half_trend = p.value < .05
+  ) %>% 
+  select(dataset, better_half_trend)
+
+ds_name_with_bh <- ds_name_with_og_age_trend_df %>% 
+  select(dataset) %>% 
+  left_join(bh_df)
+``` 
+
+
+
+
+```{r}
+# h4
+toddler_df <- toddler_slope %>% 
+  filter(term == "mean_age_months") %>%
+  mutate(
+    toddler_sig = p.value < .05
+  ) %>% 
+  select(dataset, toddler_sig)
+
+ds_name_with_toddler <- ds_name_with_og_age_trend_df %>% 
+  select(dataset) %>% 
+  left_join(toddler_df)
+```
+
+
+
+
+
+```{r}
+# put everything together 
+
+logical_to_symbol <- function(x){
+  if (is.na(x)){
+    return ("")
+  }
+  
+  if (x == TRUE){
+    return ("✓")
+  }else{
+    return ("X")
+  }
+}
+
+
+table_df <- ds_name_with_og_age_trend_df %>% 
+  left_join(ds_name_with_publicaiton_bias, by = c("dataset")) %>% 
+  left_join(ds_name_with_method_adaptation, by = c("dataset")) %>% 
+  left_join(ds_name_with_bh, by = c("dataset")) %>% 
+  left_join(ds_name_with_toddler, by = c("dataset")) %>% 
+  rowwise() %>% 
+  mutate_if(is_logical, logical_to_symbol) %>% 
+  mutate(
+    summary = case_when(
+      dataset == "Abstract rule learning" ~ "Unknown", 
+      dataset == "Audio-Visual Congruence" ~ "Not applicable.", 
+      dataset == "Categorization bias" ~ "More severe publication bias for younger infants.", 
+      dataset == "Cross-situational word learning" ~ "Late emergence of growth.",
+      dataset == "Familiar word recognition" ~ "Not applicable.", 
+      dataset == "Gaze following (combined)" ~ "Not applicable.", 
+      dataset == "Label advantage in concept learning" ~ "Unknown", 
+      dataset == "Language discrimination and preference (discrimination)" ~ "Unknown", 
+      dataset == "Language discrimination and preference (preference)" ~ "Unknown", 
+      dataset == "Mispronunciation sensitivity" ~ "Late emergence of growth.", 
+      dataset == "Mutual exclusivity" ~ "Not applicable",
+      dataset == "Natural speech preference" ~ "Unknown",
+      dataset == "Neonatal Imitation" ~ "Not applicable", 
+      dataset == "Online word recognition" ~ "Not applicable", 
+      dataset == "Prosocial agents" ~ "Unknown", 
+      dataset == "Simple arithmetic competences" ~ "Unknown", 
+      dataset == "Sound symbolism" ~ "Not applicable", 
+      dataset == "Statistical sound category learning" ~ "Not applicable", 
+      dataset == "Statistical word segmentation" ~ "Unknown",
+      dataset == "Switch task" ~ "Unknown", 
+      dataset == "Syntactic bootstrapping" ~ "More severe publication bias for younger infants.", 
+      dataset == "Vowel discrimination (native)" ~ "Unknown", 
+      dataset == "Vowel discrimination (non-native)" ~ "More severe publication bias for younger infants.",
+      dataset == "Word Segmentation (combined)" ~ "Unknown", 
+      dataset == "Infant directed speech preference" ~ "Unknown"
+    )
+  ) %>% 
+  mutate(
+     dataset = case_when(
+      dataset == "Language discrimination and preference (discrimination)" ~ "Language discrimination", 
+      dataset == "Language discrimination and preference (preference)" ~ "Language preference",
+      dataset == "Gaze following (combined)" ~ "Gaze following", 
+      dataset == "Word Segmentation (combined)" ~ "Word segmentation", 
+      TRUE ~ dataset
+  ))
+  
+  
+kable(table_df,
+      #"html",
+      booktabs = T,
+      align = c("l"),
+      col.names = c("","","Weight Function","Egger's Test", "", "", "", "")) %>%
+  kable_styling("striped", full_width = F,
+                position = "left", font_size = 10) %>% 
+  add_header_above(c("Dataset" = 1, "Linear Growth" = 1, "Publication Bias" = 2, 
+                   "Methods Adaptation" = 1, "Theoretical Constraints" = 1, "Late emergence of growth"= 1, "Why is there no growth?"))  
+   
+
+
+
+
+```
+
+```{r}
+apa <- function(x, title = " ") {
+  gt(x) %>%
+  tab_options(
+    table.border.top.color = "white",
+    heading.title.font.size = px(16),
+    column_labels.border.top.width = 3,
+    column_labels.border.top.color = "black",
+    column_labels.border.bottom.width = 3,
+    column_labels.border.bottom.color = "black",
+    table_body.border.bottom.color = "black",
+    table.border.bottom.color = "white",
+    table.width = pct(100),
+    table.background.color = "white"
+  ) %>%
+  cols_align(align="center") %>%
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = c("top", "bottom"),
+        color = "white",
+        weight = px(1)
+      ),
+      cell_text(
+        align="center"
+      ),
+      cell_fill(color = "white", alpha = NULL)
+      ),
+    locations = cells_body(
+      columns = everything(),
+      rows = everything()
+    )
+  ) %>%
+    #title setup
+    tab_header(
+    title = html("<i>", title, "</i>")
+  ) %>%
+  opt_align_table_header(align = "left")
+}
+
+#library(papaja)
+#apa_table(table_df)
+
+```
+

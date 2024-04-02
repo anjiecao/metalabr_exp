@@ -259,6 +259,7 @@ egger_test_df <- d %>%
 
 saveRDS(egger_test_df, here("cached_data/h1_egger_test.rds"))
 
+egger_test_df <- readRDS(here("cached_data/h1_egger_test.rds"))
 
 
 
@@ -290,7 +291,10 @@ egger_test_df %>%
       (younger_sig == FALSE & older_sig == FALSE) ~ "no pub bias"
     )
   ) %>% 
-  filter(comparison_direction == "younger_more_severe")
+  saveRDS(here("cached_data/pub_bias_egger_test.Rds"))
+
+#%>% 
+#  filter(comparison_direction == "younger_more_severe")
 
 egger_sig <- egger_test_df %>%
   select(ds_clean, age_group, limit_est, pval) %>% 
@@ -350,9 +354,12 @@ bias_lrt %>%
       (younger_sig == FALSE & older_sig == FALSE) ~ "no pub bias"
     )
   ) %>% 
+  saveRDS(here("cached_data/pub_bias_weight_function.Rds"))
+
+#%>% 
   #filter(ds_clean %in% egger_sig$ds_clean)
   #filter(comparison_direction == "younger_more_severe")
-  filter(ds_clean %in% c("Audio-Visual Congruence", "Categorization bias", "Syntactic bootstrapping"))
+  #filter(ds_clean %in% c("Audio-Visual Congruence", "Categorization bias", "Syntactic bootstrapping"))
 ```
 
 ```{r}

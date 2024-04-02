@@ -1,0 +1,52 @@
+
+## Datasets 
+
+Datasets were retrieved from Metalab. As of February 2024, Metalab hosted 32 datasets in total, with research areas ranging from language learning to cognitive development. All datasets included effect size estimates converted to standardized mean difference (SMD; also known as Cohen’s *d*) as well as estimates of effect size variance and a variety of other moderators (e.g., average age of participants) provided by the contributors. There were 2 desiderata for the datasets to be included in the final analysis: 
+
+1. The dataset must describe an experimental (non-correlational) effect that uses behavioral measures, and 
+2. For a dataset that has already been published, the meta-analytic effect reported in the published form must not be null (i.e., must be significantly different than zero). 
+
+Five datasets did not meet the first desideratum (*Pointing and vocabulary (concurrent)*; *Pointing and vocabulary (longitudinal)*; *Video deficit*; *Symbolic play*; *Word segmentation (neuro)*), and one dataset did not meet the second desideratum (*Phonotactic learning*). These datasets were not included in the analysis. 
+
+For the remaining 26 datasets, we made the following modifications. Following the organization in the original meta-analysis [@gasparini2021quantifying], we separated the Language discrimination and preference dataset into two datasets, one for discrimination and one for preference. We also combined two pairs of datasets because they were testing the same experimental effects: *Gaze following (live)* and *Gaze following (video)* was combined into *Gaze following (combined)*; *Function word segmentation* and *Word segmentation (behavioral)* was combined into *Word segmentation (combined)*. We also replaced the *Infant directed speech preference* dataset with a more up-to-date version reported in @zettersten2023evidence. 
+
+To make the comparison more equivalent to each other, we would run models with the same random effect structure specifications across all datasets. To achieve this goal, we recoded the relevant grouping variables in the datasets with missing grouping variables. 
+
+Since we were mostly interested in the age trajectory of these constructs in early childhood, we further trimmed the datasets to include only effect sizes from participants under 36 months of age. This decision did not qualitatively affect our findings as most datasets did not include data above age 36 months. The final analysis included 25 datasets in total. Table 1 presented the names of all the datasets, along with the number of effect sizes and participants included for each dataset. 
+
+## Methods
+
+All of the statistical analyses were conducted in R. Meta-analytic models were fit using the metafor package [@viechtbauer2010conducting]. This was an exploratory study in which no hypotheses were pre-registered.
+
+For each dataset, we considered four functional forms as possible candidates for the shape of the developmental trajectory: linear, logarithmic, quadratic, and constant. A linear form is the most common assumption in the literature, whereas logarithmic and quadratic were chosen to represent sublinear growth and superlinear growth, respectively. The constant form served as a baseline null hypothesis for the other alternative growth patterns. Although other, more complex growth patterns are of course possible, we opted to compare these forms as a first pass. Note that the constant model includes one parameter (an intercept), linear and logarithmic models include two parameters (an intercept and a slope), and the quadratic model includes three parameters (intercept, slope, and quadratic growth term). 
+
+For all analyses, we fit multilevel random-effects meta-regression models using nested random intercepts to account for both the testing of individual samples in multiple conditions (e.g., in a between-participants design) and multiple studies within a single paper. Meta-regression models predicted effect sizes (standardized mean difference / Cohen’s d) with mean age in months in different functional forms. We fit four meta-regression models in total for each dataset. 
+
+## Results
+
+```{r}
+delta_aic_df <- readRDS(here("cached_data/delta_aic_df.Rds"))
+total_n <- nrow(delta_aic_df)
+n_has_any_meaningful_difference <- delta_aic_df %>% 
+  filter(if_any(where(is.numeric), ~ .x > 4)) %>% 
+  nrow()
+n_has_no_differnece <- total_n - n_has_any_meaningful_difference
+```
+
+### Model comparison 
+
+Our initial goal was to compare the fit of models with different functional forms for each meta-analysis. Because models differed in their complexity (number of parameters), we extracted the corrected AIC (AICc) for each model. The model with the lowest AICc was considered the baseline model, and all the remaining models were compared against the baseline. The remaining model each received a $\Delta_{AIC}$, which was the difference between the AIC of the model and the AIC of the baseline model. Following standard convention, we treated $\Delta_{AIC} > 4$ as the statistical significance threshold [@burnham2004multimodel]. A baseline model was significantly better than an alternative model if and only if the alternative model had  $\Delta_{AIC} > 4$. 
+
+Surprisingly, the four functional forms could not be meaningfully distinguished in `r n_has_no_differnece` out of `r total_n` datasets.. (This situation typically arises because the data are constant and hence more complex models with zero parameters fit the data equally well ^[In the situation of a completely constant pattern of effects across age, the maximal difference in model fit would be an AICc of exactly 4 between the constant and quadratic model, reflecting a two-parameter difference.]). The remaining `r n_has_any_meaningful_difference` datasets yielded meaningful contrasts between different functional forms, but the linear form was not the best-fitting form for any dataset. Table 2 shows the model comparison results for each dataset. Figure 1 shows the prediction of each functional form.  
+
+
+### Linearity and Positive Increase Assumption
+
+One limitation of the model comparison approach is that it does not quantify growth over time. To further examine the positive increase assumption, we estimated linear meta-regression models and examined the estimates on the age predictor. We found that the slope estimate for age was not significantly different from zero the in majority of the datasets (17/25; Fig 2). 
+
+## Discussion 
+
+We conducted model comparisons to assess the functional forms of age-related change across 25 datasets. Four functional forms—Logarithmic, Linear, Quadratic, and Constant—were largely indistinguishable within most datasets. Notably, in datasets where contrasts were meaningful, linear models received no support, challenging the prevalent linearity assumption for early linguistic and cognitive development. Further, we only detected any positive growth in 8/25 meta-analyses. Past work has successfully revealed age-related changes using meta-analysis [e.g. @best2015age; @sugden2017meta; @mccartney1990growing]. But in most datasets that we have considered, effect size does not increase with age. Why? 
+
+
+

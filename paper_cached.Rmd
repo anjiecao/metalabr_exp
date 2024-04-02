@@ -1,0 +1,65 @@
+```{r}
+library(tidyverse)
+library(here)
+
+d <- read_csv(here("data/metalab_data_mini.csv")) %>% 
+  filter(mean_age_months <= 36)
+
+full_d <- read_csv(here("data/metalab_data_mini.csv")) 
+source(here("analysis/helper/model_comparison_help.r"))
+```
+
+
+# Estimating Developmental Change
+
+```{r}
+all_slope_estimates <- lapply(unique(d$ds_clean), 
+       function(name){
+         print(name)
+         get_model_fit_df(d, name, NULL)
+       }) %>% 
+  bind_rows()
+age_models_df <- lapply(unique(d$ds_clean), 
+       function(name){
+         print(name)
+         get_compare_IC_df(d, name, NULL)
+       }) %>% 
+  bind_rows()
+all_age <- full_age_models_df %>% 
+  filter(ic == "AICc") 
+
+all_age_pred <- lapply(seq(1, nrow(all_age)), 
+       function(x){
+         get_all_age_model_prediction(all_age$dataset[[x]], all_age, all_age$model_spec[[x]], all_age$model_spec_clean[[x]], d)
+       }) %>% 
+  bind_rows() 
+
+#get the delta AICc
+age_df_wide <- age_models_df %>% 
+  filter(ic == "AICc") %>% 
+  rename(Dataset = dataset) %>% 
+  select(REML, model_spec_clean, Dataset) %>% 
+  pivot_wider(names_from = model_spec_clean, 
+              values_from = REML)
+
+age_df_wide$min <- apply(age_df_wide[c('Linear','Log', 'Quadratic', 'Const')], 1, min)
+age_df_wide <- age_df_wide %>% 
+  mutate(d_linear = Linear - min, 
+         d_log = Log - min, 
+         d_quad = Quadratic - min, 
+         d_const= Const - min) %>% 
+  select(Dataset, d_linear, d_log, d_quad, d_const) %>% 
+  rename(Linear = d_linear, 
+         Log = d_log, 
+         Quadratic = d_quad, 
+         Const = d_const) %>% 
+   mutate(across(where(is.numeric), round, 2)) 
+
+saveRDS(all_slope_estimates, here("cached_data/all_slope_estimates.Rds"))
+saveRDS(age_models_df, here("cached_data/age_models_df.Rds"))
+saveRDS(all_age_pred, here("cached_data/full_age_pred_df.RDS"))
+saveRDS(age_df_wide, here("cached_data/delta_aic_df.Rds"))
+
+```
+ 
+ 
