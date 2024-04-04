@@ -63,3 +63,371 @@ saveRDS(age_df_wide, here("cached_data/delta_aic_df.Rds"))
 ```
  
  
+# Hypothesis 1: Publication bias 
+
+## Egger's test
+
+```{r}
+get_tidy_regtest <- function(regtest_res){
+  tibble(
+    "zval" = regtest_res$z_val, 
+    "pval" = regtest_res$pval,
+    "limit_est" = regtest_res$est, 
+    "lb" = regtest_res$ci.lb,
+    "ub" = regtest_res$ci.ub
+  )
+}
+
+age_summary <- d %>% 
+  group_by(ds_clean) %>% 
+  summarise(mid_point = median(mean_age_months))
+
+egger_test_ok <- d %>% 
+  left_join(age_summary, by = c("ds_clean")) %>% 
+  mutate(
+    age_group = case_when(
+      mean_age_months < mid_point ~ "younger", 
+      TRUE ~ "older"
+    )
+  ) %>%
+  group_by(ds_clean, age_group) %>% 
+  count() %>% 
+  filter(n >= 20) %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  filter(n == 2)
+
+
+egger_test_df <- d %>% 
+  left_join(age_summary, by = c("ds_clean")) %>% 
+  mutate(
+    age_group = case_when(
+      mean_age_months < mid_point ~ "younger", 
+      TRUE ~ "older"
+    )
+  ) %>%
+  group_by(ds_clean, age_group) %>% 
+  filter(ds_clean %in% egger_test_ok$ds_clean) %>% 
+  nest() %>% 
+  mutate(
+    reg_fit = map(data, ~ get_tidy_regtest(regtest(x = .x$d_calc, vi = .x$d_var_calc)))
+  ) %>% 
+  unnest(reg_fit)
+
+saveRDS(egger_test_df, here("cached_data/h1_egger_test.rds"))
+
+```
+
+## Weight bias analysis
+
+```{r}
+source(here("analysis/helper/pubbias_correction.R"))
+
+bias_lrt <- lapply(
+  unique(d$ds_clean), 
+  function(name){
+    tryCatch(get_pub_bias_lrt(d, name), 
+             warning = function(w){
+               tibble("ds_clean" = name, 
+                      "warning" = as.character(w))
+             })
+  }
+) %>% bind_rows()
+
+bias_estimates <- lapply(
+  unique(d$ds_clean), 
+  function(name){
+    tryCatch(get_pub_bias_estimates(d, name), 
+             warning = function(w){
+               tibble("ds_clean" = name, 
+                      "warning" = as.character(w))
+             })
+  }
+) %>% bind_rows()
+
+saveRDS(bias_lrt, here("cached_data/h1_bias_lrt.rds"))
+```
+
+# Hypothesis 2: Method adaptation 
+
+```{r}
+
+source(here("analysis/helper/model_comparison_help.r"))
+source(here("analysis/helper/bootsrap_ci.R"))
+
+d <- read_csv(here("data/metalab_data_kitchensink.csv"))
+method_d <- (read_csv(here("data/ks_info.csv"))) %>% 
+  filter(!is.na(var)) 
+
+study_with_multiple_age_group_d <- d %>% 
+  group_by(ds_clean, short_cite) %>%
+  filter(mean_age_months < 48) %>% 
+  summarise(
+    max_mean_age_months = max(mean_age_months), 
+    min_mean_age_months = min(mean_age_months)
+  ) %>% 
+  mutate(diff = max_mean_age_months - min_mean_age_months) %>% 
+  filter(diff > 1) %>% 
+  distinct(ds_clean, short_cite) %>% 
+  ungroup()
+
+
+
+var_selection <- method_d %>%
+  filter(!is.na(var)) %>% 
+  # Split the column values and unnest to keep them in a list-column
+  mutate(cols = str_split(`var`, " \\+ ")) %>% 
+  mutate(cols =  lapply(cols, function(x) gsub("\\s+", "", x)))
+
+
+study_with_single_method_d <- lapply(
+  seq(1, nrow(method_d)), 
+  function(id){
+    d %>%
+    filter(ds_clean == var_selection$ds_clean[[id]]) %>% 
+    select(
+      ds_clean,
+      short_cite, 
+      all_of(var_selection$cols[[id]])) %>% 
+    mutate_if(is.numeric, as.character) %>% 
+    rowwise() %>%
+    mutate(meta_method = paste(c_across(-c(ds_clean, short_cite)), collapse = ";")) %>% 
+    distinct(ds_clean, meta_method, short_cite) %>% 
+    group_by(ds_clean, short_cite) %>% 
+    count()
+  }
+) %>% 
+  bind_rows() %>% 
+  filter(n == 1) %>% 
+  rename(n_method_group = n)
+
+single_method_multiple_age <- study_with_single_method_d %>% 
+  filter(short_cite %in% study_with_multiple_age_group_d$short_cite)
+
+delta_age_d <-  d %>% 
+  filter(ds_clean %in% (single_method_multiple_age %>% ungroup() %>%  distinct(ds_clean) %>% pull()), 
+         short_cite %in% (single_method_multiple_age %>% ungroup() %>%  distinct(short_cite) %>% pull())) %>% 
+  group_by(ds_clean, short_cite) %>% 
+  summarise(min_age = min(mean_age_months)) %>% 
+  left_join(d %>% 
+  filter(ds_clean %in% (single_method_multiple_age %>% ungroup() %>%  distinct(ds_clean) %>% pull()), 
+         short_cite %in% (single_method_multiple_age %>% ungroup() %>%  distinct(short_cite) %>% pull())), 
+  by = c("ds_clean", "short_cite")) %>% 
+  select(ds_clean, short_cite, mean_age_months, same_infant, unique_row, min_age, d_calc, d_var_calc) %>% 
+  mutate(delta_age = mean_age_months - min_age)
+
+
+
+delta_age_model <- lapply(
+  seq(1, nrow(delta_age %>% distinct(ds_clean))), 
+  function(x){
+    get_model_fit_df(delta_age, ds_name = (delta_age %>% distinct(ds_clean) %>% pull())[[x]], NULL, 
+                     age_type = "delta_age")
+  }
+) %>% 
+  bind_rows()
+
+write_rds(delta_age_d, here("cached_data/delta_age_d.Rds"))
+write_rds(single_method_multiple_age, here("cached_data/single_method_multiple_age.Rds"))
+write_rds(delta_age_model, here("cached_data/delta_age.Rds"))
+
+```
+
+# Hypothesis 3: Better half 
+
+```{r}
+d <- read_csv(here("data/metalab_data_kitchensink.csv"))
+supp_d <- read_csv(here("data/rework/ma_paper_supplement.csv"))
+
+# sort out the tidy d and 
+tidy_supp_d <- supp_d %>% 
+  select(ds_clean, better_half_identified, better_half_code) %>% 
+  filter(!is.na(better_half_code)) %>% 
+  separate(
+    better_half_code, into = c("d1", "d2"), sep = ";"
+  ) %>% 
+  pivot_longer(cols = c("d1", "d2"), 
+               values_to = "code", 
+               names_to = "name") %>% 
+  filter(!is.na(code)) %>% 
+  select(-name) %>% 
+  group_by(ds_clean) %>% 
+  mutate(half_id = row_number())
+
+# get all the better halves 
+
+better_halves <- lapply(
+  seq(1, nrow(tidy_supp_d)), 
+  function(id){
+    print(tidy_supp_d$ds_clean[[id]])
+    print(tidy_supp_d$code[[id]])
+    #string = tidy_supp_d$code[[id]]
+    code_expr = rlang::parse_expr(tidy_supp_d$code[[id]])
+    d %>% 
+      filter(ds_clean == tidy_supp_d$ds_clean[[id]]) %>% 
+      filter(!!code_expr) %>% 
+      mutate(ds_half = paste0(ds_clean, "_", "half", tidy_supp_d$half_id[[id]]))
+  }
+) %>% 
+  bind_rows() %>% 
+  group_by(ds_clean, ds_half) %>% 
+  nest()
+
+worse_halves <- lapply(
+  seq(1, nrow(tidy_supp_d)), 
+  function(id){
+    print(tidy_supp_d$ds_clean[[id]])
+    print(tidy_supp_d$code[[id]])
+    #string = tidy_supp_d$code[[id]]
+    code_expr = rlang::parse_expr(tidy_supp_d$code[[id]])
+    d %>% 
+      filter(ds_clean == tidy_supp_d$ds_clean[[id]]) %>% 
+      filter(!(!!code_expr)) %>% 
+      mutate(ds_half = paste0(ds_clean, "_", "half", tidy_supp_d$half_id[[id]], "_worse"))
+  }
+) %>% 
+  bind_rows() %>% 
+  group_by(ds_clean, ds_half) %>% 
+  nest()
+
+# get all the full datasets from the better halves 
+
+better_halves_full <- lapply(
+  seq(1, nrow(tidy_supp_d)), 
+  function(id){
+    d %>% 
+      filter(ds_clean == tidy_supp_d$ds_clean[[id]]) %>% 
+      mutate(ds_half = "full")
+  }
+) %>% 
+  bind_rows() %>% 
+  group_by(ds_clean, ds_half) %>% 
+  nest()
+
+
+better_halves_all <- bind_rows(better_halves, better_halves_full)
+
+wald_test_df <- lapply(
+  better_halves$ds_half,
+  function(x){
+    better_data = (better_halves %>% filter(ds_half == x))$data
+    worse_data = (worse_halves %>% filter(grepl(x, ds_half)))$data
+    
+    better_res = rma.mv(d_calc ~ 1, 
+                         V = d_var_calc, 
+                          random = ~ 1 | short_cite/same_infant/unique_row, 
+                          data = better_data)
+    
+    worse_res = rma.mv(d_calc ~ 1, 
+                         V = d_var_calc, 
+                          random = ~ 1 | short_cite/same_infant/unique_row, 
+                          data = worse_data)
+    
+    dat.comp <- data.frame(estimate = c(coef(better_res), coef(worse_res)), stderror = c(better_res$se, worse_res$se),
+                       meta = c("better","worse"), tau2 = round(c(better_res$tau2, worse_res$tau2),3))
+    
+    comparison_res = rma(estimate, sei=stderror, mods = ~ meta, method="FE", data=dat.comp, digits=3) %>% 
+      broom::tidy() %>% 
+      mutate(half_name = x)
+  }
+) %>% 
+  bind_rows() 
+
+
+
+model_comparison <- lapply(
+  seq(1, nrow(better_halves_all)),
+  function(id){
+    get_compare_IC_df(better_halves_all$data[[id]], 
+                      ds_name = better_halves_all$ds_clean[[id]], 
+                      moderators = NULL) %>% 
+      mutate(ds_half = better_halves_all$ds_half[[id]])
+  }
+) %>% 
+  bind_rows()
+
+
+
+age_model_estimates <- lapply(
+  seq(1, nrow(better_halves_all)),
+  function(id){
+    get_model_estimate_df(better_halves_all$data[[id]], 
+                      ds_name = better_halves_all$ds_clean[[id]], 
+                      moderators = "age") %>% 
+      mutate(ds_half = better_halves_all$ds_half[[id]])
+  }
+) %>% 
+  bind_rows()
+
+ma_estimates <- lapply(
+  seq(1, nrow(better_halves_all)),
+  function(id){
+    get_model_estimate_df(better_halves_all$data[[id]], 
+                      ds_name = better_halves_all$ds_clean[[id]], 
+                      moderators = NULL) %>% 
+      mutate(ds_half = better_halves_all$ds_half[[id]])
+  }
+) %>% 
+  bind_rows()
+
+
+saveRDS(model_comparison, here("cached_data/better_half_model_comparison.Rds"))
+saveRDS(age_model_estimates, here("cached_data/better_half_age_model_estimate.Rds"))
+saveRDS(ma_estimates, here("cached_data/better_half_ma_estimate.Rds"))
+saveRDS(wald_test_df,here("cached_data/better_half_wald_df.Rds"))
+
+```
+
+# Hypothesis 4: Development emerges later 
+
+```{r}
+source(here("analysis/helper/model_comparison_help.r"))
+source(here("analysis/helper/model_comparison_help.r"))
+
+d <- read_csv(here("data/metalab_data_mini.csv"))
+
+too_young_domain <- d %>% 
+  group_by(ds_clean) %>% 
+  summarise(max_age = max(mean_age_months)) %>% 
+  filter(max_age < 12)
+
+# looking at only 12 month and above
+toddler_d_with_enough_data <- d %>% 
+  filter(!ds_clean %in% too_young_domain$ds_clean) %>% 
+  filter(mean_age_months > 12) %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  filter(n > 10)
+
+toddler_d <- d %>% 
+  filter(ds_clean %in% toddler_d_with_enough_data$ds_clean) %>% 
+  filter(mean_age_months > 12) 
+  
+full_d <- d %>% 
+  filter(!ds_clean %in% too_young_domain$ds_clean) 
+
+toddler_comparison <- lapply(
+  unique(toddler_d$ds_clean), 
+  function(ds_name){
+    print(ds_name)
+    get_compare_IC_df(toddler_d, ds_name, NULL)
+  }
+) %>% 
+  bind_rows() %>% 
+  mutate(ds_type = "toddler")
+
+all_toddler_slope_estimates <- lapply(unique(toddler_d$ds_clean), 
+       function(name){
+         print(name)
+         get_model_fit_df(toddler_d, name, NULL)
+       }) %>% 
+  bind_rows() %>% 
+  mutate(data_type = "all_toddler")
+
+
+write_rds(toddler_comparison, here("cached_data/above_12_month_models_df.Rds"))
+write_rds(all_toddler_slope_estimates, here('cached_data/all_toddler_slope_estimates.Rds'))
+
+```
+
+ 

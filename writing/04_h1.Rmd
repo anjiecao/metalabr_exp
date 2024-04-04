@@ -1,0 +1,64 @@
+
+## Age-related publication bias 
+
+We first consider whether age-related selection bias can explain the lack of developmental changes in our datasets. If studies with younger infants suffered from publication bias more, then their effect sizes would be more inflated, obscuring possible developmental changes. 
+
+### Methods
+
+There are many methods to detect publication bias. One of the most common approaches is Egger’s test [@egger1997bias], which examines the relationship between the studies’ effect sizes and their precision. A significant result from Egger’s test indicated an asymmetry in the funnel plot, suggesting the presence of publication bias. This method is more sensitive than the rank correlation approach, another common publication bias detection method [@begg1994operating]. However, Egger’s test can not accommodate predictors other than the study’s precision. As a result, we also turned to the weight-function model developed by @vevea1995general. This method detected publication bias by likelihood ratio tests: a bias-corrected model is pitted against the original model to see if the former provides a better fit than the latter. A positive result indicates the presence of publication bias. 
+
+To detect age-related publication bias, we split each dataset by the median of the average participant age associated with each effect size  (in months). We then run both Egger’s test and the weight-function model on each half of the dataset. We compared the test outcomes from both tests across the two halves of the datasets. For Egger’s test, we used the regtest function implemented in `metafor` [@viechtbauer2010conducting]. For the weight-function model, we used the package `weightr` [@weightr2019coburn] and specified random-effect meta-regression models predicting effect sizes with mean age in months. 
+
+### Results and discussion 
+
+Egger’s test was run on all but the 4 datasets in which either half of the datasets contained less than 20 effect sizes. Previous study has shown that Egger’s test has reduced sensitivity in datasets with less than 20 studies [@sterne2001investigating]. For similar reasons, 7 datasets were excluded in the weight-function analysis. 
+
+```{r}
+egger_test_df <- readRDS(here("cached_data/h1_egger_test.rds"))
+bias_lrt_df <-  readRDS(here("cached_data/h1_bias_lrt.rds"))
+
+n_egger_test_evidence <- egger_test_df %>% select(ds_clean, age_group, pval) %>% 
+  pivot_wider(names_from = age_group, 
+              values_from = pval) %>% 
+  filter(younger < .05, older > 0.05) %>% 
+  ungroup() %>% 
+  count() %>% pull(n)
+
+egger_test_df <- egger_test_df %>% select(ds_clean, age_group, pval) %>% 
+  pivot_wider(names_from = age_group, 
+              values_from = pval)
+
+bias_lrt_df <- bias_lrt_df %>% filter(!is.na(test_data)) %>% 
+  filter(test_data != "full") %>% 
+  select(ds_clean, test_data, lrchisq, pvalue) %>% 
+  pivot_wider(names_from = test_data, 
+              values_from = c(pvalue, lrchisq)) %>% 
+  filter(pvalue_younger < .05, pvalue_older > 0.05) %>% 
+  mutate_if(is.numeric, round, 2)
+```
+
+Egger’s test suggested that in `r n_egger_test_evidence` out of 25 datasets, there was evidence for publication bias in the younger half but not in the older half (*Audio-Visual Congruence*, *Categorization bias*, *Syntactic bootstrapping*). However, this result was not corroborated by the weight-function analysis. For these three datasets, the weight function analysis did not find evidence for publication bias in either half of the three datasets. This suggests that the significant results found by Egger’s test might be due to factors other than publication bias. The weight-function analysis did find evidence for publication bias in the younger half but not the older half in two datasets: *Mutual exclusivity* (Younger: $\chi^2$ = `r filter(bias_lrt_df, ds_clean == "Mutual exclusivity")$lrchisq_younger`, *p* < 0.01; Older: $\chi^2$ = `r filter(bias_lrt_df, ds_clean == "Mutual exclusivity")$lrchisq_older`, *p* = `r filter(bias_lrt_df, ds_clean == "Mutual exclusivity")$pvalue_older`) and *Vowel discrimination (non-native)* (Younger:  $\chi^2$ = `r filter(bias_lrt_df, ds_clean == "Vowel discrimination (non-native)")$lrchisq_younger`, *p* = `r filter(bias_lrt_df, ds_clean == "Vowel discrimination (non-native)")$pvalue_younger`;  Older: $\chi^2$ = `r filter(bias_lrt_df, ds_clean == "Vowel discrimination (non-native)")$lrchisq_older`, *p* = `r filter(bias_lrt_df, ds_clean == "Vowel discrimination (non-native)")$pvalue_older`). These two datasets yielded significant results for both halves in Egger’s test. 
+
+```{r}
+slope_estimates <- readRDS(here("cached_data/all_slope_estimates.Rds")) %>% 
+  filter(term != "intercept") %>% 
+  mutate_if(is.numeric, round, 2)
+
+cat_bias_df <- slope_estimates %>% 
+  filter(dataset == "Categorization bias")
+
+me_df <- slope_estimates %>% 
+  filter(dataset == "Mutual exclusivity")
+
+avc_df <- slope_estimates %>% 
+  filter(dataset == "Audio-Visual Congruence")
+
+sb_df <- slope_estimates %>% 
+  filter(dataset == "Syntactic bootstrapping")
+
+vd_nn_df <- slope_estimates %>% 
+  filter(dataset == "Vowel discrimination (non-native)")
+```
+
+
+Overall, we found little evidence for more severe publication bias among the younger infants. The Egger’s test and the function-weight analysis did not yield converging evidence, suggesting that factors other publication bias may be at play in contributing to the results. Interestingly, out of the five datasets that yield significant results for the younger participants, 2 of which were datasets that originally showed significant age-related changes (*Categorization bias*: $\beta$ = `r cat_bias_df$estimate`, *SE* = `r cat_bias_df$std.error`, *z* = `r cat_bias_df$statistic`, *p* < 0.01; *Mutual exclusivity*:  $\beta$ = `r me_df$estimate`, *SE* = `r me_df$std.error`, *z* = `r me_df$statistic`, *p* < 0.01), which was in contrast with the other three datasets in which the age estimates were trending at the negative direction (*Audio-Visual Congruence*: $\beta$ = `r avc_df$estimate`, *p* = `r avc_df$p.value`; *Syntactic bootstrapping*: $\beta$ = `r sb_df$estimate`, *p* = `r sb_df$p.value`; *Vowel discrimination (non-native)*: $\beta$ = `r vd_nn_df$estimate`, *p* = `r vd_nn_df$p.value`). Taken together, we found limited evidence that selective publication bias explains the lack of age-related change across the board. 

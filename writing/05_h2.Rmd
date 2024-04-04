@@ -1,0 +1,36 @@
+
+## Methodological adaptation for older infants  
+
+In experiments with young children, many design decisions are made to ensure the paradigms are age appropriate [@byers2022six]. For older children, more behavioral measures are available and longer experiments are made possible by  increased attention span. As a result, experimenters might test more subtle experimental contrasts. Perhaps the increasing difficulty or subtlety  of experimental conditions for older infants mask age-related increase in effect sizes related to a particular construct. For example, imagine that different experimenters wanted to study word learning with 12- and 24-month-olds. The experimenter working with the younger group might choose a paradigm in which only two novel words were taught, while the experimenter working with the older children might choose to teach four. The resulting effect for older children might be weaker despite overall improvement in the underlying construct.
+
+The accessibility of different methods could also potentially cause an instance of Simpson’s paradox [@kievit2013simpson]. Imagine there were two methods, method A and method B, with the former having lower task demands than the latter. Due to its low task demands, method A would be more likely to be used on younger infants and causes larger effect sizes. In contrast, method B would be more likely to be used on older infants and results in smaller effect sizes. Although the age trend could be positive within each method, when pooling across studies from the two methods, the trend would then be negative, canceling out age-related changes patterns. 
+
+Since it is difficult to code for task demands across all studies, we explore whether methodological adaptation influences the developmental trend from the other side: instead of looking at method adaptation with age, we focus on studies using identical methods to test multiple age groups. This subset of datasets should provide the best chance of detecting age-related changes in the absence of methodological variation. 
+
+## Methods
+
+We first needed to identify the subset of studies in each dataset that satisfy the following two criteria: (1) the same paper tested multiple age groups, and (2) the multiple age groups were all tested using the same experimental design and measure. The first criterion was operationalized as having a paper with multiple age groups with an age difference greater than  one month. The second criterion was operationalized based on methodological moderators coded by the original authors and available in MetaLab. 
+
+Within the effects selected for each dataset, we calculated $\Delta_{age}$ for each effect size. $\Delta_{age}$ was the difference between the age associated with a particular effect size and the minimum age in each subset of the dataset. 
+
+```{r}
+delta_age_d <- readRDS(here("cached_data/delta_age_d.Rds"))
+single_method_multiple_age <- readRDS(here("cached_data/single_method_multiple_age.Rds"))
+delta_age_model <- readRDS(here("cached_data/delta_age.Rds"))
+
+n_dataset <- delta_age_d %>% distinct(ds_clean) %>% nrow()
+n_dataset_10_plus <- delta_age_d %>% group_by(ds_clean) %>% count() %>% filter(n > 10) %>% nrow()
+
+estimates_for_delta_d <- delta_age_model %>% 
+  filter(dataset %in% (delta_age_d %>% group_by(ds_clean) %>% count() %>% filter(n > 10) %>% pull(ds_clean))) %>% 
+  filter(term == "delta_age")
+```
+
+`r n_dataset` datasets had subsets of studies fitting our criteria. We focused on the `r n_dataset_10_plus` subsets that having 10 and more effect sizes. For each subset, we applied a multilevel meta-regression model using the same nested random intercept as previously described. The model predicts effect sizes based on $\Delta_{age}$. This analysis follows the logic that, if on average there is a greater effect size when the same experiment is conducted with older children relative to younger children, then the relation of effect size to $\Delta_{age}$ should be positive.
+
+## Results and discussion 
+
+We found no significant relationship between $\Delta_{age}$ and the effect sizes in any of the dataset (all *p* > 0.05). 
+
+This analysis was necessarily constrained by the granularities of the coded moderators. The number of coded methodological moderators ranged from 1 to 9, which means that the experimental design needs to be reduced into at maximum 9 dimensions. However, even at 9 dimensions, it is possible that elements of experiment design influencing task demands were overlooked. For instance, in many domains that use visual stimuli, the particular choice of visual stimuli might significantly vary in complexity [e.g. @cao2022quantifying]. Visual complexity has long been proposed as a key factor influencing the task demands [@hunter1988multifactor], but stimulus complexity was not coded in any of our meta-analyses. In conclusion, the findings presented here should be interpreted with caution due to potential limitations in the coding of methodological moderators. 
+

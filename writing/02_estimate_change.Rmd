@@ -42,7 +42,7 @@ Surprisingly, the four functional forms could not be meaningfully distinguished 
 
 ### Linearity and Positive Increase Assumption
 
-One limitation of the model comparison approach is that it does not quantify growth over time. To further examine the positive increase assumption, we estimated linear meta-regression models and examined the estimates on the age predictor. We found that the slope estimate for age was not significantly different from zero the in majority of the datasets (17/25; Fig 2). 
+One limitation of the model comparison approach is that it does not quantify growth over time. To further examine the positive increase assumption, we estimated linear meta-regression models and examined the estimates on the age predictor. We found that the slope estimate for age was not significantly different from zero the in majority of the datasets (16/25; Fig 2). 
 
 ## Discussion 
 

@@ -3,6 +3,7 @@
 library(tidyverse)
 library(ggthemes)
 library(here)
+library(metafor)
 
 d <- read_csv(here("data/metalab_data_kitchensink.csv"))
 supp_d <- read_csv(here("data/rework/ma_paper_supplement.csv"))
@@ -91,7 +92,7 @@ better_halves_all <- bind_rows(better_halves, better_halves_full)
 ## wald test between better and worse 
 
 ```{r}
-lapply(
+wald_test_df <- lapply(
   better_halves$ds_half,
   function(x){
     better_data = (better_halves %>% filter(ds_half == x))$data
@@ -115,9 +116,9 @@ lapply(
       mutate(half_name = x)
   }
 ) %>% 
-  bind_rows() %>% 
-  filter(term == "metaworse") %>% 
-  filter(p.value < .05)
+  bind_rows() 
+
+wald_test_df %>% saveRDS(here("cached_data/better_half_wald_df.Rds"))
 
 
 bind_rows(better_halves, worse_halves) %>% 

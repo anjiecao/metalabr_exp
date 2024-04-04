@@ -68,12 +68,12 @@ r_refs("r-references.bib")
 # Seed for random number generation
 set.seed(42)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
+d <- read_csv(here("data/metalab_data_mini.csv")) 
+
 ```
 
 ```{r child = "01_introduction.Rmd"}
 ```
-
-
 
 ```{r child = "02_estimate_change.Rmd"}
 

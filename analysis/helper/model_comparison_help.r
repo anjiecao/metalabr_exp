@@ -222,7 +222,7 @@ get_model_fit_df <- function(all_ds, ds_name, moderators, age_type = "mean_age_m
     const_model_formula <-  paste0("d_calc ~ 1 + ", paste(moderators, collapse = " + "))
   }
   
-  formulas = c(linear_model_formula)
+  formulas = c(linear_model_formula, log_model_formula, qua_model_formula, const_model_formula)
   
   
   
