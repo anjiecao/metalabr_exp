@@ -169,6 +169,7 @@
 
 \linenumbers
 \usepackage{csquotes}
+\usepackage{pdflscape}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -226,6 +227,145 @@ In this work, we aim to leverage meta-analysis to examine the shape of the devel
 We acknowledge at the outset that meta-analysis has significant limitations. The quality of a meta-analysis is necessarily constrained by the quality of the existing studies (Simonsohn, Simmons, \& Nelson, 2022). If the studies being aggregated are flawed, the conclusions drawn from the meta-analysis will also be questionable. Moreover, one significant issue in interpreting meta-analysis is the heterogeneity among studies. Heterogeneity refers to the variability in study participants, interventions, outcomes, and methodologies. This diversity can make it challenging to aggregate results meaningfully, because differences between studies may reflect true variation in effects rather than a singular underlying effect size (Fletcher, 2007; Higgins \& Thompson, 2002; Huedo-Medina, Sánchez-Meca, Marı́n-Martı́nez, \& Botella, 2006; Thompson \& Sharp, 1999). Critically, understanding the source of heterogeneity often requires detailed coding of the potential moderators; this process is frequently hampered by the inadequate reporting standards prevalent in psychological literature, which often leaves essential information for coding these moderators absent (Nicholson, Deboeck, \& Howard, 2017; Publications, Journal, \& Standards, 2008). In other words, whether meta-analysis can provide insights into the nature of age-related change is dependent upon the quality of the existing literature.
 
 This paper is organized as follows. In the first section, we provide an overview on the estimated general shape of age-related change across the datasets in Metalab. To preview our findings, we found that most datasets showed relatively constant effect size across age. This finding challenges the commonly held linearity assumption and the positive increase assumption. In the second section, we test four hypotheses on why the current meta-analyses failed to reveal age-related changes: (1) age-related selection bias against younger infants; (2) methodological adaptation for older infants; (3) change in only a subset of conditions; and (4) positive growth only after infancy. We found that none of the four explanations provided a satisfying explanation for the lack of age-related change in most meta-analyses.
+
+\begin{lltable}
+
+\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:unnamed-chunk-9}}\\
+\toprule
+Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{i2} & \multicolumn{1}{c}{Citation}\\
+\midrule
+\endfirsthead
+\caption*{\normalfont{Table \ref{tab:unnamed-chunk-9} continued}}\\
+\toprule
+Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{i2} & \multicolumn{1}{c}{Citation}\\
+\midrule
+\endhead
+Abstract rule learning & 95 & 1123 & 0.22 [0.07, 0.37] & 0.80 & Rabagliati, Ferguson, \& Lew-Williams (2018)\\
+Audio-visual congruence & 92 & 4132 & 0.33 [0.19, 0.47] & 0.89 & Cox, Keren-Portnoy, Roepstorff, \& Fusaroli (2022)\\
+Categorization bias & 80 & 594 & 0.16 [-0.66, 0.99] & 0.96 & NA\\
+Cross-situational word learning & 48 & 2241 & 0.67 [0.5, 0.84] & 0.90 & NA\\
+Familiar word recognition & 34 & 586 & 0.54 [0.38, 0.69] & 0.55 & Carbajal, Peperkamp, \& Tsuji (2021)\\
+Gaze following (combined) & 81 & 1407 & 0.81 [0.61, 1.01] & 0.90 & Frank, Lewis, \& MacDonald (2016)\\
+Infant directed speech preference & 100 & 1267 & 0.37 [0.25, 0.49] & 0.71 & Dunst, Gorman, \& Hamby (2012); Zettersten et al., (2023)\\
+Label advantage in concept learning & 100 & 1644 & 0.36 [0.23, 0.48] & 0.73 & NA\\
+Language discrimination & 104 & 1479 & -0.26 [-0.4, -0.11] & 0.77 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
+Language preference & 49 & 641 & 0.11 [-0.06, 0.28] & 0.93 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
+Mispronunciation sensitivity & 249 & 2122 & 0.45 [0.24, 0.66] & 0.94 & Von Holzen \& Bergmann (2021)\\
+Mutual exclusivity & 131 & 2222 & 1.27 [0.99, 1.56] & 0.95 & Lewis et al. (2020)\\
+Natural speech preference & 55 & 786 & 0.44 [0.23, 0.65] & 0.83 & Issard, Tsuji, \& Cristia (2023)\\
+Neonatal Imitation & 336 & 2455 & 0.68 [0.4, 0.97] & 0.94 & Davis et al. (2021)\\
+Online word recognition & 14 & 330 & 1.37 [0.78, 1.96] & 0.95 & Frank, Lewis, \& MacDonald (2016)\\
+Prosocial agents & 61 & 1244 & 0.4 [0.29, 0.52] & 0.20 & Margoni \& Surian (2018)\\
+Simple arithmetic competences & 14 & 369 & 0.25 [0.04, 0.46] & 0.54 & Christodoulou, Lac, \& Moore (2017)\\
+Sound symbolism & 44 & 425 & 0.16 [-0.01, 0.33] & 0.69 & Fort et al. (2018)\\
+Statistical sound category learning & 20 & 591 & 0.29 [0.01, 0.57] & 0.58 & Cristia (2018)\\
+Statistical word segmentation & 103 & 804 & -0.08 [-0.18, 0.02] & 0.83 & Black \& Bergmann (2017)\\
+Switch task & 143 & 2764 & -0.16 [-0.25, -0.06] & 0.78 & Tsui, Byers-Heinlein, \& Fennell (2019)\\
+Syntactic bootstrapping & 60 & 832 & 0.24 [0.03, 0.44] & 0.72 & Cao \& Lewis (2022)\\
+Vowel discrimination (native) & 143 & 2418 & 0.59 [0.43, 0.75] & 0.78 & Tsuji \& Cristia (2014)\\
+Vowel discrimination (non-native) & 49 & 600 & 0.65 [0.2, 1.1] & 0.92 & Tsuji \& Cristia (2014)\\
+Word segmentation (combined) & 315 & 2910 & 0.2 [0.14, 0.26] & 0.78 & Bergmann \& Cristia (2016)\\
+\bottomrule
+\end{longtable}
+
+\end{lltable}
+
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+\begin{landscape}
+\begin{center}
+\begin{threeparttable}
+\small 
+\caption{\label{tab:unnamed-chunk-9}}
+
+\begin{tabular}{llllll}
+\toprule
+Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{i2} & \multicolumn{1}{c}{Citation}\\
+\midrule
+Abstract rule learning & 95 & 1123 & 0.22 [0.07, 0.37] & 0.80 & Rabagliati, Ferguson, \& Lew-Williams (2018)\\
+Audio-visual congruence & 92 & 4132 & 0.33 [0.19, 0.47] & 0.89 & Cox, Keren-Portnoy, Roepstorff, \& Fusaroli (2022)\\
+Categorization bias & 80 & 594 & 0.16 [-0.66, 0.99] & 0.96 & NA\\
+Cross-situational word learning & 48 & 2241 & 0.67 [0.5, 0.84] & 0.90 & NA\\
+Familiar word recognition & 34 & 586 & 0.54 [0.38, 0.69] & 0.55 & Carbajal, Peperkamp, \& Tsuji (2021)\\
+Gaze following (combined) & 81 & 1407 & 0.81 [0.61, 1.01] & 0.90 & Frank, Lewis, \& MacDonald (2016)\\
+Infant directed speech preference & 100 & 1267 & 0.37 [0.25, 0.49] & 0.71 & Dunst, Gorman, \& Hamby (2012); Zettersten et al., (2023)\\
+Label advantage in concept learning & 100 & 1644 & 0.36 [0.23, 0.48] & 0.73 & NA\\
+Language discrimination & 104 & 1479 & -0.26 [-0.4, -0.11] & 0.77 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
+Language preference & 49 & 641 & 0.11 [-0.06, 0.28] & 0.93 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
+Mispronunciation sensitivity & 249 & 2122 & 0.45 [0.24, 0.66] & 0.94 & Von Holzen \& Bergmann (2021)\\
+Mutual exclusivity & 131 & 2222 & 1.27 [0.99, 1.56] & 0.95 & Lewis et al. (2020)\\
+Natural speech preference & 55 & 786 & 0.44 [0.23, 0.65] & 0.83 & Issard, Tsuji, \& Cristia (2023)\\
+Neonatal Imitation & 336 & 2455 & 0.68 [0.4, 0.97] & 0.94 & Davis et al. (2021)\\
+Online word recognition & 14 & 330 & 1.37 [0.78, 1.96] & 0.95 & Frank, Lewis, \& MacDonald (2016)\\
+Prosocial agents & 61 & 1244 & 0.4 [0.29, 0.52] & 0.20 & Margoni \& Surian (2018)\\
+Simple arithmetic competences & 14 & 369 & 0.25 [0.04, 0.46] & 0.54 & Christodoulou, Lac, \& Moore (2017)\\
+Sound symbolism & 44 & 425 & 0.16 [-0.01, 0.33] & 0.69 & Fort et al. (2018)\\
+Statistical sound category learning & 20 & 591 & 0.29 [0.01, 0.57] & 0.58 & Cristia (2018)\\
+Statistical word segmentation & 103 & 804 & -0.08 [-0.18, 0.02] & 0.83 & Black \& Bergmann (2017)\\
+Switch task & 143 & 2764 & -0.16 [-0.25, -0.06] & 0.78 & Tsui, Byers-Heinlein, \& Fennell (2019)\\
+Syntactic bootstrapping & 60 & 832 & 0.24 [0.03, 0.44] & 0.72 & Cao \& Lewis (2022)\\
+Vowel discrimination (native) & 143 & 2418 & 0.59 [0.43, 0.75] & 0.78 & Tsuji \& Cristia (2014)\\
+Vowel discrimination (non-native) & 49 & 600 & 0.65 [0.2, 1.1] & 0.92 & Tsuji \& Cristia (2014)\\
+Word segmentation (combined) & 315 & 2910 & 0.2 [0.14, 0.26] & 0.78 & Bergmann \& Cristia (2016)\\
+\bottomrule
+\end{tabular}
+
+\end{threeparttable}
+\end{center}
+\end{landscape}
+
+
+\end{table*}
+\efloatseparator
+
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:unnamed-chunk-10}????}
+
+\begin{tabular}{lllll}
+\toprule
+Dataset & \multicolumn{1}{c}{Const} & \multicolumn{1}{c}{Linear} & \multicolumn{1}{c}{Log} & \multicolumn{1}{c}{Quadratic}\\
+\midrule
+Cross-situational word learning & \bf{0.00} & 2.44 & 2.29 & 2.55\\
+Language discrimination & \bf{0.00} & 1.32 & 0.91 & 1.59\\
+Prosocial agents & \bf{0.00} & 2.08 & 1.87 & 2.15\\
+Simple arithmetic competences & \bf{0.00*} & 6.65* & 6.74* & 6.55*\\
+Statistical word segmentation & \bf{0.00} & 1.34 & 1.51 & 1.12\\
+Switch task & \bf{0.00} & 1.12 & 1.15 & 1.06\\
+Syntactic bootstrapping & \bf{0.00} & 0.71 & 0.56 & 0.88\\
+Vowel discrimination (native) & \bf{0.00} & 1.34 & 0.99 & 1.63\\
+Vowel discrimination (non-native) & \bf{0.00} & 1.56 & 1.67 & 1.46\\
+Word segmentation (combined) & \bf{0.00} & 1.28 & 1.05 & 1.61\\
+Infant directed speech preference & \bf{0.00} & 1.57 & 1.47 & 1.53\\
+Mispronunciation sensitivity & 1.89 & \bf{0.00} & 0.05 & 0.19\\
+Online word recognition & 2.22 & \bf{0.00} & 0.23 & 0.15\\
+Sound symbolism & 3.91 & \bf{0.00} & 0.61 & 0.09\\
+Audio-visual congruence & 5.90* & 6.70* & \bf{0.00*} & 7.44*\\
+Label advantage in concept learning & 2.37 & 0.95 & \bf{0.00} & 1.63\\
+Mutual exclusivity & 9.80* & 0.58 & \bf{0.00*} & 1.38\\
+Neonatal Imitation & 2.25 & 0.36 & \bf{0.00} & 1.06\\
+Abstract rule learning & 0.44 & 0.32 & 0.86 & \bf{0.00}\\
+Categorization bias & 8.46* & 0.62 & 1.36 & \bf{0.00*}\\
+Familiar word recognition & 1.68 & 0.28 & 1.15 & \bf{0.00}\\
+Gaze following (combined) & 43.73* & 2.07 & 10.41* & \bf{0.00*}\\
+Language preference & 2.50 & 2.36 & 4.12 & \bf{0.00}\\
+Natural speech preference & 0.86 & 0.43 & 1.04 & \bf{0.00}\\
+Statistical sound category learning & 3.44 & 1.04 & 3.01 & \bf{0.00}\\
+\bottomrule
+\end{tabular}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}
+\efloatseparator
 
 \hypertarget{datasets}{%
 \subsection{Datasets}\label{datasets}}

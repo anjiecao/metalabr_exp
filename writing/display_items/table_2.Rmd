@@ -1,0 +1,72 @@
+
+# Table 2
+
+all the deltas! 
+```{r}
+library(tidyverse)
+library(metafor)
+library(here)
+source(here("analysis/helper/summary_table_help.r"))
+
+delta_df <- readRDS(here("cached_data/delta_aic_df.Rds"))
+```
+
+```{r}
+const_first <- delta_df %>% 
+  mutate(
+    Dataset = case_when(
+      Dataset == "Audio-Visual Congruence" ~ "Audio-visual congruence" , 
+      Dataset == "Language discrimination and preference (discrimination)" ~ "Language discrimination", 
+      Dataset == "Language discrimination and preference (preference)" ~ "Language preference",
+      Dataset == "Word Segmentation (combined)" ~ "Word segmentation (combined)", 
+      TRUE ~ Dataset
+    )
+  ) %>% 
+  arrange(Const) %>% 
+  filter(Const == 0)
+
+linear_first <- delta_df %>% 
+  mutate(
+    Dataset = case_when(
+      Dataset == "Audio-Visual Congruence" ~ "Audio-visual congruence" , 
+      Dataset == "Language discrimination and preference (discrimination)" ~ "Language discrimination", 
+      Dataset == "Language discrimination and preference (preference)" ~ "Language preference",
+      Dataset == "Word Segmentation (combined)" ~ "Word segmentation (combined)", 
+      TRUE ~ Dataset
+    )
+  ) %>% 
+  arrange(Linear) %>% 
+  filter(Linear == 0)
+
+log_first <- delta_df %>% 
+  mutate(
+    Dataset = case_when(
+      Dataset == "Audio-Visual Congruence" ~ "Audio-visual congruence" , 
+      Dataset == "Language discrimination and preference (discrimination)" ~ "Language discrimination", 
+      Dataset == "Language discrimination and preference (preference)" ~ "Language preference",
+      Dataset == "Word Segmentation (combined)" ~ "Word segmentation (combined)", 
+      TRUE ~ Dataset
+    )
+  ) %>% 
+  arrange(Log) %>% 
+  filter(Log == 0)
+
+quad_first <- delta_df %>% 
+  mutate(
+    Dataset = case_when(
+      Dataset == "Audio-Visual Congruence" ~ "Audio-visual congruence" , 
+      Dataset == "Language discrimination and preference (discrimination)" ~ "Language discrimination", 
+      Dataset == "Language discrimination and preference (preference)" ~ "Language preference",
+      Dataset == "Word Segmentation (combined)" ~ "Word segmentation (combined)", 
+      TRUE ~ Dataset
+    )
+  ) %>% 
+  arrange(Quadratic) %>% 
+  filter(Quadratic == 0)
+
+
+bind_rows(const_first, linear_first, log_first, quad_first) %>% 
+  select(Dataset, Const, Linear, Log, Quadratic) %>% 
+  write_rds(here("writing/display_items/table_2.Rds"))
+```
+

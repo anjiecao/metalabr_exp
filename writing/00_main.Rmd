@@ -51,6 +51,11 @@ classoption       : "man"
 output            : 
     papaja::apa6_pdf:
       latex_engine: xelatex
+      
+header-includes   : 
+    - \usepackage{pdflscape}
+
+
 
 ---
 

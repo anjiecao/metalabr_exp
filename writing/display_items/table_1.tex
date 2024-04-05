@@ -1,0 +1,347 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\hypertarget{table-1}{%
+\section{Table 1}\label{table-1}}
+
+includes: - name, - done - number of effect sizes - done - number of
+participants - done - Age Range - done - Meta-analytic effect sizes +
+confidence interval - done - I\^{}2 - done - Associated paper
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
+## v ggplot2 3.5.0     v purrr   1.0.1
+## v tibble  3.2.1     v dplyr   1.1.4
+## v tidyr   1.3.0     v stringr 1.5.0
+## v readr   2.1.3     v forcats 0.5.2
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(metafor)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: Matrix
+## 
+## Attaching package: 'Matrix'
+## 
+## The following objects are masked from 'package:tidyr':
+## 
+##     expand, pack, unpack
+## 
+## Loading required package: metadat
+## 
+## Loading the 'metafor' package (version 3.8-1). For an
+## introduction to the package please type: help(metafor)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(here)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## here() starts at /Users/caoanjie/Desktop/projects/metalabr_exp
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{source}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"analysis/helper/summary\_table\_help.r"}\NormalTok{))}
+
+\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"data/metalab\_data\_kitchensink.csv"}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## New names:
+## * `...171` -> `...125`
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat <- vroom(...)
+##   problems(dat)
+\end{verbatim}
+
+\begin{verbatim}
+## Rows: 2520 Columns: 179
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## chr (66): study_ID, long_cite, short_cite, peer_reviewed, expt_condition, sa...
+## dbl (94): unique_row, expt_num, n_1, n_2, mean_age_1, mean_age_2, x_1, x_2, ...
+## lgl (19): Linguistic, words_to_passage, edge_alignment, familiarization_voic...
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+\hypertarget{get-effect-sizes}{%
+\subsection{get effect sizes}\label{get-effect-sizes}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nested\_d }\OtherTok{\textless{}{-}}\NormalTok{ d }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(ds\_clean) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{nest}\NormalTok{() }
+  
+
+\NormalTok{es\_df }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}
+\NormalTok{  nested\_d}\SpecialCharTok{$}\NormalTok{ds\_clean, }
+  \ControlFlowTok{function}\NormalTok{(name)\{}
+\NormalTok{    data }\OtherTok{=}\NormalTok{ (nested\_d }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(ds\_clean }\SpecialCharTok{==}\NormalTok{ name))}\SpecialCharTok{$}\NormalTok{data[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{    es }\OtherTok{\textless{}{-}} \FunctionTok{get\_ma\_effect\_size}\NormalTok{(data) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ds\_clean =}\NormalTok{ name)}
+\NormalTok{  \}}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{bind\_rows}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate\_if}\NormalTok{(is.numeric, round, }\DecValTok{2}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{es\_print =} \FunctionTok{paste0}\NormalTok{(es, }\StringTok{" ["}\NormalTok{, es\_lb, }\StringTok{", "}\NormalTok{, es\_ub, }\StringTok{"]"}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample\_size\_d }\OtherTok{\textless{}{-}}\NormalTok{ d }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{n\_2 =} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(n\_2), }\DecValTok{0}\NormalTok{, n\_2)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{distinct}\NormalTok{(ds\_clean, same\_infant, n\_1, n\_2) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{total\_infants =}\NormalTok{ n\_1 }\SpecialCharTok{+}\NormalTok{ n\_2) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(ds\_clean) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{n =} \FunctionTok{sum}\NormalTok{(total\_infants)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{rename}\NormalTok{(}\AttributeTok{n\_sample\_size =}\NormalTok{ n)}
+
+\NormalTok{d\_data }\OtherTok{\textless{}{-}}\NormalTok{ d }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(ds\_clean) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{n\_effect\_size =} \FunctionTok{n}\NormalTok{(), }
+    \AttributeTok{min\_age =} \FunctionTok{round}\NormalTok{(}\FunctionTok{min}\NormalTok{(mean\_age\_months), }\DecValTok{2}\NormalTok{), }
+    \AttributeTok{max\_age =} \FunctionTok{round}\NormalTok{(}\FunctionTok{max}\NormalTok{(mean\_age\_months), }\DecValTok{2}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{age\_range\_print =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"["}\NormalTok{, min\_age, }\StringTok{" ,"}\NormalTok{, max\_age, }\StringTok{"]"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{min\_age, }\SpecialCharTok{{-}}\NormalTok{max\_age) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(sample\_size\_d, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"ds\_clean"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(es\_df }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(es\_print, i2, ds\_clean), }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"ds\_clean"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(ds\_clean, n\_effect\_size, n\_sample\_size, es\_print, i2)}
+
+\NormalTok{full\_d }\OtherTok{\textless{}{-}}\NormalTok{ d\_data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{paper =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Abstract rule learning"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Rabagliati, Ferguson, \& Lew{-}Williams (2018)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Audio{-}Visual Congruence"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Cox, Keren{-}Portnoy, Roepstorff, \& Fusaroli (2022)"}\NormalTok{,}
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Categorization bias"} \SpecialCharTok{\textasciitilde{}} \StringTok{"NA"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Cross{-}situational word learning"} \SpecialCharTok{\textasciitilde{}} \StringTok{"NA"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Familiar word recognition"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Carbajal, Peperkamp, \& Tsuji (2021)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Gaze following (combined)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Frank, Lewis, \& MacDonald (2016)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Label advantage in concept learning"} \SpecialCharTok{\textasciitilde{}} \StringTok{"NA"}\NormalTok{,}
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Language discrimination and preference (discrimination)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Gasparini, Langus, Tsuji, \& Boll{-}Avetisyan (2021)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Language discrimination and preference (preference)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Gasparini, Langus, Tsuji, \& Boll{-}Avetisyan (2021)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Mispronunciation sensitivity"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Von Holzen \& Bergmann (2021)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Mutual exclusivity"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Lewis et al. (2020)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Natural speech preference"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Issard, Tsuji, \& Cristia (2023)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Neonatal Imitation"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Davis et al. (2021)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Online word recognition"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Frank, Lewis, \& MacDonald (2016)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Prosocial agents"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Margoni \& Surian (2018)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Simple arithmetic competences"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Christodoulou, Lac, \& Moore (2017)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Sound symbolism"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Fort et al. (2018)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Statistical sound category learning"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Cristia (2018)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Statistical word segmentation"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Black \& Bergmann (2017)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Switch task"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Tsui, Byers{-}Heinlein, \& Fennell (2019)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Syntactic bootstrapping"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Cao \& Lewis (2022)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Vowel discrimination (native)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Tsuji \& Cristia (2014)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Vowel discrimination (non{-}native)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Tsuji \& Cristia (2014)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Word Segmentation (combined)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Bergmann \& Cristia (2016)"}\NormalTok{, }
+\NormalTok{    ds\_clean }\SpecialCharTok{==} \StringTok{"Infant directed speech preference"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Dunst, Gorman, \& Hamby (2012); Zettersten et al., (2023)"}
+\NormalTok{  )) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{ds\_clean =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      ds\_clean }\SpecialCharTok{==} \StringTok{"Audio{-}Visual Congruence"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Audio{-}visual congruence"}\NormalTok{ , }
+\NormalTok{      ds\_clean }\SpecialCharTok{==} \StringTok{"Language discrimination and preference (discrimination)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Language discrimination"}\NormalTok{, }
+\NormalTok{      ds\_clean }\SpecialCharTok{==} \StringTok{"Language discrimination and preference (preference)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Language preference"}\NormalTok{,}
+\NormalTok{      ds\_clean }\SpecialCharTok{==} \StringTok{"Word Segmentation (combined)"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Word segmentation (combined)"}\NormalTok{, }
+      \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}}\NormalTok{ ds\_clean}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{rename}\NormalTok{(}
+    \AttributeTok{Dataset =}\NormalTok{ ds\_clean, }
+    \StringTok{\textquotesingle{}N ES\textquotesingle{}} \OtherTok{=}\NormalTok{ n\_effect\_size, }
+    \StringTok{\textquotesingle{}N Subject\textquotesingle{}} \OtherTok{=}\NormalTok{ n\_sample\_size, }
+    \StringTok{\textquotesingle{}MA ES\textquotesingle{}} \OtherTok{=}\NormalTok{ es\_print, }
+    \StringTok{\textquotesingle{}Citation\textquotesingle{}} \OtherTok{=}\NormalTok{ paper}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{full\_d }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ papaja}\SpecialCharTok{::}\FunctionTok{apa\_table}\NormalTok{(}
+  \AttributeTok{format =} \StringTok{"latex"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:unnamed-chunk-4}}
+
+\begin{tabular}{llllll}
+\toprule
+Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{i2} & \multicolumn{1}{c}{Citation}\\
+\midrule
+Abstract rule learning & 95 & 1,123.00 & 0.22 [0.07, 0.37] & 0.80 & Rabagliati, Ferguson, \& Lew-Williams (2018)\\
+Audio-visual congruence & 92 & 4,132.00 & 0.33 [0.19, 0.47] & 0.89 & Cox, Keren-Portnoy, Roepstorff, \& Fusaroli (2022)\\
+Categorization bias & 80 & 594.50 & 0.16 [-0.66, 0.99] & 0.96 & NA\\
+Cross-situational word learning & 48 & 2,241.00 & 0.67 [0.5, 0.84] & 0.90 & NA\\
+Familiar word recognition & 34 & 586.00 & 0.54 [0.38, 0.69] & 0.55 & Carbajal, Peperkamp, \& Tsuji (2021)\\
+Gaze following (combined) & 81 & 1,407.00 & 0.81 [0.61, 1.01] & 0.90 & Frank, Lewis, \& MacDonald (2016)\\
+Infant directed speech preference & 100 & 1,267.00 & 0.37 [0.25, 0.49] & 0.71 & Dunst, Gorman, \& Hamby (2012); Zettersten et al., (2023)\\
+Label advantage in concept learning & 100 & 1,644.00 & 0.36 [0.23, 0.48] & 0.73 & NA\\
+Language discrimination & 104 & 1,479.00 & -0.26 [-0.4, -0.11] & 0.77 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
+Language preference & 49 & 641.00 & 0.11 [-0.06, 0.28] & 0.93 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
+Mispronunciation sensitivity & 249 & 2,122.00 & 0.45 [0.24, 0.66] & 0.94 & Von Holzen \& Bergmann (2021)\\
+Mutual exclusivity & 131 & 2,222.00 & 1.27 [0.99, 1.56] & 0.95 & Lewis et al. (2020)\\
+Natural speech preference & 55 & 786.00 & 0.44 [0.23, 0.65] & 0.83 & Issard, Tsuji, \& Cristia (2023)\\
+Neonatal Imitation & 336 & 2,455.00 & 0.68 [0.4, 0.97] & 0.94 & Davis et al. (2021)\\
+Online word recognition & 14 & 330.00 & 1.37 [0.78, 1.96] & 0.95 & Frank, Lewis, \& MacDonald (2016)\\
+Prosocial agents & 61 & 1,244.00 & 0.4 [0.29, 0.52] & 0.20 & Margoni \& Surian (2018)\\
+Simple arithmetic competences & 14 & 369.00 & 0.25 [0.04, 0.46] & 0.54 & Christodoulou, Lac, \& Moore (2017)\\
+Sound symbolism & 44 & 425.00 & 0.16 [-0.01, 0.33] & 0.69 & Fort et al. (2018)\\
+Statistical sound category learning & 20 & 592.00 & 0.29 [0.01, 0.57] & 0.58 & Cristia (2018)\\
+Statistical word segmentation & 103 & 804.00 & -0.08 [-0.18, 0.02] & 0.83 & Black \& Bergmann (2017)\\
+Switch task & 143 & 2,764.00 & -0.16 [-0.25, -0.06] & 0.78 & Tsui, Byers-Heinlein, \& Fennell (2019)\\
+Syntactic bootstrapping & 60 & 832.00 & 0.24 [0.03, 0.44] & 0.72 & Cao \& Lewis (2022)\\
+Vowel discrimination (native) & 143 & 2,418.00 & 0.59 [0.43, 0.75] & 0.78 & Tsuji \& Cristia (2014)\\
+Vowel discrimination (non-native) & 49 & 600.00 & 0.65 [0.2, 1.1] & 0.92 & Tsuji \& Cristia (2014)\\
+Word segmentation (combined) & 315 & 2,910.00 & 0.2 [0.14, 0.26] & 0.78 & Bergmann \& Cristia (2016)\\
+\bottomrule
+\end{tabular}
+
+\end{threeparttable}
+\end{center}
+
+\end{table}
+
+\end{document}
