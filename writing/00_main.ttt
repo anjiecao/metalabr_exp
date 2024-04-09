@@ -98,7 +98,7 @@ Word segmentation (combined) & 315 & 2910 & 0.2 [0.14, 0.26] & 0.78 & Bergmann \
 \begin{center}
 \begin{threeparttable}
 
-\caption{\label{tab:unnamed-chunk-10}????}
+\caption{\label{tab:unnamed-chunk-10}}
 
 \begin{tabular}{lllll}
 \toprule
@@ -136,3 +136,44 @@ Statistical sound category learning & 3.44 & 1.04 & 3.01 & \bf{0.00}\\
 \end{center}
 
 \end{table*}
+\efloatseparator
+ 
+\begin{longtable}[l]{lllllll}
+\toprule
+\multicolumn{1}{c}{Dataset} & \multicolumn{1}{c}{Linear Growth} & \multicolumn{2}{c}{Hypothesis 1} & \multicolumn{1}{c}{Hypothesis 2} & \multicolumn{1}{c}{Hypothesis 3} & \multicolumn{1}{c}{Hypothesis 4} \\
+\cmidrule(l{3pt}r{3pt}){1-1} \cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6} \cmidrule(l{3pt}r{3pt}){7-7}
+ &  & Weight Function & Egger's Test &  &  & \\
+\midrule
+Abstract rule learning & X & X & X & X &  & \\
+Audio-visual congruence & X & X & √ & X &  & X\\
+Categorization bias & X & X & √ &  &  & X\\
+Cross-situational word learning & √ &  & X & X &  & √\\
+Familiar word recognition & √ & X &  & X & X & \\
+\addlinespace
+Gaze following (combined) & √ & X & X &  &  & √\\
+Label advantage in concept learning & X & X & X &  &  & X\\
+Language discrimination & X &  & X & X &  & \\
+Language preference & X & X & X & X &  & \\
+Mispronunciation sensitivity & √ & X & X &  &  & √\\
+\addlinespace
+Mutual exclusivity & √ & √ & X & X & √ & √\\
+Natural speech preference & X & X & X & X &  & \\
+Neonatal Imitation & √ & X & X &  &  & \\
+Online word recognition & √ &  &  & √ &  & √\\
+Prosocial agents & X &  & X & X & X & X\\
+\addlinespace
+Simple arithmetic competences & X &  &  &  &  & \\
+Sound symbolism & √ &  & X & X & X & X\\
+Statistical sound category learning & √ &  &  & √ & √ & \\
+Statistical word segmentation & X & X & X & X & X & \\
+Switch task & X & X & X & X & X & X\\
+\addlinespace
+Switch task & X & X & X & X & X & X\\
+Syntactic bootstrapping & X & X & √ & X & X & X\\
+Vowel discrimination (native) & X & X & X & X &  & X\\
+Vowel discrimination (non-native) & X & √ & X & X &  & \\
+Word segmentation (combined) & X & X & X & X &  & X\\
+\addlinespace
+Infant directed speech preference & X & X & X & X &  & X\\
+\bottomrule
+\end{longtable}

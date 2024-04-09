@@ -327,7 +327,7 @@ Word segmentation (combined) & 315 & 2910 & 0.2 [0.14, 0.26] & 0.78 & Bergmann \
 \begin{center}
 \begin{threeparttable}
 
-\caption{\label{tab:unnamed-chunk-10}????}
+\caption{\label{tab:unnamed-chunk-10}}
 
 \begin{tabular}{lllll}
 \toprule
@@ -401,6 +401,8 @@ For all analyses, we fit multilevel random-effects meta-regression models using 
 \hypertarget{results}{%
 \subsection{Results}\label{results}}
 
+\includegraphics{00_main_files/figure-latex/unnamed-chunk-11-1.pdf}
+
 \hypertarget{model-comparison}{%
 \subsubsection{Model comparison}\label{model-comparison}}
 
@@ -418,6 +420,8 @@ One limitation of the model comparison approach is that it does not quantify gro
 
 We conducted model comparisons to assess the functional forms of age-related change across 25 datasets. Four functional forms---Logarithmic, Linear, Quadratic, and Constant---were largely indistinguishable within most datasets. Notably, in datasets where contrasts were meaningful, linear models received no support, challenging the prevalent linearity assumption for early linguistic and cognitive development. Further, we only detected any positive growth in 8/25 meta-analyses. Past work has successfully revealed age-related changes using meta-analysis (e.g. Best \& Charness, 2015; McCartney, Harris, \& Bernieri, 1990; Sugden \& Marquis, 2017). But in most datasets that we have considered, effect size does not increase with age. Why?
 
+\includegraphics{00_main_files/figure-latex/unnamed-chunk-13-1.pdf}
+
 \hypertarget{understanding-the-lack-of-developmental-change-in-meta-analytic-data}{%
 \section{Understanding the lack of developmental change in meta-analytic data}\label{understanding-the-lack-of-developmental-change-in-meta-analytic-data}}
 
@@ -430,6 +434,52 @@ Third, other methodological factors unrelated to age could also contribute to th
 Fourth, developmental change in infancy and early childhood might be distinct from one another. Bergelson (2020) has speculated that word comprehension in the looking-while-listening paradigm only shows significant developmental changes after 12 months of age, with infants younger than 12 months showing mostly flat developmental trajectories in this task. This contrast could be attributed to the fact that older infants are not only more experienced compared to younger infants, but also better learners who can more effectively take advantage of the input they receive. Could this pattern generalize to other tasks and domains? There is much evidence suggesting that developmental changes occurring in one domain would have cumulative, cascading effects on changes in other domains (Ahmed, Kuhfeld, Watts, Davis-Kean, \& Vandell, 2021; Bornstein, Hahn, Putnick, \& Pearson, 2018; Oakes \& Rakison, 2019). The outcome of such developmental cascades might not be measurable in the experimental tasks included in the meta-analyses until infants are above 12 months of age.
 
 We investigate each of these explanations in turn, assessing empirical support in our data. We summarise the results of these analyses in Table 3; in brief, no explanation provided traction for more than a small number of datasets.
+
+\begin{landscape}\begingroup\fontsize{10}{12}\selectfont
+
+\begin{longtable}[l]{lllllll}
+\toprule
+\multicolumn{1}{c}{Dataset} & \multicolumn{1}{c}{Linear Growth} & \multicolumn{2}{c}{Hypothesis 1} & \multicolumn{1}{c}{Hypothesis 2} & \multicolumn{1}{c}{Hypothesis 3} & \multicolumn{1}{c}{Hypothesis 4} \\
+\cmidrule(l{3pt}r{3pt}){1-1} \cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6} \cmidrule(l{3pt}r{3pt}){7-7}
+ &  & Weight Function & Egger's Test &  &  & \\
+\midrule
+Abstract rule learning & X & X & X & X &  & \\
+Audio-visual congruence & X & X & √ & X &  & X\\
+Categorization bias & X & X & √ &  &  & X\\
+Cross-situational word learning & √ &  & X & X &  & √\\
+Familiar word recognition & √ & X &  & X & X & \\
+\addlinespace
+Gaze following (combined) & √ & X & X &  &  & √\\
+Label advantage in concept learning & X & X & X &  &  & X\\
+Language discrimination & X &  & X & X &  & \\
+Language preference & X & X & X & X &  & \\
+Mispronunciation sensitivity & √ & X & X &  &  & √\\
+\addlinespace
+Mutual exclusivity & √ & √ & X & X & √ & √\\
+Natural speech preference & X & X & X & X &  & \\
+Neonatal Imitation & √ & X & X &  &  & \\
+Online word recognition & √ &  &  & √ &  & √\\
+Prosocial agents & X &  & X & X & X & X\\
+\addlinespace
+Simple arithmetic competences & X &  &  &  &  & \\
+Sound symbolism & √ &  & X & X & X & X\\
+Statistical sound category learning & √ &  &  & √ & √ & \\
+Statistical word segmentation & X & X & X & X & X & \\
+Switch task & X & X & X & X & X & X\\
+\addlinespace
+Switch task & X & X & X & X & X & X\\
+Syntactic bootstrapping & X & X & √ & X & X & X\\
+Vowel discrimination (native) & X & X & X & X &  & X\\
+Vowel discrimination (non-native) & X & √ & X & X &  & \\
+Word segmentation (combined) & X & X & X & X &  & X\\
+\addlinespace
+Infant directed speech preference & X & X & X & X &  & X\\
+\bottomrule
+\end{longtable}
+\endgroup{}
+\end{landscape}
+
+\includegraphics{00_main_files/figure-latex/unnamed-chunk-17-1.pdf}
 
 \hypertarget{age-related-publication-bias}{%
 \subsection{Age-related publication bias}\label{age-related-publication-bias}}

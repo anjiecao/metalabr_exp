@@ -1,0 +1,43 @@
+
+```{r}
+library(tidyverse)
+library(here)
+
+all_slope_estimates <- readRDS(here("cached_data/all_slope_estimates.Rds"))
+```
+
+```{r}
+all_slope_estimates %>% 
+  filter(term != "intercept") %>% 
+  filter(model_spec_clean == "Linear") %>% 
+  mutate(significant = if_else(p.value < .05, "p < 0.05", "N.S.")) %>% 
+  mutate(
+     dataset = case_when(
+       dataset == "Cross-situational word learning" ~ "X-situation learning", 
+      dataset == "Audio-Visual Congruence" ~ "Audio-visual congruen.", 
+      dataset == "Label advantage in concept learning" ~ "Label advantage",
+      dataset == "Language discrimination and preference (discrimination)" ~ "Language discrimination", 
+      dataset == "Language discrimination and preference (preference)" ~ "Language preference",
+      dataset == "Cross-situational word learning"  ~ "X-situation learning",
+      dataset == "Gaze following (combined)" ~ "Gaze following", 
+      dataset == "Label advantage in concept learning" ~ "Label advantage", 
+      dataset == "Statistical sound category learning" ~ "Stat. category learning",
+      dataset == "Statistical word segmentation" ~ "Stat. word seg.",
+      dataset == "Word Segmentation (combined)" ~ "Word segmentation", 
+      dataset == "Infant directed speech preference" ~ "IDS pref.",
+      TRUE ~ dataset
+  )) %>% 
+  ggplot(aes(x = reorder(dataset, estimate), y = estimate, ymin = conf.low, ymax = conf.high, color = significant)) + 
+  scale_color_manual(values = c("black", "red")) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  geom_pointrange() + 
+  coord_flip() + 
+  theme_few() + 
+  theme(legend.position = "top") + 
+  ylab("Age slope estimates") + 
+  xlab("") + 
+  guides(color=guide_legend(title="")) -> fig_2 
+
+saveRDS(fig_2,  here("writing/display_items/figure_2.Rds"))
+```
+

@@ -35,3 +35,32 @@ Fourth, developmental change in infancy and early childhood might be distinct fr
 
 We investigate each of these explanations in turn, assessing empirical support in our data. We summarise the results of these analyses in Table 3; in brief, no explanation provided traction for more than a small number of datasets. 
 
+```{r}
+library(kableExtra)
+library(gt)
+table_3_df <- readRDS(here("writing/display_items/table_3.Rds"))
+
+kable(table_3_df,
+      format = "latex",
+      longtable=TRUE,
+      booktabs = TRUE,
+      align = c("l"),
+      col.names = c("","","Weight Function","Egger's Test", "", "", "")) %>%
+  kable_styling("striped", full_width = F,
+                position = "left", font_size = 10) %>% 
+ # add_header_above(c("Dataset" = 1, "Linear Growth" = 1, "Publication Bias" = 2, 
+ #                  "Methods Adaptation" = 1, "Theoretical Constraints" = 1, "Late emergence of growth"= 1))  %>% 
+  add_header_above(c("Dataset" = 1, "Linear Growth" = 1, "Hypothesis 1" = 2, 
+                   "Hypothesis 2" = 1, "Hypothesis 3" = 1, "Hypothesis 4"= 1))  %>% 
+  landscape()
+   
+```
+
+
+
+
+```{r fig.width=8, fig.height=8}
+fig3 <- readRDS(here("writing/display_items/fig_3.Rds"))
+fig3
+```
+

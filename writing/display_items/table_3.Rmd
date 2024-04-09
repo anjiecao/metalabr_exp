@@ -1,32 +1,9 @@
----
-title: Evaluating the functional form of developmental change in infants’ linguistic and cognitive development using (meta-)meta-analysis
-author: Anjie Cao, Molly Lewis, Sho Tsuji, Christina Bergmann, Alejandrina Cristia, Michael C. Frank
-subtitle: Supplementary Information
-output:
-  html_document:
-    df_print: paged
-  pdf_document:
-    extra_dependencies:
-      caption: labelfont={bf}
-      hyperref:
-      - unicode=true
-      - breaklinks=true
-      lmodern: null
-      amssymb: null
-    latex_engine: xelatex
-    keep_tex: yes
----
 
+# Table 3
 
+Whether the age trend is significant + the relationship with the four hypothesis
 
-```{r include = FALSE}
-knitr::opts_chunk$set(echo=FALSE)
-knitr::opts_chunk$set(warning=FALSE)
-knitr::opts_chunk$set(message=FALSE)
-
-```
-
-```{r warning=FALSE}
+```{r}
 library(tidyverse)
 library(here)
 library(kableExtra)
@@ -39,23 +16,18 @@ bh_model_estimates <- readRDS(here("cached_data/better_half_age_model_estimate.R
 toddler_slope <- readRDS(here('cached_data/all_toddler_slope_estimates.Rds'))
 ```
 
-
-
+# age trend? 
 
 ```{r}
-# ds name + age trend in original 
-
 ds_name_with_og_age_trend_df <- all_slope_estimates %>% 
   filter(term == "mean_age_months") %>% 
   mutate(
     age_trend = p.value < .05
   ) %>% 
   select(dataset, age_trend)
-
-#ds_name_with_og_age_trend_df
 ```
 
-
+# Hypothesis 1
 
 ```{r}
 # h1
@@ -88,14 +60,11 @@ ds_name_with_publicaiton_bias <- ds_name_with_og_age_trend_df %>%
     )
   ) %>% 
   select(-wf_comparison_direction, -et_comparison_direction)
-  
-#ds_name_with_publicaiton_bias
 ```
 
-
+# Hypothesis 2
 
 ```{r}
-#h2
 ds_name_with_method_adaptation <- ds_name_with_og_age_trend_df %>% 
   select(dataset) %>% 
   left_join(
@@ -106,15 +75,11 @@ ds_name_with_method_adaptation <- ds_name_with_og_age_trend_df %>%
   ) %>% 
   select(dataset, same_method_delta_age)
   )
-
-#ds_name_with_method_adaptation
-
 ```
 
+# Hypothesis 3
 
 ```{r}
-# h3
-
 bh_df <- bh_model_estimates %>% 
   filter(term == "mean_age_months") %>% 
   filter(ds_half != "full") %>% 
@@ -126,13 +91,12 @@ bh_df <- bh_model_estimates %>%
 ds_name_with_bh <- ds_name_with_og_age_trend_df %>% 
   select(dataset) %>% 
   left_join(bh_df)
-``` 
+```
 
 
-
+# Hypothesis 4
 
 ```{r}
-# h4
 toddler_df <- toddler_slope %>% 
   filter(term == "mean_age_months") %>%
   mutate(
@@ -145,12 +109,9 @@ ds_name_with_toddler <- ds_name_with_og_age_trend_df %>%
   left_join(toddler_df)
 ```
 
-
-
-
+# Together 
 
 ```{r}
-# put everything together 
 
 logical_to_symbol <- function(x){
   if (is.na(x)){
@@ -165,6 +126,7 @@ logical_to_symbol <- function(x){
 }
 
 
+# put everything together 
 table_df <- ds_name_with_og_age_trend_df %>% 
   left_join(ds_name_with_publicaiton_bias, by = c("dataset")) %>% 
   left_join(ds_name_with_method_adaptation, by = c("dataset")) %>% 
@@ -201,74 +163,17 @@ table_df <- ds_name_with_og_age_trend_df %>%
       dataset == "Infant directed speech preference" ~ "Unknown"
     )
   ) %>% 
+  select(-summary) %>% 
   mutate(
-     dataset = case_when(
+    dataset = case_when(
+      dataset == "Audio-Visual Congruence" ~ "Audio-visual congruence" , 
       dataset == "Language discrimination and preference (discrimination)" ~ "Language discrimination", 
       dataset == "Language discrimination and preference (preference)" ~ "Language preference",
-      dataset == "Gaze following (combined)" ~ "Gaze following", 
-      dataset == "Word Segmentation (combined)" ~ "Word segmentation", 
+      dataset == "Word Segmentation (combined)" ~ "Word segmentation (combined)", 
       TRUE ~ dataset
-  ))
-  
-  
-kable(table_df,
-      #"html",
-      booktabs = T,
-      align = c("l"),
-      col.names = c("","","Weight Function","Egger's Test", "", "", "", "")) %>%
-  kable_styling("striped", full_width = F,
-                position = "left", font_size = 10) %>% 
-  add_header_above(c("Dataset" = 1, "Linear Growth" = 1, "Publication Bias" = 2, 
-                   "Methods Adaptation" = 1, "Theoretical Constraints" = 1, "Late emergence of growth"= 1, "Why is there no growth?"))  
-   
+    ))
 
 
-
-
-```
-
-```{r}
-apa <- function(x, title = " ") {
-  gt(x) %>%
-  tab_options(
-    table.border.top.color = "white",
-    heading.title.font.size = px(16),
-    column_labels.border.top.width = 3,
-    column_labels.border.top.color = "black",
-    column_labels.border.bottom.width = 3,
-    column_labels.border.bottom.color = "black",
-    table_body.border.bottom.color = "black",
-    table.border.bottom.color = "white",
-    table.width = pct(100),
-    table.background.color = "white"
-  ) %>%
-  cols_align(align="center") %>%
-  tab_style(
-    style = list(
-      cell_borders(
-        sides = c("top", "bottom"),
-        color = "white",
-        weight = px(1)
-      ),
-      cell_text(
-        align="center"
-      ),
-      cell_fill(color = "white", alpha = NULL)
-      ),
-    locations = cells_body(
-      columns = everything(),
-      rows = everything()
-    )
-  ) %>%
-    #title setup
-    tab_header(
-    title = html("<i>", title, "</i>")
-  ) %>%
-  opt_align_table_header(align = "left")
-}
-
-#library(papaja)
-#apa_table(table_df)
-
+saveRDS(table_df, here("writing/display_items/table_3.Rds"))
 ```
 

@@ -25,6 +25,12 @@ For all analyses, we fit multilevel random-effects meta-regression models using 
 ## Results
 
 ```{r}
+fig_2 <- readRDS(here("writing/display_items/figure_2.Rds"))
+fig_2
+```
+
+
+```{r}
 delta_aic_df <- readRDS(here("cached_data/delta_aic_df.Rds"))
 total_n <- nrow(delta_aic_df)
 n_has_any_meaningful_difference <- delta_aic_df %>% 
@@ -49,4 +55,8 @@ One limitation of the model comparison approach is that it does not quantify gro
 We conducted model comparisons to assess the functional forms of age-related change across 25 datasets. Four functional forms—Logarithmic, Linear, Quadratic, and Constant—were largely indistinguishable within most datasets. Notably, in datasets where contrasts were meaningful, linear models received no support, challenging the prevalent linearity assumption for early linguistic and cognitive development. Further, we only detected any positive growth in 8/25 meta-analyses. Past work has successfully revealed age-related changes using meta-analysis [e.g. @best2015age; @sugden2017meta; @mccartney1990growing]. But in most datasets that we have considered, effect size does not increase with age. Why? 
 
 
+```{r fig.width=9, fig.height=10, fig.pos="!h" }
+fig1 <- readRDS(here("writing/display_items/figure_1.Rds"))
+fig1
+```
 
