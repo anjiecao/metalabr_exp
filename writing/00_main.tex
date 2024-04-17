@@ -3,7 +3,7 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[
-  man]{apa6}
+  man,floatsintext]{apa6}
 \usepackage{amsmath,amssymb}
 \usepackage{iftex}
 \ifPDFTeX
@@ -138,13 +138,13 @@
   {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
 \makeatother
 
-% \usepackage{etoolbox}
 \makeatletter
-\patchcmd{\HyOrg@maketitle}
+\usepackage{etoolbox}
+\patchcmd{\maketitle}
   {\section{\normalfont\normalsize\abstractname}}
   {\section*{\normalfont\normalsize\abstractname}}
   {}{\typeout{Failed to patch abstract.}}
-\patchcmd{\HyOrg@maketitle}
+\patchcmd{\maketitle}
   {\section{\protect\normalfont{\@title}}}
   {\section*{\protect\normalfont{\@title}}}
   {}{\typeout{Failed to patch title.}}
@@ -159,17 +159,21 @@
   }
 {}{\PatchFailed}
 \keywords{keywords\newline\indent Word count: X}
-\DeclareDelayedFloatFlavor{ThreePartTable}{table}
-\DeclareDelayedFloatFlavor{lltable}{table}
-\DeclareDelayedFloatFlavor*{longtable}{table}
-\makeatletter
-\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
-\makeatother
 \usepackage{lineno}
 
 \linenumbers
 \usepackage{csquotes}
+\usepackage{tabu}
+\usepackage{tikz}
+\usepackage{adjustbox}
+\usepackage{float}
+\usepackage{graphicx}
 \usepackage{pdflscape}
+\usepackage{lscape}
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{longtable}{\singlespacing}{\small}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -231,37 +235,37 @@ This paper is organized as follows. In the first section, we provide an overview
 \begin{lltable}
 
 \begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
-\caption{\label{tab:unnamed-chunk-9}}\\
+\caption{\label{tab:unnamed-chunk-12} This table summarizes the number of effect sizes (ES) and the number of participants included in each dataset. The ES estimates represent the aggregated effect sizes and their 95\% confidence intervals. The $I^2$ measures the heterogneity of each dataset. The paper source column indicates the published record associated with each dataset.}\\
 \toprule
-Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{i2} & \multicolumn{1}{c}{Citation}\\
+Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{$I^2$} & \multicolumn{1}{c}{Source paper}\\
 \midrule
 \endfirsthead
-\caption*{\normalfont{Table \ref{tab:unnamed-chunk-9} continued}}\\
+\caption*{\normalfont{Table \ref{tab:unnamed-chunk-12} continued}}\\
 \toprule
-Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{i2} & \multicolumn{1}{c}{Citation}\\
+Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{$I^2$} & \multicolumn{1}{c}{Source paper}\\
 \midrule
 \endhead
-Abstract rule learning & 95 & 1123 & 0.22 [0.07, 0.37] & 0.80 & Rabagliati, Ferguson, \& Lew-Williams (2018)\\
-Audio-visual congruence & 92 & 4132 & 0.33 [0.19, 0.47] & 0.89 & Cox, Keren-Portnoy, Roepstorff, \& Fusaroli (2022)\\
+Abstract rule learning & 95 & 1123 & 0.22 [0.07, 0.37] & 0.80 & Rabagliati et al., (2018)\\
+Audio-visual congruence & 92 & 4132 & 0.33 [0.19, 0.47] & 0.89 & Cox et al., (2022)\\
 Categorization bias & 80 & 594 & 0.16 [-0.66, 0.99] & 0.96 & NA\\
 Cross-situational word learning & 48 & 2241 & 0.67 [0.5, 0.84] & 0.90 & NA\\
-Familiar word recognition & 34 & 586 & 0.54 [0.38, 0.69] & 0.55 & Carbajal, Peperkamp, \& Tsuji (2021)\\
-Gaze following (combined) & 81 & 1407 & 0.81 [0.61, 1.01] & 0.90 & Frank, Lewis, \& MacDonald (2016)\\
-Infant directed speech preference & 100 & 1267 & 0.37 [0.25, 0.49] & 0.71 & Dunst, Gorman, \& Hamby (2012); Zettersten et al., (2023)\\
+Familiar word recognition & 34 & 586 & 0.54 [0.38, 0.69] & 0.55 & Carbajal et al., (2021)\\
+Gaze following (combined) & 81 & 1407 & 0.81 [0.61, 1.01] & 0.90 & Frank et al., (2016)\\
+Infant directed speech preference & 100 & 1267 & 0.37 [0.25, 0.49] & 0.71 & Zettersten et al., (2023)\\
 Label advantage in concept learning & 100 & 1644 & 0.36 [0.23, 0.48] & 0.73 & NA\\
-Language discrimination & 104 & 1479 & -0.26 [-0.4, -0.11] & 0.77 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
-Language preference & 49 & 641 & 0.11 [-0.06, 0.28] & 0.93 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
+Language discrimination & 104 & 1479 & -0.26 [-0.4, -0.11] & 0.77 & Gasparini et al., (2021)\\
+Language preference & 49 & 641 & 0.11 [-0.06, 0.28] & 0.93 & Gasparini et al., (2021)\\
 Mispronunciation sensitivity & 249 & 2122 & 0.45 [0.24, 0.66] & 0.94 & Von Holzen \& Bergmann (2021)\\
 Mutual exclusivity & 131 & 2222 & 1.27 [0.99, 1.56] & 0.95 & Lewis et al. (2020)\\
-Natural speech preference & 55 & 786 & 0.44 [0.23, 0.65] & 0.83 & Issard, Tsuji, \& Cristia (2023)\\
+Natural speech preference & 55 & 786 & 0.44 [0.23, 0.65] & 0.83 & Issard et al., (2023)\\
 Neonatal Imitation & 336 & 2455 & 0.68 [0.4, 0.97] & 0.94 & Davis et al. (2021)\\
-Online word recognition & 14 & 330 & 1.37 [0.78, 1.96] & 0.95 & Frank, Lewis, \& MacDonald (2016)\\
+Online word recognition & 14 & 330 & 1.37 [0.78, 1.96] & 0.95 & Frank et al., (2016)\\
 Prosocial agents & 61 & 1244 & 0.4 [0.29, 0.52] & 0.20 & Margoni \& Surian (2018)\\
-Simple arithmetic competences & 14 & 369 & 0.25 [0.04, 0.46] & 0.54 & Christodoulou, Lac, \& Moore (2017)\\
+Simple arithmetic competences & 14 & 369 & 0.25 [0.04, 0.46] & 0.54 & Christodoulou et al., (2017)\\
 Sound symbolism & 44 & 425 & 0.16 [-0.01, 0.33] & 0.69 & Fort et al. (2018)\\
 Statistical sound category learning & 20 & 591 & 0.29 [0.01, 0.57] & 0.58 & Cristia (2018)\\
 Statistical word segmentation & 103 & 804 & -0.08 [-0.18, 0.02] & 0.83 & Black \& Bergmann (2017)\\
-Switch task & 143 & 2764 & -0.16 [-0.25, -0.06] & 0.78 & Tsui, Byers-Heinlein, \& Fennell (2019)\\
+Switch task & 143 & 2764 & -0.16 [-0.25, -0.06] & 0.78 & Tsui et al., (2019)\\
 Syntactic bootstrapping & 60 & 832 & 0.24 [0.03, 0.44] & 0.72 & Cao \& Lewis (2022)\\
 Vowel discrimination (native) & 143 & 2418 & 0.59 [0.43, 0.75] & 0.78 & Tsuji \& Cristia (2014)\\
 Vowel discrimination (non-native) & 49 & 600 & 0.65 [0.2, 1.1] & 0.92 & Tsuji \& Cristia (2014)\\
@@ -274,60 +278,11 @@ Word segmentation (combined) & 315 & 2910 & 0.2 [0.14, 0.26] & 0.78 & Bergmann \
 \begin{table*}[hbt]
 \ifnextchar[{\eatarg}{}
 [tbp]
-\begin{landscape}
-\begin{center}
-\begin{threeparttable}
-\small 
-\caption{\label{tab:unnamed-chunk-9}}
-
-\begin{tabular}{llllll}
-\toprule
-Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{i2} & \multicolumn{1}{c}{Citation}\\
-\midrule
-Abstract rule learning & 95 & 1123 & 0.22 [0.07, 0.37] & 0.80 & Rabagliati, Ferguson, \& Lew-Williams (2018)\\
-Audio-visual congruence & 92 & 4132 & 0.33 [0.19, 0.47] & 0.89 & Cox, Keren-Portnoy, Roepstorff, \& Fusaroli (2022)\\
-Categorization bias & 80 & 594 & 0.16 [-0.66, 0.99] & 0.96 & NA\\
-Cross-situational word learning & 48 & 2241 & 0.67 [0.5, 0.84] & 0.90 & NA\\
-Familiar word recognition & 34 & 586 & 0.54 [0.38, 0.69] & 0.55 & Carbajal, Peperkamp, \& Tsuji (2021)\\
-Gaze following (combined) & 81 & 1407 & 0.81 [0.61, 1.01] & 0.90 & Frank, Lewis, \& MacDonald (2016)\\
-Infant directed speech preference & 100 & 1267 & 0.37 [0.25, 0.49] & 0.71 & Dunst, Gorman, \& Hamby (2012); Zettersten et al., (2023)\\
-Label advantage in concept learning & 100 & 1644 & 0.36 [0.23, 0.48] & 0.73 & NA\\
-Language discrimination & 104 & 1479 & -0.26 [-0.4, -0.11] & 0.77 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
-Language preference & 49 & 641 & 0.11 [-0.06, 0.28] & 0.93 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
-Mispronunciation sensitivity & 249 & 2122 & 0.45 [0.24, 0.66] & 0.94 & Von Holzen \& Bergmann (2021)\\
-Mutual exclusivity & 131 & 2222 & 1.27 [0.99, 1.56] & 0.95 & Lewis et al. (2020)\\
-Natural speech preference & 55 & 786 & 0.44 [0.23, 0.65] & 0.83 & Issard, Tsuji, \& Cristia (2023)\\
-Neonatal Imitation & 336 & 2455 & 0.68 [0.4, 0.97] & 0.94 & Davis et al. (2021)\\
-Online word recognition & 14 & 330 & 1.37 [0.78, 1.96] & 0.95 & Frank, Lewis, \& MacDonald (2016)\\
-Prosocial agents & 61 & 1244 & 0.4 [0.29, 0.52] & 0.20 & Margoni \& Surian (2018)\\
-Simple arithmetic competences & 14 & 369 & 0.25 [0.04, 0.46] & 0.54 & Christodoulou, Lac, \& Moore (2017)\\
-Sound symbolism & 44 & 425 & 0.16 [-0.01, 0.33] & 0.69 & Fort et al. (2018)\\
-Statistical sound category learning & 20 & 591 & 0.29 [0.01, 0.57] & 0.58 & Cristia (2018)\\
-Statistical word segmentation & 103 & 804 & -0.08 [-0.18, 0.02] & 0.83 & Black \& Bergmann (2017)\\
-Switch task & 143 & 2764 & -0.16 [-0.25, -0.06] & 0.78 & Tsui, Byers-Heinlein, \& Fennell (2019)\\
-Syntactic bootstrapping & 60 & 832 & 0.24 [0.03, 0.44] & 0.72 & Cao \& Lewis (2022)\\
-Vowel discrimination (native) & 143 & 2418 & 0.59 [0.43, 0.75] & 0.78 & Tsuji \& Cristia (2014)\\
-Vowel discrimination (non-native) & 49 & 600 & 0.65 [0.2, 1.1] & 0.92 & Tsuji \& Cristia (2014)\\
-Word segmentation (combined) & 315 & 2910 & 0.2 [0.14, 0.26] & 0.78 & Bergmann \& Cristia (2016)\\
-\bottomrule
-\end{tabular}
-
-\end{threeparttable}
-\end{center}
-\end{landscape}
-
-
-\end{table*}
-\efloatseparator
-
-\begin{table*}[hbt]
-\ifnextchar[{\eatarg}{}
-[tbp]
 
 \begin{center}
 \begin{threeparttable}
 
-\caption{\label{tab:unnamed-chunk-10}}
+\caption{\label{tab:unnamed-chunk-10} This table summarizes the values of $\Delta$ of corrected Akaike Information Criterion (AICc) for the age model with different functional forms: Constant, Linear, Logarithmic, and Quadratic. The values were calculated from subtracting the minimum AICc from the AICc of each model. They were rounded to two decimal. The bold values indicate the best fitting model. Asterisks indicate models that are a significantly better fit compared to other functional forms for that dataset.}
 
 \begin{tabular}{lllll}
 \toprule
@@ -401,7 +356,11 @@ For all analyses, we fit multilevel random-effects meta-regression models using 
 \hypertarget{results}{%
 \subsection{Results}\label{results}}
 
-\includegraphics{00_main_files/figure-latex/unnamed-chunk-11-1.pdf}
+\begin{figure}
+\centering
+\includegraphics{00_main_files/figure-latex/unnamed-chunk-18-1.pdf}
+\caption{\label{fig:unnamed-chunk-18}Each dot represents the estimate of the age predictor in the linear model. Red dots indicate the particular estimate is statistically significant, and black indicate the estimate is not significant. Error bars show 95\% confidence intervals.}
+\end{figure}
 
 \hypertarget{model-comparison}{%
 \subsubsection{Model comparison}\label{model-comparison}}
@@ -420,7 +379,11 @@ One limitation of the model comparison approach is that it does not quantify gro
 
 We conducted model comparisons to assess the functional forms of age-related change across 25 datasets. Four functional forms---Logarithmic, Linear, Quadratic, and Constant---were largely indistinguishable within most datasets. Notably, in datasets where contrasts were meaningful, linear models received no support, challenging the prevalent linearity assumption for early linguistic and cognitive development. Further, we only detected any positive growth in 8/25 meta-analyses. Past work has successfully revealed age-related changes using meta-analysis (e.g. Best \& Charness, 2015; McCartney, Harris, \& Bernieri, 1990; Sugden \& Marquis, 2017). But in most datasets that we have considered, effect size does not increase with age. Why?
 
-\includegraphics{00_main_files/figure-latex/unnamed-chunk-13-1.pdf}
+\begin{figure}
+\centering
+\includegraphics{00_main_files/figure-latex/unnamed-chunk-20-1.pdf}
+\caption{\label{fig:unnamed-chunk-20}Each panel shows the dataset and the predicted values of the four functional forms. For each panel, X-axis represent the age in month, and Y-axis represents the effect size. The shaded area is the 95\% confidence interval of the prediction.}
+\end{figure}
 
 \hypertarget{understanding-the-lack-of-developmental-change-in-meta-analytic-data}{%
 \section{Understanding the lack of developmental change in meta-analytic data}\label{understanding-the-lack-of-developmental-change-in-meta-analytic-data}}
@@ -435,51 +398,57 @@ Fourth, developmental change in infancy and early childhood might be distinct fr
 
 We investigate each of these explanations in turn, assessing empirical support in our data. We summarise the results of these analyses in Table 3; in brief, no explanation provided traction for more than a small number of datasets.
 
-\begin{landscape}\begingroup\fontsize{10}{12}\selectfont
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
 
-\begin{longtable}[l]{lllllll}
+\begin{lltable}
+
+\begin{longtable}{lllllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:unnamed-chunk-12} This table presents whether the original dataset shows any evidence for linear growth, and to what extent there is evidence supporting the four hypotheses (Checkmarks for yes, crosses for no). Absence of any symbol suggests that there is not enough data to test the hypothesis.}\\
 \toprule
-\multicolumn{1}{c}{Dataset} & \multicolumn{1}{c}{Linear Growth} & \multicolumn{2}{c}{Hypothesis 1} & \multicolumn{1}{c}{Hypothesis 2} & \multicolumn{1}{c}{Hypothesis 3} & \multicolumn{1}{c}{Hypothesis 4} \\
+\multicolumn{1}{c}{Dataset} & \multicolumn{1}{c}{Linear Growth} & \multicolumn{2}{c}{H1} & \multicolumn{1}{c}{H2} & \multicolumn{1}{c}{H3} & \multicolumn{1}{c}{H4} \\
 \cmidrule(l{3pt}r{3pt}){1-1} \cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6} \cmidrule(l{3pt}r{3pt}){7-7}
  &  & Weight Function & Egger's Test &  &  & \\
 \midrule
+\endfirsthead
+\caption*{\normalfont{Table \ref{tab:unnamed-chunk-12} continued}}\\
+\toprule
+Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{$I^2$} & \multicolumn{1}{c}{Source paper}\\
+\midrule
+\endhead
 Abstract rule learning & X & X & X & X &  & \\
-Audio-visual congruence & X & X & √ & X &  & X\\
-Categorization bias & X & X & √ &  &  & X\\
-Cross-situational word learning & √ &  & X & X &  & √\\
-Familiar word recognition & √ & X &  & X & X & \\
-\addlinespace
-Gaze following (combined) & √ & X & X &  &  & √\\
+Audio-visual congruence & X & X & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& X &  & X\\
+Categorization bias & X & X & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;&  &  & X\\
+Cross-situational word learning & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;&  & X & X &  & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;\\
+Familiar word recognition & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& X &  & X & X & \\
+Gaze following (combined) & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& X & X &  &  & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;\\
 Label advantage in concept learning & X & X & X &  &  & X\\
 Language discrimination & X &  & X & X &  & \\
 Language preference & X & X & X & X &  & \\
-Mispronunciation sensitivity & √ & X & X &  &  & √\\
-\addlinespace
-Mutual exclusivity & √ & √ & X & X & √ & √\\
+Mispronunciation sensitivity & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& X & X &  &  & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;\\
+Mutual exclusivity & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& X & X & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;\\
 Natural speech preference & X & X & X & X &  & \\
-Neonatal Imitation & √ & X & X &  &  & \\
-Online word recognition & √ &  &  & √ &  & √\\
+Neonatal Imitation & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& X & X &  &  & \\
+Online word recognition & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;&  &  & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;&  & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;\\
 Prosocial agents & X &  & X & X & X & X\\
-\addlinespace
 Simple arithmetic competences & X &  &  &  &  & \\
-Sound symbolism & √ &  & X & X & X & X\\
-Statistical sound category learning & √ &  &  & √ & √ & \\
+Sound symbolism & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;&  & X & X & X & X\\
+Statistical sound category learning & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;&  &  & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& \\
 Statistical word segmentation & X & X & X & X & X & \\
 Switch task & X & X & X & X & X & X\\
-\addlinespace
-Switch task & X & X & X & X & X & X\\
-Syntactic bootstrapping & X & X & √ & X & X & X\\
+Syntactic bootstrapping & X & X & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& X & X & X\\
 Vowel discrimination (native) & X & X & X & X &  & X\\
-Vowel discrimination (non-native) & X & √ & X & X &  & \\
+Vowel discrimination (non-native) & X & \tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;& X & X &  & \\
 Word segmentation (combined) & X & X & X & X &  & X\\
-\addlinespace
 Infant directed speech preference & X & X & X & X &  & X\\
 \bottomrule
 \end{longtable}
-\endgroup{}
-\end{landscape}
+\end{lltable}
 
-\includegraphics{00_main_files/figure-latex/unnamed-chunk-17-1.pdf}
+\begin{figure}
+\centering
+\includegraphics{00_main_files/figure-latex/unnamed-chunk-29-1.pdf}
+\caption{\label{fig:unnamed-chunk-29}Schematic illustration of the four hypotheses considered. The gray shaded line represents the observed age effect if the hypothesis holds. The red dotted lines represents the true underlying age effect under the particular hypothesis.}
+\end{figure}
 
 \hypertarget{age-related-publication-bias}{%
 \subsection{Age-related publication bias}\label{age-related-publication-bias}}

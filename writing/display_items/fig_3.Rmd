@@ -3,7 +3,7 @@
 ```{r}
 library(tidyverse)
 library(xkcd)
-
+library(ggthemes)
 ```
 
 # age-related selection bias 
@@ -33,7 +33,7 @@ p1 <- fake_data %>%
   ggplot(aes(x = x, y = y)) + 
   geom_point(position = position_jitter(width = .2), aes( color = type)) + 
   #scale_shape_manual(values=c(19, 3))+
-  scale_color_manual(values = c("black", "gray")) +
+  scale_color_manual(values = c("black", "lightblue")) +
   #geom_hline(yintercept = -5, color = "black") + 
   
   geom_smooth(
@@ -85,7 +85,7 @@ fake_data <- tibble(
 p2 <-fake_data %>%     
   ggplot(aes(x = x, y = y)) + 
   geom_point(position = position_jitter(width = .2), aes( color = type)) + 
-  scale_color_manual(values=c("black", "darkgray"))+
+  scale_color_manual(values=c("black", "lightblue"))+
   geom_smooth(
     data = fake_data %>% filter(type == "Method A"), aes(x = x, y = y), method = "lm", se = FALSE,
     color = "red", linetype = "dashed") + 
@@ -139,7 +139,7 @@ fake_data <- tibble(
 p3 <-fake_data %>%     
   ggplot(aes(x = x, y = y)) + 
   geom_point(position = position_jitter(width = .2), aes( color = type)) + 
-  scale_color_manual(values=c("black", "darkgray"))+
+  scale_color_manual(values=c("black", "lightblue"))+
   geom_smooth(
     data = fake_data %>% filter(type ==  "Subsample A"), aes(x = x, y = y), method = "lm", se = FALSE,
     color = "red", linetype = "dashed") + 
@@ -192,7 +192,7 @@ fake_data <- tibble(
 p4 <- fake_data %>%     
   ggplot(aes(x = x, y = y)) + 
   geom_point(position = position_jitter(width = .2), aes( color = type)) + 
-  scale_color_manual(values=c("black", "darkgray"))+
+  scale_color_manual(values=c("black", "lightblue"))+
  # geom_smooth(
 #    data = fake_data %>% filter(type ==  "Infants"), aes(x = x, y = y), method = "lm", se = FALSE,
 #    color = "gray", linetype = "dashed") + 
@@ -225,6 +225,6 @@ library(cowplot)
 library(patchwork)
 
 
-plot_grid(p1, p2, p3, p4,labels = c("A", "B", "C", "D"))-> fig_3
+plot_grid(p1, p2, p3, p4,labels = c("1", "2", "3", "4"))-> fig_3
 saveRDS(fig_3, here("writing/display_items/fig_3.Rds"))
 ```

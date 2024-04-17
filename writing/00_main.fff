@@ -1,0 +1,7 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{00_main_files/figure-latex/unnamed-chunk-18-1.pdf}
+\caption{\label{fig:unnamed-chunk-18}Each dot represents the estimate of the age predictor in the linear model. Red dots indicate the particular estimate is statistically significant, and black indicate the estimate is not significant. Error bars show 95\% confidence intervals.}
+\end{figure*}

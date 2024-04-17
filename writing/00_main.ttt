@@ -1,96 +1,3 @@
-\begin{lltable}
-
-\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
-\caption{\label{tab:unnamed-chunk-9}}\\
-\toprule
-Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{i2} & \multicolumn{1}{c}{Citation}\\
-\midrule
-\endfirsthead
-\caption*{\normalfont{Table \ref{tab:unnamed-chunk-9} continued}}\\
-\toprule
-Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{i2} & \multicolumn{1}{c}{Citation}\\
-\midrule
-\endhead
-Abstract rule learning & 95 & 1123 & 0.22 [0.07, 0.37] & 0.80 & Rabagliati, Ferguson, \& Lew-Williams (2018)\\
-Audio-visual congruence & 92 & 4132 & 0.33 [0.19, 0.47] & 0.89 & Cox, Keren-Portnoy, Roepstorff, \& Fusaroli (2022)\\
-Categorization bias & 80 & 594 & 0.16 [-0.66, 0.99] & 0.96 & NA\\
-Cross-situational word learning & 48 & 2241 & 0.67 [0.5, 0.84] & 0.90 & NA\\
-Familiar word recognition & 34 & 586 & 0.54 [0.38, 0.69] & 0.55 & Carbajal, Peperkamp, \& Tsuji (2021)\\
-Gaze following (combined) & 81 & 1407 & 0.81 [0.61, 1.01] & 0.90 & Frank, Lewis, \& MacDonald (2016)\\
-Infant directed speech preference & 100 & 1267 & 0.37 [0.25, 0.49] & 0.71 & Dunst, Gorman, \& Hamby (2012); Zettersten et al., (2023)\\
-Label advantage in concept learning & 100 & 1644 & 0.36 [0.23, 0.48] & 0.73 & NA\\
-Language discrimination & 104 & 1479 & -0.26 [-0.4, -0.11] & 0.77 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
-Language preference & 49 & 641 & 0.11 [-0.06, 0.28] & 0.93 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
-Mispronunciation sensitivity & 249 & 2122 & 0.45 [0.24, 0.66] & 0.94 & Von Holzen \& Bergmann (2021)\\
-Mutual exclusivity & 131 & 2222 & 1.27 [0.99, 1.56] & 0.95 & Lewis et al. (2020)\\
-Natural speech preference & 55 & 786 & 0.44 [0.23, 0.65] & 0.83 & Issard, Tsuji, \& Cristia (2023)\\
-Neonatal Imitation & 336 & 2455 & 0.68 [0.4, 0.97] & 0.94 & Davis et al. (2021)\\
-Online word recognition & 14 & 330 & 1.37 [0.78, 1.96] & 0.95 & Frank, Lewis, \& MacDonald (2016)\\
-Prosocial agents & 61 & 1244 & 0.4 [0.29, 0.52] & 0.20 & Margoni \& Surian (2018)\\
-Simple arithmetic competences & 14 & 369 & 0.25 [0.04, 0.46] & 0.54 & Christodoulou, Lac, \& Moore (2017)\\
-Sound symbolism & 44 & 425 & 0.16 [-0.01, 0.33] & 0.69 & Fort et al. (2018)\\
-Statistical sound category learning & 20 & 591 & 0.29 [0.01, 0.57] & 0.58 & Cristia (2018)\\
-Statistical word segmentation & 103 & 804 & -0.08 [-0.18, 0.02] & 0.83 & Black \& Bergmann (2017)\\
-Switch task & 143 & 2764 & -0.16 [-0.25, -0.06] & 0.78 & Tsui, Byers-Heinlein, \& Fennell (2019)\\
-Syntactic bootstrapping & 60 & 832 & 0.24 [0.03, 0.44] & 0.72 & Cao \& Lewis (2022)\\
-Vowel discrimination (native) & 143 & 2418 & 0.59 [0.43, 0.75] & 0.78 & Tsuji \& Cristia (2014)\\
-Vowel discrimination (non-native) & 49 & 600 & 0.65 [0.2, 1.1] & 0.92 & Tsuji \& Cristia (2014)\\
-Word segmentation (combined) & 315 & 2910 & 0.2 [0.14, 0.26] & 0.78 & Bergmann \& Cristia (2016)\\
-\bottomrule
-\end{longtable}
-
-\end{lltable}
-\efloatseparator
- 
-\begin{table*}[hbt]
-\ifnextchar[{\eatarg}{}
-[tbp]
-\begin{landscape}
-\begin{center}
-\begin{threeparttable}
-\small
-\caption{\label{tab:unnamed-chunk-9}}
-
-\begin{tabular}{llllll}
-\toprule
-Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{i2} & \multicolumn{1}{c}{Citation}\\
-\midrule
-Abstract rule learning & 95 & 1123 & 0.22 [0.07, 0.37] & 0.80 & Rabagliati, Ferguson, \& Lew-Williams (2018)\\
-Audio-visual congruence & 92 & 4132 & 0.33 [0.19, 0.47] & 0.89 & Cox, Keren-Portnoy, Roepstorff, \& Fusaroli (2022)\\
-Categorization bias & 80 & 594 & 0.16 [-0.66, 0.99] & 0.96 & NA\\
-Cross-situational word learning & 48 & 2241 & 0.67 [0.5, 0.84] & 0.90 & NA\\
-Familiar word recognition & 34 & 586 & 0.54 [0.38, 0.69] & 0.55 & Carbajal, Peperkamp, \& Tsuji (2021)\\
-Gaze following (combined) & 81 & 1407 & 0.81 [0.61, 1.01] & 0.90 & Frank, Lewis, \& MacDonald (2016)\\
-Infant directed speech preference & 100 & 1267 & 0.37 [0.25, 0.49] & 0.71 & Dunst, Gorman, \& Hamby (2012); Zettersten et al., (2023)\\
-Label advantage in concept learning & 100 & 1644 & 0.36 [0.23, 0.48] & 0.73 & NA\\
-Language discrimination & 104 & 1479 & -0.26 [-0.4, -0.11] & 0.77 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
-Language preference & 49 & 641 & 0.11 [-0.06, 0.28] & 0.93 & Gasparini, Langus, Tsuji, \& Boll-Avetisyan (2021)\\
-Mispronunciation sensitivity & 249 & 2122 & 0.45 [0.24, 0.66] & 0.94 & Von Holzen \& Bergmann (2021)\\
-Mutual exclusivity & 131 & 2222 & 1.27 [0.99, 1.56] & 0.95 & Lewis et al. (2020)\\
-Natural speech preference & 55 & 786 & 0.44 [0.23, 0.65] & 0.83 & Issard, Tsuji, \& Cristia (2023)\\
-Neonatal Imitation & 336 & 2455 & 0.68 [0.4, 0.97] & 0.94 & Davis et al. (2021)\\
-Online word recognition & 14 & 330 & 1.37 [0.78, 1.96] & 0.95 & Frank, Lewis, \& MacDonald (2016)\\
-Prosocial agents & 61 & 1244 & 0.4 [0.29, 0.52] & 0.20 & Margoni \& Surian (2018)\\
-Simple arithmetic competences & 14 & 369 & 0.25 [0.04, 0.46] & 0.54 & Christodoulou, Lac, \& Moore (2017)\\
-Sound symbolism & 44 & 425 & 0.16 [-0.01, 0.33] & 0.69 & Fort et al. (2018)\\
-Statistical sound category learning & 20 & 591 & 0.29 [0.01, 0.57] & 0.58 & Cristia (2018)\\
-Statistical word segmentation & 103 & 804 & -0.08 [-0.18, 0.02] & 0.83 & Black \& Bergmann (2017)\\
-Switch task & 143 & 2764 & -0.16 [-0.25, -0.06] & 0.78 & Tsui, Byers-Heinlein, \& Fennell (2019)\\
-Syntactic bootstrapping & 60 & 832 & 0.24 [0.03, 0.44] & 0.72 & Cao \& Lewis (2022)\\
-Vowel discrimination (native) & 143 & 2418 & 0.59 [0.43, 0.75] & 0.78 & Tsuji \& Cristia (2014)\\
-Vowel discrimination (non-native) & 49 & 600 & 0.65 [0.2, 1.1] & 0.92 & Tsuji \& Cristia (2014)\\
-Word segmentation (combined) & 315 & 2910 & 0.2 [0.14, 0.26] & 0.78 & Bergmann \& Cristia (2016)\\
-\bottomrule
-\end{tabular}
-
-\end{threeparttable}
-\end{center}
-\end{landscape}
-
-
-\end{table*}
-\efloatseparator
- 
 \begin{table*}[hbt]
 \ifnextchar[{\eatarg}{}
 [tbp]
@@ -98,7 +5,7 @@ Word segmentation (combined) & 315 & 2910 & 0.2 [0.14, 0.26] & 0.78 & Bergmann \
 \begin{center}
 \begin{threeparttable}
 
-\caption{\label{tab:unnamed-chunk-10}}
+\caption{\label{tab:unnamed-chunk-10} This table summarizes the values of $\Delta$ of corrected Akaike Information Criterion (AICc) for the age model with different functional forms: Constant, Linear, Logarithmic, and Quadratic. The values were calculated from subtracting the minimum AICc from the AICc of each model. They were rounded to two decimal. The bold values indicate the best fitting model. Asterisks indicate models that are a significantly better fit compared to other functional forms for that dataset.}
 
 \begin{tabular}{lllll}
 \toprule
@@ -136,44 +43,3 @@ Statistical sound category learning & 3.44 & 1.04 & 3.01 & \bf{0.00}\\
 \end{center}
 
 \end{table*}
-\efloatseparator
- 
-\begin{longtable}[l]{lllllll}
-\toprule
-\multicolumn{1}{c}{Dataset} & \multicolumn{1}{c}{Linear Growth} & \multicolumn{2}{c}{Hypothesis 1} & \multicolumn{1}{c}{Hypothesis 2} & \multicolumn{1}{c}{Hypothesis 3} & \multicolumn{1}{c}{Hypothesis 4} \\
-\cmidrule(l{3pt}r{3pt}){1-1} \cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6} \cmidrule(l{3pt}r{3pt}){7-7}
- &  & Weight Function & Egger's Test &  &  & \\
-\midrule
-Abstract rule learning & X & X & X & X &  & \\
-Audio-visual congruence & X & X & √ & X &  & X\\
-Categorization bias & X & X & √ &  &  & X\\
-Cross-situational word learning & √ &  & X & X &  & √\\
-Familiar word recognition & √ & X &  & X & X & \\
-\addlinespace
-Gaze following (combined) & √ & X & X &  &  & √\\
-Label advantage in concept learning & X & X & X &  &  & X\\
-Language discrimination & X &  & X & X &  & \\
-Language preference & X & X & X & X &  & \\
-Mispronunciation sensitivity & √ & X & X &  &  & √\\
-\addlinespace
-Mutual exclusivity & √ & √ & X & X & √ & √\\
-Natural speech preference & X & X & X & X &  & \\
-Neonatal Imitation & √ & X & X &  &  & \\
-Online word recognition & √ &  &  & √ &  & √\\
-Prosocial agents & X &  & X & X & X & X\\
-\addlinespace
-Simple arithmetic competences & X &  &  &  &  & \\
-Sound symbolism & √ &  & X & X & X & X\\
-Statistical sound category learning & √ &  &  & √ & √ & \\
-Statistical word segmentation & X & X & X & X & X & \\
-Switch task & X & X & X & X & X & X\\
-\addlinespace
-Switch task & X & X & X & X & X & X\\
-Syntactic bootstrapping & X & X & √ & X & X & X\\
-Vowel discrimination (native) & X & X & X & X &  & X\\
-Vowel discrimination (non-native) & X & √ & X & X &  & \\
-Word segmentation (combined) & X & X & X & X &  & X\\
-\addlinespace
-Infant directed speech preference & X & X & X & X &  & X\\
-\bottomrule
-\end{longtable}

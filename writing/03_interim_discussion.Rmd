@@ -40,26 +40,75 @@ library(kableExtra)
 library(gt)
 table_3_df <- readRDS(here("writing/display_items/table_3.Rds"))
 
-kable(table_3_df,
-      format = "latex",
-      longtable=TRUE,
-      booktabs = TRUE,
-      align = c("l"),
-      col.names = c("","","Weight Function","Egger's Test", "", "", "")) %>%
-  kable_styling("striped", full_width = F,
-                position = "left", font_size = 10) %>% 
- # add_header_above(c("Dataset" = 1, "Linear Growth" = 1, "Publication Bias" = 2, 
- #                  "Methods Adaptation" = 1, "Theoretical Constraints" = 1, "Late emergence of growth"= 1))  %>% 
-  add_header_above(c("Dataset" = 1, "Linear Growth" = 1, "Hypothesis 1" = 2, 
-                   "Hypothesis 2" = 1, "Hypothesis 3" = 1, "Hypothesis 4"= 1))  %>% 
-  landscape()
-   
+# kable(table_3_df,
+#       format = "latex",
+#       longtable=TRUE,
+#       booktabs = TRUE,
+#       align = c("l"),
+#       col.names = c("","","Weight Function","Egger's Test", "", "", "")) %>%
+#   kable_styling("striped", full_width = F,
+#                 position = "left", font_size = 10) %>% 
+#  # add_header_above(c("Dataset" = 1, "Linear Growth" = 1, "Publication Bias" = 2, 
+#  #                  "Methods Adaptation" = 1, "Theoretical Constraints" = 1, "Late emergence of growth"= 1))  %>% 
+#   add_header_above(c("Dataset" = 1, "Linear Growth" = 1, "Hypothesis 1" = 2, 
+#                    "Hypothesis 2" = 1, "Hypothesis 3" = 1, "Hypothesis 4"= 1))  %>% 
+#   landscape()
+#    
 ```
 
 
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
+
+\begin{lltable}
+
+\begin{longtable}{lllllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:unnamed-chunk-12} This table presents whether the original dataset shows any evidence for linear growth, and to what extent there is evidence supporting the four hypotheses (Checkmarks for yes, crosses for no). Absence of any symbol suggests that there is not enough data to test the hypothesis.}\\
+\toprule
+\multicolumn{1}{c}{Dataset} & \multicolumn{1}{c}{Linear Growth} & \multicolumn{2}{c}{H1} & \multicolumn{1}{c}{H2} & \multicolumn{1}{c}{H3} & \multicolumn{1}{c}{H4} \\
+\cmidrule(l{3pt}r{3pt}){1-1} \cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6} \cmidrule(l{3pt}r{3pt}){7-7}
+ &  & Weight Function & Egger's Test &  &  & \\
+\midrule
+\endfirsthead
+\caption*{\normalfont{Table \ref{tab:unnamed-chunk-12} continued}}\\
+\toprule
+Dataset & \multicolumn{1}{c}{N ES} & \multicolumn{1}{c}{N Subject} & \multicolumn{1}{c}{MA ES} & \multicolumn{1}{c}{$I^2$} & \multicolumn{1}{c}{Source paper}\\
+\midrule
+\endhead
+Abstract rule learning & X & X & X & X &  & \\
+Audio-visual congruence & X & X & \checkmark & X &  & X\\
+Categorization bias & X & X & \checkmark &  &  & X\\
+Cross-situational word learning & \checkmark &  & X & X &  & \checkmark\\
+Familiar word recognition & \checkmark & X &  & X & X & \\
+Gaze following (combined) & \checkmark & X & X &  &  & \checkmark\\
+Label advantage in concept learning & X & X & X &  &  & X\\
+Language discrimination & X &  & X & X &  & \\
+Language preference & X & X & X & X &  & \\
+Mispronunciation sensitivity & \checkmark & X & X &  &  & \checkmark\\
+Mutual exclusivity & \checkmark & \checkmark & X & X & \checkmark & \checkmark\\
+Natural speech preference & X & X & X & X &  & \\
+Neonatal Imitation & \checkmark & X & X &  &  & \\
+Online word recognition & \checkmark &  &  & \checkmark &  & \checkmark\\
+Prosocial agents & X &  & X & X & X & X\\
+Simple arithmetic competences & X &  &  &  &  & \\
+Sound symbolism & \checkmark &  & X & X & X & X\\
+Statistical sound category learning & \checkmark &  &  & \checkmark & \checkmark & \\
+Statistical word segmentation & X & X & X & X & X & \\
+Switch task & X & X & X & X & X & X\\
+Syntactic bootstrapping & X & X & \checkmark & X & X & X\\
+Vowel discrimination (native) & X & X & X & X &  & X\\
+Vowel discrimination (non-native) & X & \checkmark & X & X &  & \\
+Word segmentation (combined) & X & X & X & X &  & X\\
+Infant directed speech preference & X & X & X & X &  & X\\
+\bottomrule
+\end{longtable}
+\end{lltable}
 
 
-```{r fig.width=8, fig.height=8}
+
+
+
+
+```{r fig.width=8, fig.height=8, fig.pos="!h", fig.cap= "Schematic illustration of the four hypotheses considered. The gray shaded line represents the observed age effect if the hypothesis holds. The red dotted lines represents the true underlying age effect under the particular hypothesis. "}
 fig3 <- readRDS(here("writing/display_items/fig_3.Rds"))
 fig3
 ```

@@ -38,7 +38,7 @@ wordcount         : "X"
 
 bibliography      : "r-references.bib"
 
-floatsintext      : no
+floatsintext      : yes
 linenumbers       : yes
 draft             : no
 mask              : no
@@ -52,8 +52,19 @@ output            :
     papaja::apa6_pdf:
       latex_engine: xelatex
       
-header-includes   : 
+header-includes   :
+    - \usepackage{tabu}
+    - \usepackage{tikz}
+    - \usepackage{adjustbox}
+    - \usepackage{float}
+    - \usepackage{graphicx}
     - \usepackage{pdflscape}
+    - \usepackage{lscape}
+    - \usepackage{longtable}
+    - \usepackage{tabu}
+    - \usepackage{setspace}% http://ctan.org/pkg/setspace
+    - \AtBeginEnvironment{longtable}{\singlespacing}{\small}
+    
 
 
 

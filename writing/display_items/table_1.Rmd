@@ -73,31 +73,42 @@ d_data <- d %>%
 
 full_d <- d_data %>% 
   mutate(paper = case_when(
-    ds_clean == "Abstract rule learning" ~ "Rabagliati, Ferguson, & Lew-Williams (2018)", 
-    ds_clean == "Audio-Visual Congruence" ~ "Cox, Keren-Portnoy, Roepstorff, & Fusaroli (2022)",
+    #ds_clean == "Abstract rule learning" ~ "Rabagliati, Ferguson, & Lew-Williams (2018)", 
+    ds_clean == "Abstract rule learning" ~ "Rabagliati et al., (2018)", 
+    #ds_clean == "Audio-Visual Congruence" ~ "Cox, Keren-Portnoy, Roepstorff, & Fusaroli (2022)",
+    ds_clean == "Audio-Visual Congruence" ~ "Cox et al., (2022)",
     ds_clean == "Categorization bias" ~ "NA", 
     ds_clean == "Cross-situational word learning" ~ "NA", 
-    ds_clean == "Familiar word recognition" ~ "Carbajal, Peperkamp, & Tsuji (2021)", 
-    ds_clean == "Gaze following (combined)" ~ "Frank, Lewis, & MacDonald (2016)", 
+    #ds_clean == "Familiar word recognition" ~ "Carbajal, Peperkamp, & Tsuji (2021)", 
+    ds_clean == "Familiar word recognition" ~ "Carbajal et al., (2021)", 
+    #ds_clean == "Gaze following (combined)" ~ "Frank, Lewis, & MacDonald (2016)", 
+    ds_clean == "Gaze following (combined)" ~ "Frank et al., (2016)", 
     ds_clean == "Label advantage in concept learning" ~ "NA",
-    ds_clean == "Language discrimination and preference (discrimination)" ~ "Gasparini, Langus, Tsuji, & Boll-Avetisyan (2021)", 
-    ds_clean == "Language discrimination and preference (preference)" ~ "Gasparini, Langus, Tsuji, & Boll-Avetisyan (2021)", 
+    #ds_clean == "Language discrimination and preference (discrimination)" ~ "Gasparini, Langus, Tsuji, & Boll-Avetisyan (2021)", 
+    ds_clean == "Language discrimination and preference (discrimination)" ~ "Gasparini et al., (2021)", 
+    #ds_clean == "Language discrimination and preference (preference)" ~ "Gasparini, Langus, Tsuji, & Boll-Avetisyan (2021)", 
+    ds_clean == "Language discrimination and preference (preference)" ~ "Gasparini et al., (2021)", 
     ds_clean == "Mispronunciation sensitivity" ~ "Von Holzen & Bergmann (2021)", 
     ds_clean == "Mutual exclusivity" ~ "Lewis et al. (2020)", 
-    ds_clean == "Natural speech preference" ~ "Issard, Tsuji, & Cristia (2023)", 
+    #ds_clean == "Natural speech preference" ~ "Issard, Tsuji, & Cristia (2023)", 
+    ds_clean == "Natural speech preference" ~ "Issard et al., (2023)", 
     ds_clean == "Neonatal Imitation" ~ "Davis et al. (2021)", 
-    ds_clean == "Online word recognition" ~ "Frank, Lewis, & MacDonald (2016)", 
+    #ds_clean == "Online word recognition" ~ "Frank, Lewis, & MacDonald (2016)", 
+    ds_clean == "Online word recognition" ~ "Frank et al., (2016)", 
     ds_clean == "Prosocial agents" ~ "Margoni & Surian (2018)", 
-    ds_clean == "Simple arithmetic competences" ~ "Christodoulou, Lac, & Moore (2017)", 
+    #ds_clean == "Simple arithmetic competences" ~ "Christodoulou, Lac, & Moore (2017)", 
+    ds_clean == "Simple arithmetic competences" ~ "Christodoulou et al., (2017)", 
     ds_clean == "Sound symbolism" ~ "Fort et al. (2018)", 
     ds_clean == "Statistical sound category learning" ~ "Cristia (2018)", 
     ds_clean == "Statistical word segmentation" ~ "Black & Bergmann (2017)", 
-    ds_clean == "Switch task" ~ "Tsui, Byers-Heinlein, & Fennell (2019)", 
+    #ds_clean == "Switch task" ~ "Tsui, Byers-Heinlein, & Fennell (2019)", 
+    ds_clean == "Switch task" ~ "Tsui et al., (2019)", 
     ds_clean == "Syntactic bootstrapping" ~ "Cao & Lewis (2022)", 
     ds_clean == "Vowel discrimination (native)" ~ "Tsuji & Cristia (2014)", 
     ds_clean == "Vowel discrimination (non-native)" ~ "Tsuji & Cristia (2014)", 
     ds_clean == "Word Segmentation (combined)" ~ "Bergmann & Cristia (2016)", 
-    ds_clean == "Infant directed speech preference" ~ "Dunst, Gorman, & Hamby (2012); Zettersten et al., (2023)"
+    #ds_clean == "Infant directed speech preference" ~ "Dunst, Gorman, & Hamby (2012); Zettersten et al., (2023)",
+    ds_clean == "Infant directed speech preference" ~ "Zettersten et al., (2023)"
   )) %>% 
   mutate(
     ds_clean = case_when(
@@ -114,7 +125,7 @@ full_d <- d_data %>%
     'N ES' = n_effect_size, 
     'N Subject' = n_sample_size, 
     'MA ES' = es_print, 
-    'Citation' = paper
+    'Source paper' = paper
   ) 
 ```
 
