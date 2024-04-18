@@ -8,24 +8,29 @@ author:
     corresponding : yes    # Define only one corresponding author
     address       : "450 Jane Stanford Way, Stanford, CA 94305"
     email         : "anjiecao@stanford.edu"
-    role:         # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
-      - "Conceptualization"
-      - "Writing - Original Draft Preparation"
-      - "Writing - Review & Editing"
+  - name          : "Molly Lewis"
+    affiliation   : "2"
+  - name          : "Sho Tsuji"
+    affiliation   : "3"
+  - name          : "Christina Bergmann"
+    affiliation   : "3"
+  - name          : "Alejandrina Cristia"
+    affiliation   : "4"
   - name          : "Michael C. Frank"
     affiliation   : "1"
-    role:
-      - "Writing - Review & Editing"
-      - "Supervision"
+
 
 affiliation:
   - id            : "1"
     institution   : "Stanford University "
   - id            : "2"
-    institution   : "Konstanz Business School"
+    institution   : "?"
+  - id            : "3"
+    institution   : "?"
+  - id            : "4"
+    institution   : "?"
 
 authornote: |
-  Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
 
   Enter author note here.
 
