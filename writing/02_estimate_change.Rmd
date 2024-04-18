@@ -8,7 +8,7 @@ Datasets were retrieved from Metalab. As of February 2024, Metalab hosted 32 dat
 
 Five datasets did not meet the first desideratum (*Pointing and vocabulary (concurrent)*; *Pointing and vocabulary (longitudinal)*; *Video deficit*; *Symbolic play*; *Word segmentation (neuro)*), and one dataset did not meet the second desideratum (*Phonotactic learning*). These datasets were not included in the analysis. 
 
-For the remaining 26 datasets, we made the following modifications. Following the organization in the original meta-analysis [@gasparini2021quantifying], we separated the Language discrimination and preference dataset into two datasets, one for discrimination and one for preference. We also combined two pairs of datasets because they were testing the same experimental effects: *Gaze following (live)* and *Gaze following (video)* was combined into *Gaze following (combined)*; *Function word segmentation* and *Word segmentation (behavioral)* was combined into *Word segmentation (combined)*. We also replaced the *Infant directed speech preference* dataset with a more up-to-date version reported in @zettersten2023evidence. 
+For the remaining 26 datasets, we made the following modifications. Following the organization in the original meta-analysis [@gasparini2021quantifying], we separated the *Language discrimination and preference* dataset into two datasets, one for discrimination and one for preference. We also combined two pairs of datasets because they were testing the same experimental effects: *Gaze following (live)* and *Gaze following (video)* was combined into *Gaze following (combined)*; *Function word segmentation* and *Word segmentation (behavioral)* was combined into *Word segmentation (combined)*. We also replaced the *Infant directed speech preference* dataset with a more up-to-date version reported in @zettersten2023evidence. 
 
 To make the comparison more equivalent to each other, we would run models with the same random effect structure specifications across all datasets. To achieve this goal, we recoded the relevant grouping variables in the datasets with missing grouping variables. 
 
@@ -16,7 +16,7 @@ Since we were mostly interested in the age trajectory of these constructs in ear
 
 ## Methods
 
-All of the statistical analyses were conducted in R. Meta-analytic models were fit using the metafor package [@viechtbauer2010conducting]. This was an exploratory study in which no hypotheses were pre-registered.
+All of the statistical analyses were conducted in R. Meta-analytic models were fit using the `metafor` package [@viechtbauer2010conducting]. This was an exploratory study in which no hypotheses were pre-registered.
 
 For each dataset, we considered four functional forms as possible candidates for the shape of the developmental trajectory: linear, logarithmic, quadratic, and constant. A linear form is the most common assumption in the literature, whereas logarithmic and quadratic were chosen to represent sublinear growth and superlinear growth, respectively. The constant form served as a baseline null hypothesis for the other alternative growth patterns. Although other, more complex growth patterns are of course possible, we opted to compare these forms as a first pass. Note that the constant model includes one parameter (an intercept), linear and logarithmic models include two parameters (an intercept and a slope), and the quadratic model includes three parameters (intercept, slope, and quadratic growth term). 
 
@@ -24,10 +24,7 @@ For all analyses, we fit multilevel random-effects meta-regression models using 
 
 ## Results
 
-```{r fig.pos = "!H", fig.cap= "Each dot represents the estimate of the age predictor in the linear model. Red dots indicate the particular estimate is statistically significant, and black indicate the estimate is not significant. Error bars show 95% confidence intervals."}
-fig_2 <- readRDS(here("writing/display_items/figure_2.Rds"))
-fig_2
-```
+
 
 
 ```{r}
@@ -41,14 +38,14 @@ n_has_no_differnece <- total_n - n_has_any_meaningful_difference
 
 ### Model comparison 
 
-Our initial goal was to compare the fit of models with different functional forms for each meta-analysis. Because models differed in their complexity (number of parameters), we extracted the corrected AIC (AICc) for each model. The model with the lowest AICc was considered the baseline model, and all the remaining models were compared against the baseline. The remaining model each received a $\Delta_{AIC}$, which was the difference between the AIC of the model and the AIC of the baseline model. Following standard convention, we treated $\Delta_{AIC} > 4$ as the statistical significance threshold [@burnham2004multimodel]. A baseline model was significantly better than an alternative model if and only if the alternative model had  $\Delta_{AIC} > 4$. 
+Our initial goal was to compare the fit of models with different functional forms for each meta-analysis. Because models differed in their complexity (number of parameters), we extracted the corrected AIC (AICc) for each model. The model with the lowest AICc was considered the baseline model, and all the remaining models were compared against the baseline. The remaining model each received a $\Delta_{AIC}$, which was the difference between the AIC of the model and the AIC of the baseline model. Following statistical convention, we treated $\Delta_{AIC} > 4$ as the statistical significance threshold [@burnham2004multimodel]. A baseline model was significantly better than an alternative model if and only if the alternative model had  $\Delta_{AIC} > 4$. 
 
 Surprisingly, the four functional forms could not be meaningfully distinguished in `r n_has_no_differnece` out of `r total_n` datasets.. (This situation typically arises because the data are constant and hence more complex models with zero parameters fit the data equally well ^[In the situation of a completely constant pattern of effects across age, the maximal difference in model fit would be an AICc of exactly 4 between the constant and quadratic model, reflecting a two-parameter difference.]). The remaining `r n_has_any_meaningful_difference` datasets yielded meaningful contrasts between different functional forms, but the linear form was not the best-fitting form for any dataset. Table 2 shows the model comparison results for each dataset. Figure 1 shows the prediction of each functional form.  
 
 
 ### Linearity and Positive Increase Assumption
 
-One limitation of the model comparison approach is that it does not quantify growth over time. To further examine the positive increase assumption, we estimated linear meta-regression models and examined the estimates on the age predictor. We found that the slope estimate for age was not significantly different from zero the in majority of the datasets (16/25; Fig 2). 
+One limitation of the model comparison approach is that it does not quantify growth over time. To further examine the positive increase assumption, we estimated linear meta-regression models and examined the estimates on the age predictor. We found that the slope estimate for age was not significantly different from zero the in majority of the datasets (16/25; Figure 2). 
 
 ## Discussion 
 
@@ -60,3 +57,7 @@ fig1 <- readRDS(here("writing/display_items/figure_1.Rds"))
 fig1
 ```
 
+```{r fig.pos = "!H", fig.cap= "Each dot represents the estimate of the age predictor in the linear model. Red dots indicate the particular estimate is statistically significant, and black indicate the estimate is not significant. Error bars show 95% confidence intervals."}
+fig_2 <- readRDS(here("writing/display_items/figure_2.Rds"))
+fig_2
+```

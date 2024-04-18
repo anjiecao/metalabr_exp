@@ -1,5 +1,5 @@
 
-## Theoretical constraints on effect sizes
+## Change in only a subsest of conditions
 
 ```{r}
 paper_info <- read_csv(here("data/rework/ma_paper_supplement.csv")) %>% 
@@ -21,7 +21,7 @@ n_has_paper <- paper_info %>% filter(`With paper` == "Yes") %>% pull(n)
 
 ```
 
-Across the 25 datasets, `r n_has_paper` datasets were published through manuscripts in peer-reviewed journals. Among these manuscripts, we found that `r n_identify_better_half` papers reported that the meta-analytic effect was significantly stronger in a subset of the data. The subset was often identified by a particular condition in the experimental paradigm [e.g. experiment that shows “giving and taking action” to infants, @margoni2018infants], or certain characteristics of the participants [e.g. bilingual infants, @tsui2019associative]. In the rest of the data, the meta-analytic effect was either significantly weaker or not present at all. There are many reasons for why the effect would be stronger or only present in a subset of the data. Here, we remain agnostic to the underlying causes for these differences, and leverage these findings to ask: Is it possible that the influence of age was only observable in the subset of the dataset characterized by stronger effect sizes?  Perhaps noise in other conditions inadvertently masked age-related changes.
+Across the 25 datasets, `r n_has_paper` datasets were published through manuscripts in peer-reviewed venues Among these manuscripts, we found that `r n_identify_better_half` papers reported that the meta-analytic effect was significantly stronger in a subset of the data. The subset was often identified by a particular condition in the experimental paradigm [e.g. experiment that shows “giving and taking action” to infants, @margoni2018infants], or certain characteristics of the participants [e.g. bilingual infants, @tsui2019associative]. In the rest of the data, the meta-analytic effect was either significantly weaker or not present at all. There are many reasons for why the effect would be stronger or only present in a subset of the data. Here, we remain agnostic to the underlying causes for these differences, and leverage these findings to ask: Is it possible that the influence of age was only observable in the subset of the dataset characterized by stronger effect sizes?  Perhaps noise in other conditions inadvertently masked age-related changes.
 
 ### Methods 
 
@@ -89,7 +89,7 @@ st_df <- age_model_estimates %>%
 ```
 
 
-In addition, we did not find constraining our analyses to the “better half” increased the number of significant slope estimates. The two significant slope estimates came from *Mutual Exclusivity* ($\beta$ = `r me_df$estimate`, *SE* = `r me_df$std.error`, *z* = `r me_df$statistic`, *p* < 0.01) and *Statistical sound category learning* ($\beta$ = `r scl_df$estimate`, *SE* = `r scl_df$std.error`, *z* = `r scl_df$statistic`, *p* = `r scl_df$p.value`), which also showed significant slopes in the analyses with the full datasets. Qualitatively, we did see that the estimates increased in magnitude in *Syntactic bootstrapping* ($\beta$ = `r sb_df$estimate`, *SE* = `r sb_df$std.error`, *z* = `r sb_df$statistic`, *p* = `r sb_df$p.value`) and *Switch task* ($\beta$ = `r st_df$estimate`, *SE* = `r st_df$std.error`, *z* = `r st_df$statistic`, *p* = `r st_df$p.value`), but neither reached the statistical significance threshold. 
+In addition, we did not find constraining our analyses to the “better half” increased the number of significant slope estimates. The two significant slope estimates came from *Mutual Exclusivity* ($\beta$ = `r me_df$estimate`, *SE* = `r me_df$std.error`, *z* = `r me_df$statistic`, *p* < 0.01) and *Statistical sound category learning* ($\beta$ = `r scl_df$estimate`, *SE* = `r scl_df$std.error`, *z* = `r scl_df$statistic`, *p* = `r scl_df$p.value`), which also showed significant slopes in the analyses with the full datasets. Qualitatively, we did see that the estimates increased in magnitude in *Syntactic bootstrapping* ($\beta$ = `r sb_df$estimate`, *p* = `r sb_df$p.value`) and *Switch task* ($\beta$ = `r st_df$estimate`, *p* = `r st_df$p.value`), but neither reached the statistical significance threshold. 
 
 The discrepancy between our analyses and the previously reported finding suggested that the “better half effect” might not be sufficiently robust. This discrepancy could be attributed to the different statistical models we chose – in the original meta-analysis papers, the models tend to differ in their particular specification of the nested random effect structure and/or in the inclusions of moderators. We chose the simplest model with the maximum random effect structure per recommendation [@barr2013random]. This approach ensured fair comparison across all datasets, but it could diminish the strength of the reported effects. 
 

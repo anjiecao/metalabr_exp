@@ -38,7 +38,7 @@ wordcount         : "X"
 
 bibliography      : "r-references.bib"
 
-floatsintext      : yes
+floatsintext      : no
 linenumbers       : yes
 draft             : no
 mask              : no
@@ -91,6 +91,9 @@ d <- read_csv(here("data/metalab_data_mini.csv"))
 ```{r child = "01_introduction.Rmd"}
 ```
 
+
+# Estimating the functional forms of the developmental change in meta-analytic data
+
 ```{r child = "02_estimate_change.Rmd"}
 
 ```
@@ -98,6 +101,9 @@ d <- read_csv(here("data/metalab_data_mini.csv"))
 ```{r child = "03_interim_discussion.Rmd"}
 
 ```
+
+
+# Understanding the lack of developmental change in meta-analytic data
 
 ```{r child = "04_h1.Rmd"}
 

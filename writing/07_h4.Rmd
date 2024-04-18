@@ -1,5 +1,5 @@
 
-## Developmental change emerges later 
+## Positive growth only after infancy
 
 Last but not least, we consider whether there is evidence for discontinuity between the growth patterns in infancy and beyond. @bergelson2020comprehension's hypothesis on the development of word comprehension suggests a notable shift post the 12-month mark in infancy. This raises the question of whether such distinctions extend across various tasks. This section aims to delve into these dynamics by only looking at the subset of the dataset with infants older than 12-month-olds. 
 

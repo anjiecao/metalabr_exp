@@ -1,5 +1,5 @@
 
-## Methodological adaptation for older infants  
+## Methodological adaptation for older infants
 
 In experiments with young children, many design decisions are made to ensure the paradigms are age appropriate [@byers2022six]. For older children, more behavioral measures are available and longer experiments are made possible by  increased attention span. As a result, experimenters might test more subtle experimental contrasts. Perhaps the increasing difficulty or subtlety  of experimental conditions for older infants mask age-related increase in effect sizes related to a particular construct. For example, imagine that different experimenters wanted to study word learning with 12- and 24-month-olds. The experimenter working with the younger group might choose a paradigm in which only two novel words were taught, while the experimenter working with the older children might choose to teach four. The resulting effect for older children might be weaker despite overall improvement in the underlying construct.
 
