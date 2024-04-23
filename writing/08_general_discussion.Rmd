@@ -1,5 +1,5 @@
 
-# Genral discussion 
+# General discussion 
 
 ```{r}
 all_slope_estimates <- readRDS(here("cached_data/all_slope_estimates.Rds"))

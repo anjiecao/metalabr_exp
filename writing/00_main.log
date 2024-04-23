@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.3.17)  18 APR 2024 08:48
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.3.17)  23 APR 2024 09:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1260,11 +1260,11 @@ File: 00_main_files/figure-latex/unnamed-chunk-28-1.pdf Graphic file (type pdf)
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `00_main.out' has not changed.
-(rerunfilecheck)             Checksum: B1370B5010D3C22860354D2A6C0580CF;4076.
+(rerunfilecheck)             Checksum: D900CD3465686CA547B108F65F9A10FE;4081.
  ) 
 Here is how much of TeX's memory you used:
  33693 strings out of 478683
- 657497 string characters out of 5847962
+ 657498 string characters out of 5847962
  1869018 words of memory out of 5000000
  53209 multiletter control sequences out of 15000+600000
  545002 words of font info for 107 fonts, out of 8000000 for 9000

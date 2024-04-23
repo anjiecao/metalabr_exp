@@ -13,9 +13,9 @@ author:
   - name          : "Sho Tsuji"
     affiliation   : "3"
   - name          : "Christina Bergmann"
-    affiliation   : "3"
-  - name          : "Alejandrina Cristia"
     affiliation   : "4"
+  - name          : "Alejandrina Cristia"
+    affiliation   : "3"
   - name          : "Michael C. Frank"
     affiliation   : "1"
 
@@ -24,11 +24,11 @@ affiliation:
   - id            : "1"
     institution   : "Stanford University "
   - id            : "2"
-    institution   : "?"
+    institution   : "Carnegie Mellon University"
   - id            : "3"
-    institution   : "?"
+    institution   : "École Normale Supérieure - PSL"
   - id            : "4"
-    institution   : "?"
+    institution   : "Hochschule Osnabrück"
 
 authornote: |
 
