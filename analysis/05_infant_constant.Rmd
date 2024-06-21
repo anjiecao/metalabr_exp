@@ -88,7 +88,32 @@ all_toddler_slope_estimates %>%
 ```
 
 
+
+
 # Visualization 
+
+
+```{r}
+all_toddler_slope_estimates <- read_rds(here('cached_data/all_toddler_slope_estimates.Rds')) %>% 
+  mutate(data_type = "12MO+ only") %>% 
+  filter(term == "mean_age_months") %>% 
+  filter(dataset != "Audio-Visual Congruence") 
+all_slope_estimates <- read_rds(here("cached_data/all_slope_estimates.Rds")) %>% 
+  mutate(data_type = "Full dataset") %>% 
+  filter(term == "mean_age_months")
+
+bind_rows(all_toddler_slope_estimates, all_slope_estimates) %>% 
+  ggplot(aes(x = dataset, y = estimate, ymin = conf.low, ymax = conf.high, color = data_type)) +
+  geom_pointrange(position = position_dodge(width = .5)) + 
+   geom_hline(yintercept = 0, linetype = 2, color = "gray") + 
+  coord_flip() + 
+  theme_few() + 
+  xlab("") + 
+  ylab("Estimate on mean age") +
+  scale_color_manual(values = c("purple", "lightblue"), name = "") + 
+  theme(legend.position = "top")
+```
+
 
 ```{r}
 wide_toddler <- toddler_comparison %>% 

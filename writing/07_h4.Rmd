@@ -1,11 +1,11 @@
 
 ## Positive growth only after infancy
 
-Last but not least, we consider whether there is evidence for discontinuity between the growth patterns in infancy and beyond. @bergelson2020comprehension's hypothesis on the development of word comprehension suggests a notable shift post the 12-month mark in infancy. This raises the question of whether such distinctions extend across various tasks. This section aims to delve into these dynamics by only looking at the subset of the dataset with infants older than 12-month-olds. 
+Last but not least, we considered whether there is evidence for discontinuity between the growth patterns in infancy and beyond. @bergelson2020comprehension's hypothesis on the development of word comprehension suggests a notable shift post the 12-month mark in infancy. This raises the question of whether such distinctions extend across various tasks. This section aims to delve into these dynamics by only looking at the subset of the dataset with infants older than 12-month-olds. 
 
 ### Methods
 
-Similar to previous analyses, we filtered each dataset to include only studies that reported more than 10 effect sizes that tested infants older than 12 months. 15 datasets met the criteria. We ran the same meta-regressions predicting effect size with mean age in months on this subset, and then we compared the estimates on the age predictor with the same models run on the full datasets.   
+Similar to previous analyses, we filtered each dataset to include only studies that reported more than 10 effect sizes that tested infants older than 12 months. 15 datasets met the criteria and contained sufficient effect sizes from participants above 12 months of age. We ran the same meta-regressions predicting effect size with mean age in months on this subset, and then we compared the estimates on the age predictor with the same models run on the full datasets.   
 
 ### Results and discussion 
 
@@ -25,4 +25,4 @@ cb_df <- all_toddler_slope_estimates %>%
 ```
 
 
-If the discontinuity account is true, we should expect to see more significant age effects  to emerge on models run on the subset of data with older infants. We found support for this hypothesis in two datasets, *Cross-situational Word Learning* ($\beta$ = `r cswl_df$estimate`, *SE* < 0.01, *z* = `r cswl_df$statistic`, *p* = `r cswl_df$p.value`) and *Mispronunciation sensitivity* ($\beta$ = `r ms_df$estimate`, *SE* = `r ms_df$std.error`, *z* = `r ms_df$statistic`, *p* < 0.01). In both datasets, there were no age effects in the full datasets, but significant age-related change in the subsets with older infants. However, we also found the opposite patterns. In *Categorization bias* and *Sound symbolism*, there was evidence for age-related change across the entire age range, but no evidence for age-related change in the toddler subset (Both *p* > 0.05). 
+If the discontinuity account is true, we should expect to see more significant age effects  to emerge on models run on the subset of data with older infants. We found support for this hypothesis in two datasets, *Cross-situational Word Learning* ($\beta$ = `r cswl_df$estimate`, *SE* < 0.01, *z* = `r cswl_df$statistic`, *p* = `r cswl_df$p.value`) and *Mispronunciation sensitivity* ($\beta$ = `r ms_df$estimate`, *SE* = `r ms_df$std.error`, *z* = `r ms_df$statistic`, *p* < 0.01). In both datasets, there were no age effects in the full datasets, but significant age-related change in the subsets with older infants. This suggests that the discontinuity hypothesis was supported in at least two datasets. However, it is also worth noting that we also found the opposite patterns. In *Categorization bias* and *Sound symbolism*, there was evidence for age-related change across the entire age range, but no evidence for age-related change in the toddler subset (Both *p* > 0.05). 

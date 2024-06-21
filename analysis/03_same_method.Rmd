@@ -72,6 +72,156 @@ write_rds(single_method_multiple_age, here("cached_data/single_method_multiple_a
 
 ```
 
+
+## Nilam's suggested analysis
+
+```{r}
+d %>% 
+  filter(ds_clean %in% single_method_multiple_age$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc)) + 
+  geom_point(alpha = .5) + 
+  geom_line(aes(group = study_ID), alpha = .5)+
+  facet_wrap(~ds_clean, scales = "free_x")
+```
+
+```{r fig.height=8, fig.width=10}
+d %>% 
+  filter(ds_clean %in% single_method_multiple_age$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc)) + 
+  geom_point(alpha = .5) + 
+  geom_smooth(method = "lm") + 
+  geom_line(aes(group = short_cite), alpha = .5)+
+  facet_wrap(~ds_clean, scales = "free")
+```
+
+
+### run the models
+
+```{r}
+better_half_nested_half_d <- read_rds(here("cached_data/better_halves_data.Rds"))%>% 
+  filter(ds_clean %in% single_method_multiple_age$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  group_by(ds_clean, ds_half) %>% 
+  nest()
+
+better_half_same_method_model <- nested_half_d %>% 
+  filter(!(ds_clean == "Sound symbolism" & ds_half == "Sound symbolism_half1")) %>% 
+  mutate(
+    model = (map(data, ~ broom.mixed::tidy(metafor::rma.mv(d_calc ~ mean_age_months, 
+                         V = d_var_calc, 
+                          random = ~ 1 | short_cite/same_infant/unique_row, 
+                          data = .), conf.int = TRUE)))
+    
+    ) %>% 
+  unnest(model)
+
+full_nested_d <- d%>% 
+  filter(ds_clean %in% single_method_multiple_age$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  group_by(ds_clean) %>% 
+  nest()
+
+full_same_method_model <- full_nested_d %>% 
+  #filter(!(ds_clean == "Sound symbolism" & ds_half == "Sound symbolism_half1")) %>% 
+  mutate(
+    model = (map(data, ~ broom.mixed::tidy(metafor::rma.mv(d_calc ~ mean_age_months, 
+                         V = d_var_calc, 
+                          random = ~ 1 | short_cite/same_infant/unique_row, 
+                          data = .),  conf.int = TRUE)))
+    
+    ) %>% 
+  unnest(model)
+```
+
+```{r fig.width=12}
+full_slope_estimates <- readRDS(here("cached_data/all_slope_estimates.Rds")) %>% 
+  filter(term == "mean_age_months") %>% 
+  mutate(type = "original") %>% 
+  rename(ds_clean = dataset)
+
+full_same_methods_estimates <- full_same_method_model %>% 
+  filter(term == "mean_age_months") %>% 
+  mutate(type = "all same methods")
+
+better_half_same_methods_estimates <- better_half_same_method_model %>% 
+  filter(term == "mean_age_months") %>% 
+  mutate(type = "better half same method")
+
+bind_rows(full_slope_estimates, full_same_methods_estimates, better_half_same_methods_estimates) %>% 
+  ggplot(aes(x = ds_clean, y = estimate, ymin = conf.low, ymax = conf.high, color = type)) + 
+  geom_pointrange(position = position_dodge(width = .5)) + 
+  geom_hline(yintercept = 0, color = "gray", linetype = "dashed") + 
+  theme_few() + 
+  coord_flip()
+
+
+bind_rows(full_slope_estimates, full_same_methods_estimates, better_half_same_methods_estimates) %>% 
+  mutate(is_sig = (p.value < 0.05)) %>% 
+  ggplot(aes(x = ds_clean, y = estimate, ymin = conf.low, ymax = conf.high, color = is_sig)) + 
+  geom_pointrange(position = position_dodge(width = .5)) + 
+  geom_hline(yintercept = 0, color = "gray", linetype = "dashed") + 
+  theme_few() + 
+  coord_flip() + 
+  facet_wrap(~type)
+
+
+```
+
+```{r}
+
+```
+
+
+
+```{r}
+read_rds(here("cached_data/better_halves_data.Rds")) %>% 
+  filter(ds_clean %in% single_method_multiple_age$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc)) + 
+  geom_smooth(method = "lm") + 
+  geom_point(alpha = .5) + 
+  geom_line(aes(group = short_cite), alpha = .5)+
+  facet_wrap(~ds_half, scales = "free")
+```
+
+
+maybe just get the ones with larger effect sizes?
+
+```{r}
+good_studies <- read_rds(here("cached_data/better_halves_data.Rds")) %>% 
+  filter(ds_clean %in% single_method_multiple_age$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  select(ds_clean, ds_half, short_cite, study_ID, mean_age_months, d_calc) %>%  
+  group_by(ds_clean, ds_half, short_cite, study_ID) %>% 
+  mutate(
+    min_age = min(mean_age_months), 
+    max_age = max(mean_age_months), 
+    min_es = min(d_calc), 
+    max_es = max(d_calc),
+    row_id = row_number()
+  ) %>% 
+  # does the one with the largest age also have the largst ES
+  filter(d_calc == max_es) %>% 
+  filter(max_age == mean_age_months) %>% 
+  ungroup() %>% 
+  select(ds_clean, ds_half, short_cite, study_ID)
+
+
+read_rds(here("cached_data/better_halves_data.Rds")) %>% 
+  filter(ds_clean %in% single_method_multiple_age$ds_clean, 
+         short_cite %in% single_method_multiple_age$short_cite) %>% 
+  filter(ds_half %in% good_studies$ds_half, 
+         short_cite %in% good_studies$short_cite) %>% 
+  ggplot(aes(x = mean_age_months, y = d_calc)) + 
+  geom_point(alpha = .5) + 
+  geom_line(aes(group = short_cite), alpha = .5)+
+  facet_wrap(~ds_half, scales = "free")
+  
+```
+
+
 ## fit (age|short_cite) model
 
 ### Figure out datasets that allow us to run this 
@@ -209,6 +359,35 @@ write_rds(delta_age_model, here("cached_data/delta_age.Rds"))
 
 
 
+## talk visualization 
+
+```{r fig.width=10, fig.height = 6}
+delta_age_model %>% 
+  filter(term == "delta_age") %>% 
+  mutate(conf.low = estimate - 1.96 * std.error, 
+         conf.high = estimate + 1.96 * std.error) %>% 
+  select(term, estimate, conf.low, conf.high, p.value, dataset) %>% 
+  bind_rows(
+    all_slope_estimates %>% 
+  filter(term == "mean_age_months") %>% 
+  select(term, estimate, conf.low, conf.high, p.value, dataset)
+  ) %>% 
+  mutate(term = if_else(term == "delta_age", "Same Method Delta Age", "Original")) %>% 
+  ggplot(aes(x = dataset, y = estimate)) + 
+  geom_pointrange(aes(ymin = conf.low, ymax = conf.high, color = term),
+                  position = position_dodge(width = .5)) + 
+  scale_color_manual(values = c("purple", "lightblue")) + 
+  geom_hline(yintercept = 0, color = "gray", linetype = "dashed") + 
+  coord_flip() + 
+  theme_few() + 
+  xlab("") + 
+  ylab("Estimate on Age") + 
+  theme(legend.position = "top") + 
+  scale_color_discrete(name = "")
+
+
+
+```
 
 
 

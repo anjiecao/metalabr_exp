@@ -281,7 +281,11 @@ age_model_estimates %>%
   geom_pointrange(position = position_dodge(width = .3)) + 
    geom_hline(yintercept = 0, linetype = 2, color = "gray") + 
   coord_flip() + 
-  theme_few() 
+  theme_few() + 
+  xlab("") + 
+  ylab("Estimate on mean age") +
+  scale_color_manual(values = c("purple", "blue"), name = "") + 
+  theme(legend.position = "top")
   
 ```
 

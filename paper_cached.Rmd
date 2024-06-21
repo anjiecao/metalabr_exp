@@ -148,6 +148,78 @@ bias_estimates <- lapply(
 saveRDS(bias_lrt, here("cached_data/h1_bias_lrt.rds"))
 ```
 
+```{r}
+bias_lrt %>% filter(is.na(warning)) %>% 
+  group_by(ds_clean) %>% select(-lrchisq, -df, -warning) %>% 
+  pivot_wider(names_from = test_data, values_from = pvalue) %>% 
+  filter(younger < 0.05 & older > 0.05)
+```
+
+## SI? 12-MO split
+
+```{r}
+bias_lrt_12mo <- lapply(
+  unique(d$ds_clean), 
+  function(name){
+    print(name)
+    tryCatch(get_pub_bias_lrt(d, name, split_option = "12mo"), 
+             warning = function(w){
+               tibble("ds_clean" = name, 
+                      "warning" = as.character(w))
+             })
+  }
+) %>% bind_rows()
+
+bias_estimates_12mo <- lapply(
+  unique(d$ds_clean), 
+  function(name){
+    print(name)
+    tryCatch(get_pub_bias_estimates(d, name, split_option = "12mo"), 
+             warning = function(w){
+               tibble("ds_clean" = name, 
+                      "warning" = as.character(w))
+             })
+  }
+) %>% bind_rows()
+
+
+
+egger_test_ok_12 <- d %>% 
+  mutate(
+    age_group = case_when(
+      mean_age_months < 12 ~ "younger", 
+      TRUE ~ "older"
+    )
+  ) %>%
+  group_by(ds_clean, age_group) %>% 
+  count() %>% 
+  filter(n >= 20) %>% 
+  group_by(ds_clean) %>% 
+  count() %>% 
+  filter(n == 2)
+
+
+egger_test_df <- d %>% 
+  mutate(
+    age_group = case_when(
+      mean_age_months < 12 ~ "younger", 
+      TRUE ~ "older"
+    )
+  ) %>%
+  group_by(ds_clean, age_group) %>% 
+  filter(ds_clean %in% egger_test_ok_12$ds_clean) %>% 
+  nest() %>% 
+  mutate(
+    reg_fit = map(data, ~ get_tidy_regtest(regtest(x = .x$d_calc, vi = .x$d_var_calc)))
+  ) %>% 
+  unnest(reg_fit)
+
+saveRDS(egger_test_df, here("cached_data/h1_egger_test_12mo.rds"))
+saveRDS(bias_lrt_12mo, here("cached_data/h1_bias_lrt_12mo.rds"))
+
+```
+
+
 # Hypothesis 2: Method adaptation 
 
 ```{r}

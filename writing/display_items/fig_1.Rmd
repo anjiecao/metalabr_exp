@@ -135,3 +135,62 @@ xlab("Mean age (months)") +
 saveRDS(fig_1, here("writing/display_items/figure_1.Rds"))
 ```
 
+```{r fig.width=9, fig.height=10}
+age_pred_d %>% 
+  # this is to handle the tricky part with neonatal imitation
+  filter(pred != -Inf) %>% 
+  mutate(group_var = paste0(ds_name, model_type)) %>% 
+  mutate(
+     ds_name = case_when(
+       ds_name == "Cross-situational word learning" ~ "X-situation learning", 
+      ds_name == "Audio-Visual Congruence" ~ "Audio-visual congruen.", 
+      ds_name == "Label advantage in concept learning" ~ "Label advantage",
+      ds_name == "Language discrimination and preference (discrimination)" ~ "Language discrimination", 
+      ds_name == "Language discrimination and preference (preference)" ~ "Language preference",
+      ds_name == "Cross-situational word learning"  ~ "X-situation learning",
+      ds_name == "Gaze following (combined)" ~ "Gaze following", 
+      ds_name == "Label advantage in concept learning" ~ "Label advantage", 
+      ds_name == "Statistical sound category learning" ~ "Stat. category learning",
+      ds_name == "Statistical word segmentation" ~ "Stat. word seg.",
+      ds_name == "Word Segmentation (combined)" ~ "Word segmentation", 
+      ds_name == "Infant directed speech preference" ~ "IDS pref.",
+      TRUE ~ ds_name
+  )) %>% 
+  mutate(
+    model_type = case_when(
+      model_type == "constant" ~ "Constant", 
+      model_type == "linear" ~ "Linear", 
+      model_type == "quad" ~ "Quadratic", 
+      model_type == "log" ~ "Logarithmic"
+    )
+  ) %>% 
+
+  ggplot(aes(x = mean_age_months,  y = pred)) + 
+  geom_hline(yintercept = 0, linetype ="dotted", alpha = .5) + 
+  geom_point(data = clean_d , 
+            aes(x = mean_age_months, y = d_calc),size = .5, alpha = .5) + 
+  geom_line(alpha = 1,  aes(group = group_var,color = model_type)) + 
+  
+ geom_ribbon(
+              aes(x = mean_age_months, group = group_var,y = pred, ymin = ci.lb, ymax = ci.ub, fill = model_type), alpha = 0.2, colour = NA)+ 
+
+    theme_few()+
+     guides(color=guide_legend(title="Model Type")) + 
+guides(fill = "none") + 
+xlab("Mean age (months)") + 
+  ylab("Predicted ES") + 
+  
+   theme(legend.position = "top", 
+         strip.text = element_text(size = 8, margin = margin())) + 
+  
+  scale_y_log10()+
+  
+  
+  facet_wrap(~ds_name, scales = "free",
+             labeller = label_wrap_gen()) -> fig_1_freey_log
+
+saveRDS(fig_1_freey_log, here("writing/display_items/fig_1_freey_log.Rds"))
+
+
+```
+

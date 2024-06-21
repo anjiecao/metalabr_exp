@@ -45,71 +45,93 @@ get_estimates <- function(model){
 }
 
 
-get_pub_bias_lrt <- function(full_d, ds_name){
+get_pub_bias_lrt <- function(full_d, ds_name, split_option = "median"){
   
   d <- full_d %>% filter(ds_clean == ds_name)
   
-  median_age <- median(d$mean_age_months)
-  younger_ds <- d %>% filter(mean_age_months >= median_age)
-  older_ds <- d %>% filter(mean_age_months < median_age)
+  if (split_option == "median"){
+    median_age <- median(d$mean_age_months)
+    younger_ds <- d %>% filter(mean_age_months < median_age)
+    older_ds <- d %>% filter(mean_age_months >= median_age)
+  }else{
+    younger_ds <- d %>% filter(mean_age_months < 12)
+    older_ds <- d %>% filter(mean_age_months >= 12)
+  }
+  
   
   # check how many studies are in each half 
   n_younger <- nrow(younger_ds)
   n_older <- nrow(older_ds)
   
-  # run three models 
-  # first half 
-  younger_res <- weightr::weightfunct(effect = younger_ds$d_calc, 
-                                      v = younger_ds$d_var_calc, 
+  if (n_younger == 0 | n_older == 0){
+    return (tibble("ds_clean" = name, 
+                   "warning" = "no enough data"))
+  }else{
+    
+    # run three models 
+    # first half 
+    younger_res <- weightr::weightfunct(effect = younger_ds$d_calc, 
+                                        v = younger_ds$d_var_calc, 
+                                        steps = c(0.05, 1), 
+                                        mods = ~ younger_ds$mean_age_months 
+    )
+    
+    
+    # second half 
+    older_res <- weightr::weightfunct(effect = older_ds$d_calc, 
+                                      v = older_ds$d_var_calc, 
                                       steps = c(0.05, 1), 
-                                      mods = ~ younger_ds$mean_age_months 
-  )
+                                      mods = ~ older_ds$mean_age_months 
+    )
+    
+    # together 
+    full_res <- weightr::weightfunct(effect = d$d_calc, 
+                                     v = d$d_var_calc, 
+                                     steps = c(0.05, 0.5, 1), 
+                                     mods = ~ d$mean_age_months 
+    )
+    
+    younger_p_val <- get_lrt(younger_res)
+    older_p_val <- get_lrt(older_res)
+    full_p_val <- get_lrt(full_res)
+    
+    
+    lrt_summary <- bind_rows(
+      younger_p_val %>% mutate(test_data = "younger"), 
+      older_p_val %>% mutate(test_data = "older"), 
+      full_p_val %>% mutate(test_data = "full")
+    ) %>% 
+      mutate(ds_clean = ds_name)
+    
+    return(lrt_summary)
+    
+  }
   
- 
-  # second half 
-  older_res <- weightr::weightfunct(effect = older_ds$d_calc, 
-                                    v = older_ds$d_var_calc, 
-                                    steps = c(0.05, 1), 
-                                    mods = ~ older_ds$mean_age_months 
-  )
-  
-  # together 
-  full_res <- weightr::weightfunct(effect = d$d_calc, 
-                                   v = d$d_var_calc, 
-                                   steps = c(0.05, 0.5, 1), 
-                                   mods = ~ d$mean_age_months 
-  )
-
-  younger_p_val <- get_lrt(younger_res)
-  older_p_val <- get_lrt(older_res)
-  full_p_val <- get_lrt(full_res)
-
-  
-  lrt_summary <- bind_rows(
-    younger_p_val %>% mutate(test_data = "younger"), 
-    older_p_val %>% mutate(test_data = "older"), 
-    full_p_val %>% mutate(test_data = "full")
-  ) %>% 
-    mutate(ds_clean = ds_name)
-  
-  return(lrt_summary)
   
 }
 
 
 
-get_pub_bias_estimates <- function(full_d, ds_name){
+get_pub_bias_estimates <- function(full_d, ds_name,  split_option = "median"){
   
   d <- full_d %>% filter(ds_clean == ds_name)
+  print(ds_name)
   
-  median_age <- median(d$mean_age_months)
-  younger_ds <- d %>% filter(mean_age_months >= median_age)
-  older_ds <- d %>% filter(mean_age_months < median_age)
+  if (split_option == "median"){
+    median_age <- median(d$mean_age_months)
+    younger_ds <- d %>% filter(mean_age_months < median_age)
+    older_ds <- d %>% filter(mean_age_months >= median_age)
+  }else{
+    younger_ds <- d %>% filter(mean_age_months < 12)
+    older_ds <- d %>% filter(mean_age_months >= 12)
+  }
   
-  # check how many studies are in each half 
   n_younger <- nrow(younger_ds)
   n_older <- nrow(older_ds)
-  
+  if (n_younger == 0 | n_older == 0){
+    return (tibble("ds_clean" = name, 
+                   "warning" = "no enough data"))
+  }else{
   # run three models 
   # first half 
   younger_res <- weightr::weightfunct(effect = younger_ds$d_calc, 
@@ -148,4 +170,5 @@ get_pub_bias_estimates <- function(full_d, ds_name){
   
   return(estimates_summary)
   
+  }
 }

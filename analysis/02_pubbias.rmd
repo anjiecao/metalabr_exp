@@ -47,6 +47,32 @@ bias_estimates <- lapply(
 ) %>% bind_rows()
 
 ```
+```{r}
+bias_lrt_12mo <- lapply(
+  unique(d$ds_clean), 
+  function(name){
+    print(name)
+    tryCatch(get_pub_bias_lrt(d, name, split_option = "12mo"), 
+             warning = function(w){
+               tibble("ds_clean" = name, 
+                      "warning" = as.character(w))
+             })
+  }
+) %>% bind_rows()
+
+bias_estimates_12mo <- lapply(
+  unique(d$ds_clean), 
+  function(name){
+    print(name)
+    tryCatch(get_pub_bias_estimates(d, name, split_option = "12mo"), 
+             warning = function(w){
+               tibble("ds_clean" = name, 
+                      "warning" = as.character(w))
+             })
+  }
+) %>% bind_rows()
+```
+
 
 
 ```{r}
@@ -370,8 +396,22 @@ egger_test_df %>%
   stat_summary(col = "red") + 
   #facet_wrap(~ds_clean) + 
   geom_hline(yintercept = 0.05, lty = 2) + 
-  theme_few()
+  theme_few() + 
+  xlab("Age Group") + 
+  ylab("p value")
 
+
+```
+
+
+```{r}
+readRDS(here("cached_data/pub_bias_weight_function.Rds"))
+```
+
+# Try 12 months old split 
+
+
+```{r}
 
 ```
 
